@@ -38,6 +38,9 @@ Main sidebar
 
         > a {
           color: $themecolor;
+          mat-icon {
+            color: $themecolor;
+          }
         }
       }
     }
@@ -101,11 +104,17 @@ Main sidebar
   .mat-nav-list .sub-item {
     display: none;
     margin-top: -15px;
+    margin-left: -25px;
 
     a {
       padding-left: 40px;
       height: 50px;
       margin-bottom: 0px;
+      font-size: smaller;
+      .mat-icon {
+        vertical-align: middle;
+        transform: scale(0.4);
+      }
     }
 
     .child-sub-item {

@@ -19,12 +19,18 @@ $white: #fff;
       &:hover {
         > a {
           color: $themecolor;
+          mat-icon {
+            color: $themecolor;
+          }
         }
       }
     }
     &.selected > .mat-list-item-content > a {
       background: $themecolor-alt;
       color: $white;
+      mat-icon {
+        color: $white;
+      }
     }
   }
 }
