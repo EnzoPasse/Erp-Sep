@@ -21,7 +21,7 @@
   },
   "angularCompilerOptions": {
     "strictInjectionParameters": true,
-    "strictTemplates": true,
+    "strictTemplates": false,
     "strictInputAccessModifiers": true,
     "preserveWhitespaces": true
   },

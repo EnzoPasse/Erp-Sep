@@ -13,6 +13,7 @@ import { Account } from 'app/core/auth/account.model';
 export class HomeComponent implements OnInit, OnDestroy {
   account: Account | null = null;
   authSubscription?: Subscription;
+  today = Date.now();
 
   constructor(private accountService: AccountService, private router: Router) {}
 
