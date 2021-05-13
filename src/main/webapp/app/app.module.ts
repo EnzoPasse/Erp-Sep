@@ -14,12 +14,13 @@ import { ApplicationConfigService } from 'app/core/config/application-config.ser
 import './config/dayjs';
 import { SharedModule } from 'app/shared/shared.module';
 import { AppRoutingModule } from './app-routing.module';
-import { HomeModule } from './home/home.module';
-import { EntityRoutingModule } from './entities/entity-routing.module';
+
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { NgbDateDayjsAdapter } from './config/datepicker-adapter';
 import { fontAwesomeIcons } from './config/font-awesome-icons';
 import { httpInterceptorProviders } from 'app/core/interceptor/index';
+/* import { HomeModule } from './home/home.module';
+import { EntityRoutingModule } from './entities/entity-routing.module';
 import { MainComponent } from './layouts/main/main.component';
 import { NavbarComponent } from './layouts/navbar/navbar.component';
 import { FooterComponent } from './layouts/footer/footer.component';
@@ -27,52 +28,35 @@ import { PageRibbonComponent } from './layouts/profiles/page-ribbon.component';
 import { ErrorComponent } from './layouts/error/error.component';
 import { SidebarComponent } from './layouts/sidebar/sidebar.component';
 import { AppBreadcrumbComponent } from './layouts/breadcrumb/breadcrumb.component';
-
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
-import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
-
-const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
-  suppressScrollX: true,
-  wheelSpeed: 2,
-  wheelPropagation: true,
-};
+import { AppBlankComponent } from './layouts/blank/blank.component';
+ */
+import { AppComponent } from './app.component';
 
 @NgModule({
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     SharedModule,
-    HomeModule,
+
+    // HomeModule,
     // jhipster-needle-angular-add-module JHipster will add new module here
-    EntityRoutingModule,
     AppRoutingModule,
+
+    // EntityRoutingModule,
     // Set this to true to enable service worker (PWA)
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: false }),
     HttpClientModule,
     NgxWebstorageModule.forRoot({ prefix: 'jhi', separator: '-', caseSensitive: true }),
-    PerfectScrollbarModule,
   ],
   providers: [
     Title,
     { provide: LOCALE_ID, useValue: 'es' },
     { provide: NgbDateAdapter, useClass: NgbDateDayjsAdapter },
-    {
-      provide: PERFECT_SCROLLBAR_CONFIG,
-      useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
-    },
+
     httpInterceptorProviders,
   ],
-  declarations: [
-    MainComponent,
-    NavbarComponent,
-    ErrorComponent,
-    PageRibbonComponent,
-    FooterComponent,
-    SidebarComponent,
-    AppBreadcrumbComponent,
-  ],
-  bootstrap: [MainComponent],
+  declarations: [AppComponent],
+  bootstrap: [AppComponent],
 })
 export class AppModule {
   constructor(applicationConfigService: ApplicationConfigService, iconLibrary: FaIconLibrary, dpConfig: NgbDatepickerConfig) {
