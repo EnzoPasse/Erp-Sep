@@ -1,3 +1,4 @@
+<!--  JHISPTER
 <div>
   <div class="row justify-content-center">
     <div class="col-lg-6 col-md-8 col-sm-10">
@@ -51,5 +52,85 @@
         <a class="alert-link" routerLink="/account/register">Register a new account</a>
       </div>
     </div>
+  </div>
+</div>
+ -->
+
+<div class="login-register" style="background-image: url(content/images/bg-financial.jpg)">
+  <div class="login-register-box">
+    <mat-card>
+      <mat-card-content>
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
+          <div class="text-center">
+            <img alt="homepage" src="content/images/logo-icon.png" />
+            <h4 class="m-t-0">Ingresar a ERP-SEP</h4>
+          </div>
+
+          <div fxLayout="row wrap">
+            <!-- col full-->
+            <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+              <mat-form-field appearance="outline">
+                <mat-label>Usuario </mat-label>
+                <input matInput [formControl]="loginForm.controls['username']" />
+              </mat-form-field>
+              <small
+                *ngIf="loginForm.controls['username'].hasError('required') && loginForm.controls['username'].touched"
+                class="text-danger support-text"
+                >Usuario necesario.</small
+              >
+            </div>
+            <!-- col full-->
+            <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+              <mat-form-field appearance="outline">
+                <mat-label>Contraseña </mat-label>
+                <input matInput type="password" [formControl]="loginForm.controls['password']" />
+              </mat-form-field>
+              <small
+                *ngIf="loginForm.controls['password'].hasError('required') && loginForm.controls['password'].touched"
+                class="text-danger support-text"
+                >Contraseña requerido.</small
+              >
+            </div>
+
+            <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+              <mat-form-field appearance="outline">
+                <mat-label for="select">Periodo Contable </mat-label>
+                <mat-select formControlName="periodo" aria-describedby="periodoHelp">
+                  <mat-option disabled selected [value]="">Período del Ejercicio Contable</mat-option>
+                  <!--  <option *ngFor="let item of periods" [ngValue]="item">{{ item.nombre }} <small>[{{item.fechaDesde}} - {{item.fechaHasta}}]</small></option> -->
+                </mat-select>
+              </mat-form-field>
+              <small
+                *ngIf="loginForm.controls['periodo'].hasError('required') && loginForm.controls['periodo'].touched"
+                class="text-danger support-text"
+                >Periodo requerido.</small
+              >
+            </div>
+
+            <!-- col half-->
+            <div fxFlex.gt-sm="50" fxFlex.gt-xs="50">
+              <mat-checkbox color="warn">Recuérdame</mat-checkbox>
+            </div>
+            <!-- col half-->
+            <!--   <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" class="text-right">
+                          <a [routerLink]="['/authentication/forgot']" class="link">Forgot pwd?</a>
+                      </div> -->
+            <!-- col full-->
+            <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+              <button mat-raised-button color="primary" class="btn-block btn-lg m-t-20 m-b-20" type="submit" [disabled]="!loginForm.valid">
+                Login
+              </button>
+            </div>
+            <!-- col full-->
+            <!--  <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" class="text-center">
+                          <span>Don't have an account?
+                              <a [routerLink]="['/authentication/register']" class="text-info link">Register</a>
+                          </span>
+                      </div> -->
+            <span> Ingrese su Usuario, Contraseña y el Perìodo del ejercicio Contable </span>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
   </div>
 </div>

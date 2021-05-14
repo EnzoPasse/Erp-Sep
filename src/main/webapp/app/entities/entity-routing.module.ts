@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
 import { errorRoute } from 'app/layouts/error/error.route';
 import { MainComponent } from 'app/layouts/main/main.component';
 
@@ -15,7 +14,6 @@ const LAYOUT_ROUTES: Routes = [
       {
         path: 'admin',
         data: {
-          // authorities: [Authority.ADMIN],
           title: 'Admin',
           urls: [{ title: 'admin', url: '/admin1' }, { title: 'ADMIN' }],
         },

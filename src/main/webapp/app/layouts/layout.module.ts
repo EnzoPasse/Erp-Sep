@@ -22,7 +22,12 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 };
 
 @NgModule({
-  imports: [SharedModule, RouterModule, EntityRoutingModule, PerfectScrollbarModule],
+  imports: [
+    SharedModule,
+    RouterModule,
+    EntityRoutingModule, // se llama al modulo de las rutas de las entidades aqui
+    PerfectScrollbarModule,
+  ],
   declarations: [
     MainComponent,
     NavbarComponent,
