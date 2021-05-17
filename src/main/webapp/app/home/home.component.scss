@@ -1,6 +1,4 @@
-/* ==========================================================================
-Main page styles
-========================================================================== */
+/* JHIPSTER
 
 .hipster {
   display: inline-block;
@@ -10,7 +8,7 @@ Main page styles
   background-size: contain;
 }
 
-/* wait autoprefixer update to allow simple generation of high pixel density media query */
+
 @media only screen and (-webkit-min-device-pixel-ratio: 2),
   only screen and (-moz-min-device-pixel-ratio: 2),
   only screen and (-o-min-device-pixel-ratio: 2/1),
@@ -19,5 +17,58 @@ Main page styles
   .hipster {
     background: url('../../content/images/jhipster_family_member_3.svg') no-repeat center top;
     background-size: contain;
+  }
+}
+*/
+
+.copy-right {
+  text-align: center;
+  color: gray;
+  margin: 0px 10px 0px 10px;
+}
+
+.title-text {
+  color: white;
+  font-size: xx-large;
+  font-weight: 500;
+  margin-bottom: 0%;
+  text-align: center;
+}
+
+.subtitle-text {
+  color: lightgray;
+  font-size: x-large;
+  font-weight: 300;
+  margin: 0% 10px 0px 10px;
+}
+.img-cover {
+  max-width: 100%;
+  object-fit: cover;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+
+.container {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .title-text {
+    font-size: large;
+    font-weight: 700;
+  }
+
+  .subtitle-text {
+    font-size: medium;
+    font-weight: 500;
+  }
+  .copy-right {
+    font-size: small;
   }
 }

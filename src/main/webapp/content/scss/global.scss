@@ -1,10 +1,10 @@
+/* JHIPSTER
+
 @import 'bootstrap-variables';
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 
-/* ==============================================================
-Bootstrap tweaks
-===============================================================*/
+
 
 body,
 h1,
@@ -14,7 +14,7 @@ h4 {
   font-weight: 300;
 }
 
-/* Increase contrast of links to get 100% on Lighthouse Accessability Audit. Override this color if you want to change the link color, or use a Bootswatch theme */
+
 a {
   color: #533f03;
   font-weight: bold;
@@ -24,18 +24,18 @@ a:hover {
   color: #533f03;
 }
 
-/* override hover color for dropdown-item forced by bootstrap to all a:not([href]):not([tabindex]) elements in _reboot.scss */
+
 a:not([href]):not([tabindex]):hover.dropdown-item {
   color: $dropdown-link-hover-color;
 }
 
-/* override .dropdown-item.active background-color on hover */
+
 .dropdown-item.active:hover {
   background-color: mix($dropdown-link-hover-bg, $dropdown-link-active-bg, 50%);
 }
 
 a:hover {
-  /* make sure browsers use the pointer cursor for anchors, even with no href */
+
   cursor: pointer;
 }
 
@@ -43,9 +43,7 @@ a:hover {
   color: $dropdown-link-hover-color;
 }
 
-/* ==========================================================================
-Browser Upgrade Prompt
-========================================================================== */
+
 .browserupgrade {
   margin: 0.2em 0;
   background: #ccc;
@@ -53,11 +51,6 @@ Browser Upgrade Prompt
   padding: 0.2em 0;
 }
 
-/* ==========================================================================
-Generic styles
-========================================================================== */
-
-/* Error highlight on input fields */
 .ng-valid[required],
 .ng-valid.required {
   border-left: 5px solid green;
@@ -67,7 +60,7 @@ Generic styles
   border-left: 5px solid red;
 }
 
-/* other generic styles */
+
 
 .jh-card {
   padding: 1.5%;
@@ -111,9 +104,7 @@ Generic styles
   cursor: pointer;
 }
 
-/* ==========================================================================
-Custom alerts for notification
-========================================================================== */
+
 .alerts {
   .alert {
     text-overflow: ellipsis;
@@ -153,9 +144,7 @@ Custom alerts for notification
   }
 }
 
-/* ==========================================================================
-entity detail page css
-========================================================================== */
+
 .row-md.jh-entity-details {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -182,9 +171,7 @@ entity detail page css
   }
 }
 
-/* ==========================================================================
-ui bootstrap tweaks
-========================================================================== */
+
 .nav,
 .pagination,
 .carousel,
@@ -199,4 +186,4 @@ ui bootstrap tweaks
   white-space: nowrap;
 }
 
-/* jhipster-needle-scss-add-main JHipster will add new css style */
+*/

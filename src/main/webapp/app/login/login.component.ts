@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginService } from 'app/login/login.service';
 import { AccountService } from 'app/core/auth/account.service';
+import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
 
 @Component({
   selector: 'jhi-login',
@@ -17,6 +18,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   loginForm = this.fb.group({
     username: [null, [Validators.required]],
     password: [null, [Validators.required]],
+    periodo: [null],
     rememberMe: [false],
   });
 
@@ -43,10 +45,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   login(): void {
-    this.loginService
+    /*  this.loginService
       .login({
         username: this.loginForm.get('username')!.value,
         password: this.loginForm.get('password')!.value,
+        // periodo:this.loginForm.get('periodo')!.value,
         rememberMe: this.loginForm.get('rememberMe')!.value,
       })
       .subscribe(
@@ -58,6 +61,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
           }
         },
         () => (this.authenticationError = true)
-      );
+      ); */
+
+    this.router.navigate(['']);
   }
 }
