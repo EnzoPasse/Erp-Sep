@@ -28,7 +28,7 @@ export class AuthServerProvider {
 
   login(credentials: Login): Observable<void> {
     return this.http
-      .post<JwtToken>(this.applicationConfigService.getEndpointFor('api/authenticate'), credentials)
+      .post(this.applicationConfigService.getEndpointFor('login/authenticate'), credentials)
       .pipe(map(response => this.authenticateSuccess(response, credentials.rememberMe)));
   }
 
@@ -40,8 +40,11 @@ export class AuthServerProvider {
     });
   }
 
-  private authenticateSuccess(response: JwtToken, rememberMe: boolean): void {
-    const jwt = response.id_token;
+  private authenticateSuccess(response: any, rememberMe: boolean): void {
+    // eslint-disable-next-line no-console
+    console.log(response);
+
+    const jwt = response.token;
     if (rememberMe) {
       this.$localStorage.store('authenticationToken', jwt);
       this.$sessionStorage.clear('authenticationToken');

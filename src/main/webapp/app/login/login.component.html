@@ -71,7 +71,7 @@
             <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
               <mat-form-field appearance="outline">
                 <mat-label>Usuario </mat-label>
-                <input matInput [formControl]="loginForm.controls['username']" />
+                <input matInput [formControl]="loginForm.controls['username']" #username />
               </mat-form-field>
               <small
                 *ngIf="loginForm.controls['username'].hasError('required') && loginForm.controls['username'].touched"
@@ -97,7 +97,9 @@
                 <mat-label for="select">Periodo Contable </mat-label>
                 <mat-select formControlName="periodo" aria-describedby="periodoHelp">
                   <mat-option disabled selected [value]="">Período del Ejercicio Contable</mat-option>
-                  <!--  <option *ngFor="let item of periods" [ngValue]="item">{{ item.nombre }} <small>[{{item.fechaDesde}} - {{item.fechaHasta}}]</small></option> -->
+                  <mat-option *ngFor="let item of periods" [value]="item"
+                    >{{ item.nombre }} <small>[{{ item.fechaDesde }} - {{ item.fechaHasta }}]</small></mat-option
+                  >
                 </mat-select>
               </mat-form-field>
               <small
@@ -109,7 +111,7 @@
 
             <!-- col half-->
             <div fxFlex.gt-sm="50" fxFlex.gt-xs="50">
-              <mat-checkbox color="warn">Recuérdame</mat-checkbox>
+              <mat-checkbox color="warn" formControlName="rememberMe">Recuérdame</mat-checkbox>
             </div>
             <!-- col half-->
             <!--   <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" class="text-right">
@@ -127,7 +129,9 @@
                               <a [routerLink]="['/authentication/register']" class="text-info link">Register</a>
                           </span>
                       </div> -->
-            <span> Ingrese su Usuario, Contraseña y el Perìodo del ejercicio Contable </span>
+            <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" class="text-center">
+              <span class="text-center text-danger" *ngIf="authenticationError"> <strong> Credenciales incorrectas</strong></span>
+            </div>
           </div>
         </form>
       </mat-card-content>
