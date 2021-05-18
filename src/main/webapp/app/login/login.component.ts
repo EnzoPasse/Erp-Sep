@@ -15,10 +15,12 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   authenticationError = false;
 
+  periods: any[] = [];
+
   loginForm = this.fb.group({
     username: [null, [Validators.required]],
     password: [null, [Validators.required]],
-    periodo: [null],
+    periodo: [null, [Validators.required]],
     rememberMe: [false],
   });
 
@@ -30,6 +32,9 @@ export class LoginComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
+    // load the accounting periods
+    this.accountService.getAllPeriod().subscribe(period => (this.periods = period));
+
     // if already authenticated then navigate to home page
     this.accountService.identity().subscribe(() => {
       if (this.accountService.isAuthenticated()) {
@@ -45,11 +50,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   login(): void {
-    /*  this.loginService
+    this.loginService
       .login({
-        username: this.loginForm.get('username')!.value,
-        password: this.loginForm.get('password')!.value,
-        // periodo:this.loginForm.get('periodo')!.value,
+        nombre: this.loginForm.get('username')!.value,
+        clave: this.loginForm.get('password')!.value,
+        idPeriodoContable: this.loginForm.get('periodo')!.value.id,
         rememberMe: this.loginForm.get('rememberMe')!.value,
       })
       .subscribe(
@@ -61,8 +66,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
           }
         },
         () => (this.authenticationError = true)
-      ); */
+      );
 
-    this.router.navigate(['']);
+    //this.router.navigate(['']);
   }
 }
