@@ -7,6 +7,7 @@ import { shareReplay, tap, catchError } from 'rxjs/operators';
 import { StateStorageService } from 'app/core/auth/state-storage.service';
 import { ApplicationConfigService } from '../config/application-config.service';
 import { Account } from 'app/core/auth/account.model';
+import { AccountPeriod } from './accountingPeriod.model';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
@@ -67,6 +68,10 @@ export class AccountService {
 
   getImageUrl(): string {
     return this.userIdentity?.imageUrl ?? '';
+  }
+
+  getAllPeriod(): Observable<AccountPeriod[]> {
+    return this.http.get<AccountPeriod[]>(this.applicationConfigService.getEndpointFor('login/getperiodoContable'));
   }
 
   private fetch(): Observable<Account> {
