@@ -30,7 +30,7 @@
     "watch": "concurrently npm:start",
     "webapp:build": "npm run clean-www && npm run webapp:build:dev",
     "webapp:build:dev": "ng build",
-    "webapp:build:prod": "ng build --prod",
+    "webapp:build:prod": "ng build --prod --base-href=/erp-sep",
     "webapp:dev": "ng serve",
     "webapp:dev-verbose": "ng serve --verbose",
     "webapp:prod": "npm run clean-www && npm run webapp:build:prod",
