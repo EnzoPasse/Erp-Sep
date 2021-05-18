@@ -5,6 +5,7 @@
   "description": "Description for ErpSep",
   "license": "UNLICENSED",
   "scripts": {
+    "deploy": "npm build --prod --base-href=/erp-sep/",
     "prettier:check": "prettier --check \"{,src/**/,webpack/}*.{md,json,yml,html,js,ts,tsx,css,scss}\"",
     "prettier:format": "prettier --write \"{,src/**/,webpack/}*.{md,json,yml,html,js,ts,tsx,css,scss}\"",
     "lint": "eslint . --ext .js,.ts",
