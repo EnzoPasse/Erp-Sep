@@ -5,7 +5,6 @@
   "description": "Description for ErpSep",
   "license": "UNLICENSED",
   "scripts": {
-    "deploy": "npm build --prod --base-href=/erp-sep/",
     "prettier:check": "prettier --check \"{,src/**/,webpack/}*.{md,json,yml,html,js,ts,tsx,css,scss}\"",
     "prettier:format": "prettier --write \"{,src/**/,webpack/}*.{md,json,yml,html,js,ts,tsx,css,scss}\"",
     "lint": "eslint . --ext .js,.ts",
@@ -30,7 +29,7 @@
     "watch": "concurrently npm:start",
     "webapp:build": "npm run clean-www && npm run webapp:build:dev",
     "webapp:build:dev": "ng build",
-    "webapp:build:prod": "ng build --prod --base-href=https://enzopasse.github.io/Erp-Sep/",
+    "webapp:build:prod": "ng build --prod",
     "webapp:dev": "ng serve",
     "webapp:dev-verbose": "ng serve --verbose",
     "webapp:prod": "npm run clean-www && npm run webapp:build:prod",
