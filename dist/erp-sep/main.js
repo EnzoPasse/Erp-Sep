@@ -1969,7 +1969,7 @@ const VERSION = 'DEV';
 const DEBUG_INFO_ENABLED = Boolean(true);
 // export const SERVER_API_URL = process.env.SERVER_API_URL ?? '';
 const SERVER_API_URL = 'http://190.226.45.26:82/webapierp/api/'; // TODO: aca se cambia la url base
-const BUILD_TIMESTAMP = '1621435384217';
+const BUILD_TIMESTAMP = '1621436352219';
 
 
 /***/ }),
