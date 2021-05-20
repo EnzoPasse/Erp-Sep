@@ -21,4 +21,4 @@ function setupProxy() {
   return conf;
 }
 
-module.exports = setupProxy();
+/* module.exports = setupProxy(); */

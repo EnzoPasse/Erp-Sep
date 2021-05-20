@@ -1,3 +1,4 @@
+/* 
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
@@ -47,3 +48,4 @@ export class SettingsComponent implements OnInit {
     });
   }
 }
+ */

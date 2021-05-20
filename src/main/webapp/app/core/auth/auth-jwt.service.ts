@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
 
 import { ApplicationConfigService } from '../config/application-config.service';
 import { Login } from 'app/login/login.model';
+import { SERVER_API_URL } from 'app/app.constants';
+import { Account } from './account.model';
+import { AccountAdaper } from './account-adapter';
 
-type JwtToken = {
-  id_token: string;
-};
+const URL_LOGIN = `${SERVER_API_URL}/login`;
 
 @Injectable({ providedIn: 'root' })
 export class AuthServerProvider {
@@ -17,7 +18,8 @@ export class AuthServerProvider {
     private http: HttpClient,
     private $localStorage: LocalStorageService,
     private $sessionStorage: SessionStorageService,
-    private applicationConfigService: ApplicationConfigService
+    private applicationConfigService: ApplicationConfigService,
+    private accountAdapter: AccountAdaper
   ) {}
 
   getToken(): string {
@@ -26,10 +28,15 @@ export class AuthServerProvider {
     return tokenInLocalStorage ?? tokenInSessionStorage ?? '';
   }
 
-  login(credentials: Login): Observable<void> {
-    return this.http
-      .post(this.applicationConfigService.getEndpointFor('login/authenticate'), credentials)
-      .pipe(map(response => this.authenticateSuccess(response, credentials.rememberMe)));
+  login(credentials: Login): Observable<Account> {
+    /*  return this.http
+       .post<Account>(this.applicationConfigService.getEndpointFor('login/authenticate'), credentials)
+       .pipe(map(response => this.authenticateSuccess(response, credentials.rememberMe))); */
+    const url = `${URL_LOGIN}/authenticate`;
+    return this.http.post<Account>(url, credentials).pipe(
+      map(data => this.accountAdapter.adapter(data)),
+      tap(response => this.authenticateSuccess(response, credentials.rememberMe))
+    );
   }
 
   logout(): Observable<void> {

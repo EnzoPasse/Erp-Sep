@@ -124,10 +124,11 @@ public languages: any[] = [{
   }
 
   ngOnInit(): void {
-    this.profileService.getProfileInfo().subscribe(profileInfo => {
+    /*  this.profileService.getProfileInfo().subscribe(profileInfo => {
       this.inProduction = profileInfo.inProduction;
       this.openAPIEnabled = profileInfo.openAPIEnabled;
-    });
+    }); */
+    true;
   }
 
   collapseNavbar(): void {
