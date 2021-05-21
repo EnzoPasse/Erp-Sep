@@ -14,14 +14,14 @@ import { AccountService } from './account.service';
 
 function accountWithAuthorities(authorities: string[]): Account {
   return {
-    activated: true,
-    authorities,
-    email: '',
-    firstName: '',
-    langKey: '',
-    lastName: '',
-    login: '',
-    imageUrl: '',
+    id: 1,
+    idPeriodoContable: 9,
+    activo: 1,
+    permisosNombre: [],
+    nombre: '',
+    nombreCompreto: '',
+    token: '',
+    imagenUrl: '',
   };
 }
 

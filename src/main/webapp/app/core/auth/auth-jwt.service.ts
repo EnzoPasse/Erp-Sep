@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
 
-import { ApplicationConfigService } from '../config/application-config.service';
+// import { ApplicationConfigService } from '../config/application-config.service';
 import { Login } from 'app/login/login.model';
 import { SERVER_API_URL } from 'app/app.constants';
 import { Account } from './account.model';
@@ -18,7 +18,7 @@ export class AuthServerProvider {
     private http: HttpClient,
     private $localStorage: LocalStorageService,
     private $sessionStorage: SessionStorageService,
-    private applicationConfigService: ApplicationConfigService,
+    // private applicationConfigService: ApplicationConfigService,
     private accountAdapter: AccountAdaper
   ) {}
 
@@ -33,6 +33,7 @@ export class AuthServerProvider {
        .post<Account>(this.applicationConfigService.getEndpointFor('login/authenticate'), credentials)
        .pipe(map(response => this.authenticateSuccess(response, credentials.rememberMe))); */
     const url = `${URL_LOGIN}/authenticate`;
+
     return this.http.post<Account>(url, credentials).pipe(
       map(data => this.accountAdapter.adapter(data)),
       tap(response => this.authenticateSuccess(response, credentials.rememberMe))

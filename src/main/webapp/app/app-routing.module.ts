@@ -3,7 +3,8 @@ import { RouterModule } from '@angular/router';
 // import { errorRoute } from './layouts/error/error.route';
 // import { navbarRoute } from './layouts/navbar/navbar.route';
 import { DEBUG_INFO_ENABLED } from 'app/app.constants';
-import { UserRouteAccessService } from './core/auth/user-route-access.service';
+import { AuthGuard } from './core/auth/auth.guard';
+// import { UserRouteAccessService } from './core/auth/user-route-access.service';
 // import { Authority } from 'app/config/authority.constants';
 
 // import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
@@ -48,7 +49,7 @@ const ROUTES = [
 
   {
     path: '',
-    canActivate: [UserRouteAccessService],
+    canActivate: [AuthGuard],
     loadChildren: () => import('./layouts/layout.module').then(m => m.LayoutModule),
   },
 
