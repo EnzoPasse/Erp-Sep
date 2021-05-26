@@ -101,17 +101,12 @@ const MENUITEMS = [
   },
 
   {
-    state: 'authentication',
-    name: 'Authentication',
+    state: 'admin',
+    name: 'Documentacion',
     type: 'sub',
-    icon: 'perm_contact_calendar',
-    children: [
-      { state: 'login', name: 'Login', type: 'link' },
-      { state: 'register', name: 'Register', type: 'link' },
-      { state: 'forgot', name: 'Forgot', type: 'link' },
-      { state: 'lockscreen', name: 'Lockscreen', type: 'link' },
-      { state: '404', name: 'Error', type: 'link' },
-    ],
+    icon: 'description',
+    permission: '',
+    children: [{ state: 'docs', name: 'API-SWAGGER', type: 'link', permission: '' }],
   },
 
   /*  MULTINIVEL  

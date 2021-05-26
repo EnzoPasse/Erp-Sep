@@ -13,7 +13,10 @@
 
     <script src="./swagger-ui-bundle.js"></script>
     <script src="./swagger-ui-standalone-preset.js"></script>
-    <script src="./axios.min.js"></script>
+
+    <!-- JHIPSTER SCRIPTS
+     
+    <script src="./axios.min.js"></script> 
 
     <script type="text/javascript">
       const AlwaysEnableTryItOutPlugin = function (system) {
@@ -32,7 +35,7 @@
       };
       window.onload = function () {
         var urls = [];
-        axios.get('/swagger-resources').then(function (response) {
+        axios.get('http://190.226.45.26/WebApiERP/swagger/docs/v1').then(function (response) {
           response.data.forEach(function (resource) {
             urls.push({ name: resource.name, url: resource.location });
           });
@@ -61,7 +64,7 @@
               var authToken = localStorage.getItem('jhi-authenticationToken') || sessionStorage.getItem('jhi-authenticationToken');
               if (authToken) {
                 authToken = JSON.parse(authToken);
-                req.headers['Authorization'] = 'Bearer ' + authToken;
+                req.headers['Authorization'] =  authToken;
               }
               // Remove the sample Swagger UI request body if present
               if (
@@ -76,6 +79,29 @@
 
           window.ui = ui;
         });
+      };
+    </script> 
+  
+  END JHIPSTER SCRIPTS
+
+-->
+
+    <script>
+      window.onload = function () {
+        // Begin Swagger UI call region
+        const ui = SwaggerUIBundle({
+          url: 'http://190.226.45.26/WebApiERP/swagger/docs/v1',
+          dom_id: '#swagger-ui',
+          deepLinking: true,
+          filter: true,
+          docExpansion: 'none',
+          presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
+          plugins: [SwaggerUIBundle.plugins.DownloadUrl],
+          layout: 'StandaloneLayout',
+        });
+        // End Swagger UI call region
+
+        window.ui = ui;
       };
     </script>
   </body>
