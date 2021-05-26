@@ -67,6 +67,6 @@ export class LoginComponent implements OnInit, AfterContentInit {
         () => (this.authenticationError = true)
       );
 
-    //this.router.navigate(['']);
+    // this.router.navigate(['']);
   }
 }
