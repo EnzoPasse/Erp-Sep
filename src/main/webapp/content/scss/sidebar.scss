@@ -115,6 +115,14 @@ Main sidebar
         vertical-align: middle;
         transform: scale(0.4);
       }
+
+      &:focus {
+        color: $themecolor;
+        font-weight: bold;
+        mat-icon {
+          color: $themecolor;
+        }
+      }
     }
 
     .child-sub-item {

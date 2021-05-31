@@ -22,6 +22,22 @@ $border: rgba(0, 0, 0, 0.12);
 /* This is for the navigation*/
 #snav {
   .mat-nav-list .mat-list-item {
+    .mat-list-item-content {
+      display: block;
+      padding: 0px 15px;
+
+      &:hover {
+        background: none;
+
+        > a {
+          color: $white;
+          mat-icon {
+            color: $white;
+          }
+        }
+      }
+    }
+
     a {
       color: $sidebar-text;
       mat-icon {
@@ -30,6 +46,17 @@ $border: rgba(0, 0, 0, 0.12);
     }
     &.selected .sub-item .mat-list-item-content a.selected {
       color: $white;
+    }
+  }
+
+  .mat-nav-list .sub-item {
+    a {
+      &:focus {
+        color: $white;
+        mat-icon {
+          color: $white;
+        }
+      }
     }
   }
 }
