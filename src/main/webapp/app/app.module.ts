@@ -19,17 +19,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { NgbDateDayjsAdapter } from './config/datepicker-adapter';
 import { fontAwesomeIcons } from './config/font-awesome-icons';
 import { httpInterceptorProviders } from 'app/core/interceptor/index';
-/* import { HomeModule } from './home/home.module';
-import { EntityRoutingModule } from './entities/entity-routing.module';
-import { MainComponent } from './layouts/main/main.component';
-import { NavbarComponent } from './layouts/navbar/navbar.component';
-import { FooterComponent } from './layouts/footer/footer.component';
-import { PageRibbonComponent } from './layouts/profiles/page-ribbon.component';
-import { ErrorComponent } from './layouts/error/error.component';
-import { SidebarComponent } from './layouts/sidebar/sidebar.component';
-import { AppBreadcrumbComponent } from './layouts/breadcrumb/breadcrumb.component';
-import { AppBlankComponent } from './layouts/blank/blank.component';
- */
+
 import { AppComponent } from './app.component';
 
 @NgModule({

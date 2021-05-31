@@ -60,6 +60,8 @@
   <div class="login-register-box">
     <mat-card>
       <mat-card-content>
+        <jhi-alert-error></jhi-alert-error>
+
         <form [formGroup]="loginForm" (ngSubmit)="login()">
           <div class="text-center">
             <img alt="homepage" src="content/images/logo-icon.png" />
@@ -129,9 +131,9 @@
                               <a [routerLink]="['/authentication/register']" class="text-info link">Register</a>
                           </span>
                       </div> -->
-            <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" class="text-center">
+            <!--  <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" class="text-center">
               <span class="text-center text-danger" *ngIf="authenticationError"> <strong> Credenciales incorrectas</strong></span>
-            </div>
+            </div> -->
           </div>
         </form>
       </mat-card-content>

@@ -1,7 +1,21 @@
-<div class="alerts" role="alert">
+<!-- <div class="alerts" role="alert">
   <div *ngFor="let alert of alerts" [ngClass]="setClasses(alert)">
     <ngb-alert *ngIf="alert.message" [type]="alert.type" (closed)="close(alert)">
       <pre [innerHTML]="alert.message"></pre>
     </ngb-alert>
   </div>
 </div>
+ -->
+
+<div *ngFor="let alert of alerts">
+  <!-- <div class="alert" [ngClass]="alert.type === 'warning'? 'bg-warning' : 'bg-danger' " > -->
+  <div [ngClass]="setClasses(alert)">
+    <button mat-icon-button (click)="close(alert)">
+      <mat-icon>clear</mat-icon>
+    </button>
+    <div class="message-content">
+      <pre>  <strong>{{alert.message}} </strong> </pre>
+    </div>
+  </div>
+</div>
+<!-- [style.background-color]="alert.type === 'danger' ? 'red' : (alert.type === 'warning'? 'orange' : null)" -->

@@ -16,11 +16,12 @@ export class AlertComponent implements OnInit, OnDestroy {
   }
 
   setClasses(alert: Alert): { [key: string]: boolean } {
-    const classes = { 'jhi-toast': Boolean(alert.toast) };
+    const classes = { 'jhi-toast': true };
+    /* const classes = { 'jhi-toast': Boolean(alert.toast) };
     if (alert.position) {
       return { ...classes, [alert.position]: true };
     }
-    return classes;
+ */ return classes;
   }
 
   ngOnDestroy(): void {
