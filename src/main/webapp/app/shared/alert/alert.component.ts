@@ -1,34 +1,29 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { MatSnackBarRef, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 
 import { AlertService, Alert } from 'app/core/util/alert.service';
 
 @Component({
   selector: 'jhi-alert',
   templateUrl: './alert.component.html',
+  styleUrls: ['./alert.component.scss'],
 })
-export class AlertComponent implements OnInit, OnDestroy {
+export class AlertComponent {
   alerts: Alert[] = [];
 
-  constructor(private alertService: AlertService) {}
+  constructor(@Inject(MAT_SNACK_BAR_DATA) public data: any, public snackBarRef: MatSnackBarRef<AlertComponent>) {}
 
-  ngOnInit(): void {
-    this.alerts = this.alertService.get();
-  }
-
-  setClasses(alert: Alert): { [key: string]: boolean } {
+  /*  setClasses(alert: Alert): { [key: string]: boolean } {
     const classes = { 'jhi-toast': true };
-    /* const classes = { 'jhi-toast': Boolean(alert.toast) };
+     const classes = { 'jhi-toast': Boolean(alert.toast) };
     if (alert.position) {
       return { ...classes, [alert.position]: true };
     }
- */ return classes;
+    return classes;
   }
-
-  ngOnDestroy(): void {
-    this.alertService.clear();
-  }
-
+  
   close(alert: Alert): void {
     alert.close?.(this.alerts);
-  }
+ }
+  */
 }

@@ -1,6 +1,4 @@
-import { ThrowStmt } from '@angular/compiler';
 import { Injectable, SecurityContext, NgZone } from '@angular/core';
-import { MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER } from '@angular/material/autocomplete';
 import { DomSanitizer } from '@angular/platform-browser';
 
 export type AlertType = 'success' | 'danger' | 'warning' | 'info';

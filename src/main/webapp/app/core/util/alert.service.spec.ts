@@ -18,8 +18,6 @@ describe('Alert service test', () => {
           type: 'success',
           message: 'Hello Jhipster',
           timeout: 3000,
-          toast: true,
-          position: 'top left',
         })
       ).toEqual(
         jasmine.objectContaining({
@@ -27,8 +25,6 @@ describe('Alert service test', () => {
           message: 'Hello Jhipster',
           id: 0,
           timeout: 3000,
-          toast: true,
-          position: 'top left',
         } as Alert)
       );
 
@@ -39,8 +35,6 @@ describe('Alert service test', () => {
           message: 'Hello Jhipster',
           id: 0,
           timeout: 3000,
-          toast: true,
-          position: 'top left',
         } as Alert)
       );
     }));
@@ -54,8 +48,6 @@ describe('Alert service test', () => {
               type: 'success',
               message: 'Hello Jhipster',
               timeout: 3000,
-              toast: true,
-              position: 'top left',
             },
             extAlerts
           )
@@ -65,8 +57,6 @@ describe('Alert service test', () => {
             message: 'Hello Jhipster',
             id: 0,
             timeout: 3000,
-            toast: true,
-            position: 'top left',
           } as Alert)
         );
 
@@ -77,8 +67,6 @@ describe('Alert service test', () => {
             message: 'Hello Jhipster',
             id: 0,
             timeout: 3000,
-            toast: true,
-            position: 'top left',
           } as Alert)
         );
       }
@@ -165,8 +153,6 @@ describe('Alert service test', () => {
             type: 'success',
             message: 'Hello Jhipster',
             timeout: 3000,
-            toast: true,
-            position: 'top left',
           },
           []
         )
@@ -176,8 +162,6 @@ describe('Alert service test', () => {
           message: 'Hello Jhipster',
           id: 0,
           timeout: 3000,
-          toast: true,
-          position: 'top left',
         } as Alert)
       );
 
@@ -194,7 +178,7 @@ describe('Alert service test', () => {
     }));
 
     it('should produce a success message with custom position', inject([AlertService], (service: AlertService) => {
-      expect(service.addAlert({ type: 'success', message: 'Hello Jhipster', position: 'bottom left' })).toEqual(
+      expect(service.addAlert({ type: 'success', message: 'Hello Jhipster' })).toEqual(
         jasmine.objectContaining({
           type: 'success',
           message: 'Hello Jhipster',

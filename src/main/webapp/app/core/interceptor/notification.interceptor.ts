@@ -4,10 +4,11 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { AlertService } from 'app/core/util/alert.service';
+import { NotificationService } from '../util/notification.service';
 
 @Injectable()
 export class NotificationInterceptor implements HttpInterceptor {
-  constructor(private alertService: AlertService) {}
+  constructor(private notificationService: NotificationService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
@@ -22,10 +23,7 @@ export class NotificationInterceptor implements HttpInterceptor {
           }
 
           if (alert) {
-            this.alertService.addAlert({
-              type: 'success',
-              message: alert,
-            });
+            this.notificationService.showNotification(alert);
           }
         }
       })

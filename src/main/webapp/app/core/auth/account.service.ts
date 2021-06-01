@@ -85,6 +85,10 @@ export class AccountService {
     return this.http.get<AccountPeriod[]>(this.applicationConfigService.getEndpointFor('login/getperiodoContable'));
   }
 
+  getIdentity(): Account | null {
+    return this.userIdentity;
+  }
+
   /*   private fetch(): Observable<Account> {
     return this.http.get<Account>(this.applicationConfigService.getEndpointFor('api/account'));
   } */
