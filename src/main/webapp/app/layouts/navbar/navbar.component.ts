@@ -149,6 +149,10 @@ public languages: any[] = [{
     this.router.navigate(['/login']);
   }
 
+  settings(): void {
+    this.router.navigate(['/cuenta/configuracion']);
+  }
+
   toggleNavbar(): void {
     this.isNavbarCollapsed = !this.isNavbarCollapsed;
   }

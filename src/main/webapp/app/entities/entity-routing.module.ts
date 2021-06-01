@@ -20,7 +20,7 @@ const LAYOUT_ROUTES: Routes = [
         loadChildren: () => import('../admin/admin-routing.module').then(m => m.AdminRoutingModule),
       },
       {
-        path: 'account',
+        path: 'cuenta',
         loadChildren: () => import('../account/account.module').then(m => m.AccountModule),
       },
 

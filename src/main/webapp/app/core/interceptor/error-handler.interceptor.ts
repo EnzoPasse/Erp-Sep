@@ -13,7 +13,10 @@ export class ErrorHandlerInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       tap({
         error: (err: HttpErrorResponse) => {
-          if (!(err.status === 401 && (err.message === '' || err.url?.includes('api/account')))) {
+          if (![403].includes(err.status) && err.message !== '') {
+            // eslint-disable-next-line no-console
+            console.log(err);
+
             this.eventManager.broadcast(new EventWithContent('erpSepApp.httpError', err));
           }
         },

@@ -18,6 +18,7 @@ export class Account {
     public idPeriodoContable: number,
     public nombre: string,
     public nombreCompreto: string,
+    public clave: string,
     public permisosNombre: string[],
     public imagenUrl: string,
     public token: string

@@ -6,7 +6,6 @@ import { MenuItems } from 'app/shared/menu-items/menu-items';
 @Component({
   selector: 'jhi-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent implements OnDestroy {
   mobileQuery: MediaQueryList;

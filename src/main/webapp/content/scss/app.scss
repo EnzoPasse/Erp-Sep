@@ -15,6 +15,7 @@ File: scss
  *	6. Posts
  *	7. Widgets
  *	8. Custom Templates
+ *  9. Alerts ( by Enzo )
  */
 /******************* 
 Global Styles 
@@ -1182,5 +1183,25 @@ ul.list-style-none {
     background: transparent;
     border: 0;
     color: white;
+  }
+}
+
+/*****************
+ ALERTS 
+ ****************/
+
+.alert {
+  display: block;
+  padding: 1rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  text-align: center;
+  font-family: $bodyfont;
+  color: white;
+
+  button {
+    top: 0;
+    float: right;
   }
 }

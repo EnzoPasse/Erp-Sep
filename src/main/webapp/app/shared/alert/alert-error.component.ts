@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 
 import { AlertError } from './alert-error.model';
-import { Alert, AlertService } from 'app/core/util/alert.service';
+import { Alert, AlertService, AlertType } from 'app/core/util/alert.service';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 
 @Component({
@@ -26,20 +26,20 @@ export class AlertErrorComponent implements OnDestroy {
       switch (httpErrorResponse.status) {
         // connection refused, server not reachable
         case 0:
-          this.addErrorAlert('Server not reachable');
+          this.addErrorAlert('Servidor inactivo');
           break;
 
         case 400: {
           const arr = httpErrorResponse.headers.keys();
           let errorHeader: string | null = null;
           for (const entry of arr) {
-            if (entry.toLowerCase().endsWith('app-error')) {
+            if (entry.toLowerCase().endsWith('messageerp')) {
               errorHeader = httpErrorResponse.headers.get(entry);
             }
           }
           if (errorHeader) {
             this.addErrorAlert(errorHeader);
-          } else if (httpErrorResponse.error !== '' && httpErrorResponse.error.fieldErrors) {
+          } /* else if (httpErrorResponse.error !== '' && httpErrorResponse.error.fieldErrors) {
             const fieldErrors = httpErrorResponse.error.fieldErrors;
             for (const fieldError of fieldErrors) {
               if (['Min', 'Max', 'DecimalMin', 'DecimalMax'].includes(fieldError.message)) {
@@ -49,35 +49,66 @@ export class AlertErrorComponent implements OnDestroy {
               const convertedField: string = fieldError.field.replace(/\[\d*\]/g, '[]');
               const fieldName: string = convertedField.charAt(0).toUpperCase() + convertedField.slice(1);
               this.addErrorAlert(`Error on field "${fieldName}"`);
-            }
-          } else if (httpErrorResponse.error !== '' && httpErrorResponse.error.message) {
+              
+            } 
+          }  else if (httpErrorResponse.error !== '' && httpErrorResponse.error.message) {
             this.addErrorAlert(httpErrorResponse.error.detail ?? httpErrorResponse.error.message);
-          } else {
-            this.addErrorAlert(httpErrorResponse.error);
+          }*/ else {
+            this.addErrorAlert(httpErrorResponse.message ? httpErrorResponse.message : httpErrorResponse.error.message, 'warning');
           }
           break;
         }
 
         case 404:
-          this.addErrorAlert('Not found');
+          this.addErrorAlert('Recurso no encontrado.', 'warning');
           break;
 
-        default:
-          if (httpErrorResponse.error !== '' && httpErrorResponse.error.message) {
-            this.addErrorAlert(httpErrorResponse.error.detail ?? httpErrorResponse.error.message);
-          } else {
-            this.addErrorAlert(httpErrorResponse.error);
+        default: {
+          const arr = httpErrorResponse.headers.keys();
+          let errorHeader: string | null = null;
+          for (const entry of arr) {
+            if (entry.toLowerCase().endsWith('messageerp')) {
+              errorHeader = httpErrorResponse.headers.get(entry);
+            }
           }
+          if (errorHeader) {
+            this.addErrorAlert(errorHeader);
+          }
+        }
+
+        /* if (httpErrorResponse.error !== '' && httpErrorResponse.error.message) {
+          this.addErrorAlert(httpErrorResponse.error.detail ?? httpErrorResponse.error.message);
+        } else {
+          this.addErrorAlert(httpErrorResponse.error);
+        } */
       }
     });
   }
 
-  setClasses(alert: Alert): { [key: string]: boolean } {
+  /* setClasses(alert: Alert): { [key: string]: boolean } {
     const classes = { 'jhi-toast': Boolean(alert.toast) };
     if (alert.position) {
       return { ...classes, [alert.position]: true };
     }
     return classes;
+  } */
+
+  setClasses(alert: Alert): { [key: string]: boolean } {
+    const classes = { alert: true };
+
+    switch (alert.type) {
+      case 'warning':
+        return { ...classes, ['bg-warning']: true };
+
+      case 'info':
+        return { ...classes, ['bg-info']: true };
+
+      case 'success':
+        return { ...classes, ['bg-success']: true };
+
+      default:
+        return { ...classes, ['bg-danger']: true };
+    }
   }
 
   ngOnDestroy(): void {
@@ -89,7 +120,8 @@ export class AlertErrorComponent implements OnDestroy {
     alert.close?.(this.alerts);
   }
 
-  private addErrorAlert(message?: string): void {
-    this.alertService.addAlert({ type: 'danger', message }, this.alerts);
+  private addErrorAlert(message?: string, type?: AlertType): void {
+    this.alertService.addAlert({ type, message }, this.alerts);
+    // this.alertService.addAlert({ type, message, timeout: 0 }, this.alerts);
   }
 }

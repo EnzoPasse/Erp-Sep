@@ -8,8 +8,9 @@ import { ActivateComponent } from './activate/activate.component';
 import { PasswordComponent } from './password/password.component';
 import { PasswordResetInitComponent } from './password-reset/init/password-reset-init.component';
 import { PasswordResetFinishComponent } from './password-reset/finish/password-reset-finish.component';
-// import { SettingsComponent } from './settings/settings.component';
+import { SettingsComponent } from './settings/settings.component';
 import { accountState } from './account.route';
+import { UserInfoComponent } from './user-info/user-info.component';
 
 @NgModule({
   imports: [SharedModule, RouterModule.forChild(accountState)],
@@ -20,7 +21,8 @@ import { accountState } from './account.route';
     PasswordStrengthBarComponent,
     PasswordResetInitComponent,
     PasswordResetFinishComponent,
-    // SettingsComponent,
+    UserInfoComponent,
+    SettingsComponent,
   ],
 })
 export class AccountModule {}

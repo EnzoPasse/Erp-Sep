@@ -21,10 +21,15 @@ export class AuthExpiredInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       tap({
         error: (err: HttpErrorResponse) => {
-          if (err.status === 401 && err.url && !err.url.includes('api/account') && this.accountService.isAuthenticated()) {
+          if ([401, 403].includes(err.status) && err.url && this.accountService.isAuthenticated()) {
             this.stateStorageService.storeUrl(this.router.routerState.snapshot.url);
-            this.loginService.logout();
-            this.router.navigate(['/login']);
+
+            // TODO: hacer el alertService y llamarlo mandando un mensaje de no autorizado y luego sacarlo al login
+
+            setTimeout(() => {
+              this.loginService.logout();
+              this.router.navigate(['/login']);
+            }, 10000);
           }
         },
       })

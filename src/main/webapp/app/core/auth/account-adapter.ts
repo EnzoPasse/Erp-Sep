@@ -12,6 +12,7 @@ export class AccountAdaper implements Adater<Account> {
       item.idPeriodoContable,
       item.nombre,
       item.nombreCompleto,
+      item.clave,
       item.rol.permisosNombre,
       item.imagenUrl || '',
       item.token

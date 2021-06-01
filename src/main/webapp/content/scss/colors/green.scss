@@ -33,4 +33,16 @@ $white: #fff;
       }
     }
   }
+
+  .mat-nav-list .sub-item {
+    a {
+      &:focus {
+        color: $themecolor;
+        font-weight: bold;
+        mat-icon {
+          color: $themecolor;
+        }
+      }
+    }
+  }
 }

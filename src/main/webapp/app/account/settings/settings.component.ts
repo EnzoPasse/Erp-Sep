@@ -49,3 +49,20 @@ export class SettingsComponent implements OnInit {
   }
 }
  */
+
+import { Component, OnInit } from '@angular/core';
+import { Account } from 'app/core/auth/account.model';
+import { AccountService } from 'app/core/auth/account.service';
+
+@Component({
+  selector: 'jhi-settings',
+  templateUrl: './settings.component.html',
+})
+export class SettingsComponent {
+  selectedTab = 0;
+  user: Account | null = null;
+
+  constructor(public accountService: AccountService) {
+    this.user = this.accountService.getIdentity();
+  }
+}

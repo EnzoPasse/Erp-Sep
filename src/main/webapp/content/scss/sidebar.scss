@@ -37,9 +37,9 @@ Main sidebar
         background: none;
 
         > a {
-          color: $themecolor;
+          color: $themecolor-alt;
           mat-icon {
-            color: $themecolor;
+            color: $themecolor-alt;
           }
         }
       }
@@ -114,6 +114,14 @@ Main sidebar
       .mat-icon {
         vertical-align: middle;
         transform: scale(0.4);
+      }
+
+      &:focus {
+        color: $themecolor-alt;
+        font-weight: bold;
+        mat-icon {
+          color: $themecolor-alt;
+        }
       }
     }
 
