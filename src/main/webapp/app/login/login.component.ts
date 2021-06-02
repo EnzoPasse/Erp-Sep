@@ -17,8 +17,8 @@ export class LoginComponent implements OnInit, AfterContentInit {
   periods: any[] = [];
 
   loginForm = this.fb.group({
-    username: [null, [Validators.required]],
-    password: [null, [Validators.required]],
+    username: ['admin', [Validators.required]],
+    password: ['102030', [Validators.required]],
     periodo: [null, [Validators.required]],
     rememberMe: [false],
   });

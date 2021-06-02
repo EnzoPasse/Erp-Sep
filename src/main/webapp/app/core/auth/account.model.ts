@@ -13,14 +13,18 @@
 
 export class Account {
   constructor(
-    public id: number,
-    public activo: number,
-    public idPeriodoContable: number,
-    public nombre: string,
-    public nombreCompreto: string,
-    public clave: string,
-    public permisosNombre: string[],
-    public imagenUrl: string,
-    public token: string
+    public id?: number,
+    public nombre?: string,
+    public nombreCompleto?: string,
+    public clave?: string,
+    public establecimiento?: string,
+    public rol?: string,
+    public grupoTrabajo?: string,
+    public correo?: string,
+    public token?: string,
+    public idPeriodoContable?: number,
+    public cuil?: string,
+    public permisosNombre?: string[],
+    public imagenUrl?: string
   ) {}
 }

@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { AlertService } from 'app/core/util/alert.service';
 import { NotificationService } from '../util/notification.service';
 
 @Injectable()

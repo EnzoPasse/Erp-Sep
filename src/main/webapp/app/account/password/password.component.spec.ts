@@ -37,16 +37,14 @@ describe('Component Tests', () => {
 
     it('should show error if passwords do not match', () => {
       // GIVEN
-      comp.passwordForm.patchValue({
+      comp.changePasswordForm.patchValue({
         newPassword: 'password1',
         confirmPassword: 'password2',
       });
       // WHEN
-      comp.changePassword();
+      comp.save();
       // THEN
-      expect(comp.doNotMatch).toBe(true);
-      expect(comp.error).toBe(false);
-      expect(comp.success).toBe(false);
+      expect(comp.changePasswordForm.valid).toBe(false);
     });
 
     it('should call Auth.changePassword when passwords match', () => {
@@ -58,14 +56,14 @@ describe('Component Tests', () => {
 
       spyOn(service, 'save').and.returnValue(of(new HttpResponse({ body: true })));
 
-      comp.passwordForm.patchValue({
+      comp.changePasswordForm.patchValue({
         currentPassword: passwordValues.currentPassword,
         newPassword: passwordValues.newPassword,
         confirmPassword: passwordValues.newPassword,
       });
 
       // WHEN
-      comp.changePassword();
+      comp.save();
 
       // THEN
       expect(service.save).toHaveBeenCalledWith(passwordValues.newPassword, passwordValues.currentPassword);
@@ -74,35 +72,32 @@ describe('Component Tests', () => {
     it('should set success to true upon success', () => {
       // GIVEN
       spyOn(service, 'save').and.returnValue(of(new HttpResponse({ body: true })));
-      comp.passwordForm.patchValue({
+      comp.changePasswordForm.patchValue({
         newPassword: 'myPassword',
         confirmPassword: 'myPassword',
       });
 
       // WHEN
-      comp.changePassword();
+      comp.save();
 
       // THEN
-      expect(comp.doNotMatch).toBe(false);
-      expect(comp.error).toBe(false);
-      expect(comp.success).toBe(true);
+      expect(comp.isSaving).toBe(true);
+      expect(comp.previousState).toHaveBeenCalled();
     });
 
     it('should notify of error if change password fails', () => {
       // GIVEN
       spyOn(service, 'save').and.returnValue(throwError('ERROR'));
-      comp.passwordForm.patchValue({
+      comp.changePasswordForm.patchValue({
         newPassword: 'myPassword',
         confirmPassword: 'myPassword',
       });
 
       // WHEN
-      comp.changePassword();
+      comp.save();
 
       // THEN
-      expect(comp.doNotMatch).toBe(false);
-      expect(comp.success).toBe(false);
-      expect(comp.error).toBe(true);
+      expect(comp.isSaving).toBe(false);
     });
   });
 });

@@ -115,15 +115,6 @@
   <mat-card-content>
     <mat-tab-group [(selectedIndex)]="selectedTab" mat-align-tabs="rigth">
       <!-- <mat-tab *ngIf="user" [disabled]="!user || !user.id"> -->
-      <mat-tab *ngIf="user">
-        <ng-template mat-tab-label>
-          <mat-icon style="margin-right: 0.5rem"> assignment_ind </mat-icon>
-          Info de Usuario
-        </ng-template>
-        <ng-template matTabContent>
-          <app-user-info></app-user-info>
-        </ng-template>
-      </mat-tab>
 
       <mat-tab *ngIf="user">
         <ng-template mat-tab-label>
@@ -132,6 +123,16 @@
         </ng-template>
         <ng-template matTabContent>
           <jhi-password [user]="user"></jhi-password>
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab *ngIf="user">
+        <ng-template mat-tab-label>
+          <mat-icon style="margin-right: 0.5rem"> assignment_ind </mat-icon>
+          Info de Usuario
+        </ng-template>
+        <ng-template matTabContent>
+          <jhi-user-info [user]="user"></jhi-user-info>
         </ng-template>
       </mat-tab>
     </mat-tab-group>

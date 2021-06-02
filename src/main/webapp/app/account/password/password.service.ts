@@ -8,7 +8,7 @@ import { ApplicationConfigService } from 'app/core/config/application-config.ser
 export class PasswordService {
   constructor(private http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
 
-  save(newPassword: string, currentPassword: string): Observable<{}> {
-    return this.http.post(this.applicationConfigService.getEndpointFor('cambiarClave'), { currentPassword, newPassword });
+  save(claveNueva: string, claveActual: string): Observable<{}> {
+    return this.http.post(this.applicationConfigService.getEndpointFor('cambiarClave'), { claveNueva, claveActual });
   }
 }
