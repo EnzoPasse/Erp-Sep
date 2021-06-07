@@ -23,6 +23,10 @@ export class AlertErrorComponent implements OnDestroy {
 
     this.httpErrorListener = eventManager.subscribe('erpSepApp.httpError', (response: EventWithContent<unknown> | string) => {
       const httpErrorResponse = (response as EventWithContent<HttpErrorResponse>).content;
+
+      // eslint-disable-next-line no-console
+      // console.log(httpErrorResponse.status);
+
       switch (httpErrorResponse.status) {
         // connection refused, server not reachable
         case 0:

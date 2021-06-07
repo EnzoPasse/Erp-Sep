@@ -17,8 +17,8 @@ export class LoginComponent implements OnInit, AfterContentInit {
   periods: any[] = [];
 
   loginForm = this.fb.group({
-    username: [null, [Validators.required]],
-    password: [null, [Validators.required]],
+    username: ['admin', [Validators.required]],
+    password: ['102030', [Validators.required]],
     periodo: [null, [Validators.required]],
     rememberMe: [false],
   });
@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit, AfterContentInit {
     // if already authenticated then navigate to home page
     this.accountService.identity().subscribe(() => {
       if (this.accountService.isAuthenticated()) {
-        this.router.navigate(['']);
+        this.router.navigate(['/home']);
       }
     });
   }
@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit, AfterContentInit {
           this.authenticationError = false;
           if (!this.router.getCurrentNavigation()) {
             // There were no routing during login (eg from navigationToStoredUrl)
-            this.router.navigate(['']);
+            this.router.navigate(['/home']);
           }
         },
         () => (this.authenticationError = true)

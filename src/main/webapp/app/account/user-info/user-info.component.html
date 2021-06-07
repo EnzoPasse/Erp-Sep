@@ -1,1 +1,81 @@
-<p>user-info works!</p>
+<form>
+  <div fxLayout="row wrap" class="align-items-center">
+    <div fxFlex="100" fxFlex.gt-sm="45">
+      <div class="m-15 m-t-30">
+        <img style="max-width: 45%" src="./content/images/user.jpg" alt="user pics" />
+      </div>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="45">
+      <div class="m-15 m-t-30">
+        <mat-form-field>
+          <input matInput type="text" [value]="user?.rol" disabled />
+          <mat-hint align="start">Rol del Usuario</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="45">
+      <div class="m-15">
+        <mat-form-field>
+          <input matInput type="text" [value]="user?.id" disabled />
+          <mat-hint>Id del Usuario</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="45">
+      <div class="m-15">
+        <mat-form-field>
+          <input matInput type="text" [value]="user?.nombre" disabled />
+          <mat-hint align="start">Nombre de Usuario</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="45">
+      <div class="m-15">
+        <mat-form-field>
+          <input matInput type="text" [value]="user?.nombreCompleto" disabled />
+          <mat-hint>Nombre Completo del Usuario</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="45">
+      <div class="m-15">
+        <mat-form-field>
+          <input matInput type="text" [value]="user?.correo" disabled />
+          <mat-hint>Correo del Usuario</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="45">
+      <div class="m-15">
+        <mat-form-field>
+          <input matInput type="text" [value]="user?.cuil" disabled />
+          <mat-hint align="start">Cuil del Usuario</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="45">
+      <div class="m-15">
+        <mat-form-field class="full-width">
+          <input matInput type="text" [value]="user?.establecimiento" disabled />
+          <mat-hint>Establecimiento del Usuario</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="45">
+      <div class="m-15">
+        <mat-form-field class="full-width">
+          <input matInput type="text" [value]="user?.grupoTrabajo" disabled />
+          <mat-hint align="start">Grupo de Trabajo del Usuario</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+</form>

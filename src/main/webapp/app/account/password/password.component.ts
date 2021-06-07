@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
 
 import { Account } from 'app/core/auth/account.model';
 import { PasswordService } from './password.service';
+import { CustomValidators } from 'app/core/util/validators';
 
 @Component({
   selector: 'jhi-password',
@@ -13,11 +13,7 @@ import { PasswordService } from './password.service';
 export class PasswordComponent {
   @Input() user: Account | null = null;
   hide = false;
-
-  doNotMatch = false;
-  error = false;
-  success = false;
-  account$?: Observable<Account | null>;
+  isSaving = false;
 
   changePasswordForm = this.fb.group(
     {
@@ -26,7 +22,7 @@ export class PasswordComponent {
       confirmPsw: ['', [Validators.required]],
     },
     {
-      // validator: CustomValidators.MatchPassword,
+      validator: CustomValidators.MatchPassword,
     }
   );
 
@@ -39,20 +35,20 @@ export class PasswordComponent {
       return;
     }
 
-    this.error = false;
-    this.success = false;
-    this.doNotMatch = false;
-
-    const newPassword = this.changePasswordForm.get(['newPsw'])!.value;
-    if (newPassword !== this.changePasswordForm.get(['confirmPsw'])!.value) {
-      this.doNotMatch = true;
-    } else {
-      this.passwordService.save(newPassword, this.changePasswordForm.get(['currentPsw'])!.value).subscribe(
-        () => (this.success = true),
-        () => (this.error = true)
-      );
-    }
+    this.passwordService.save(this.newPsw?.value, this.currentPsw?.value).subscribe({
+      next: () => {
+        (this.isSaving = true), this.previousState();
+      },
+      error: () => {
+        this.isSaving = false;
+      },
+    });
   }
+
+  previousState(): void {
+    window.history.back();
+  }
+
   get newPsw(): AbstractControl | null {
     return this.changePasswordForm.get('newPsw');
   }

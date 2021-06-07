@@ -50,7 +50,7 @@ export class SettingsComponent implements OnInit {
 }
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Account } from 'app/core/auth/account.model';
 import { AccountService } from 'app/core/auth/account.service';
 

@@ -16,7 +16,7 @@ export class AuthGuard implements CanActivate {
     }
 
     this.stateStorageService.storeUrl(state.url);
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
     return false;
   }
 }

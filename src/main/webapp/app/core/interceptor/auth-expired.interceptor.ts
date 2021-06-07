@@ -28,7 +28,7 @@ export class AuthExpiredInterceptor implements HttpInterceptor {
 
             setTimeout(() => {
               this.loginService.logout();
-              this.router.navigate(['/login']);
+              this.router.navigate(['/auth/login']);
             }, 10000);
           }
         },
