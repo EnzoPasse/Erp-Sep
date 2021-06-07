@@ -19,6 +19,15 @@ const LAYOUT_ROUTES: Routes = [
         },
         loadChildren: () => import('../admin/admin-routing.module').then(m => m.AdminRoutingModule),
       },
+
+      {
+        path: 'usuarios',
+        data: {
+          title: 'Usuarios',
+        },
+        loadChildren: () => import('./user-management/user-management.module').then(m => m.UserManagementModule),
+      },
+
       {
         path: 'cuenta',
         loadChildren: () => import('../account/account.module').then(m => m.AccountModule),

@@ -24,7 +24,7 @@ import { AuthGuard } from './core/auth/auth.guard';
           canActivate: [UserRouteAccessService],
           loadChildren: () => import('./admin/admin-routing.module').then(m => m.AdminRoutingModule),
         },
-        {
+        {// 
           path: 'account',
           loadChildren: () => import('./account/account.module').then(m => m.AccountModule),
         },
@@ -43,7 +43,7 @@ export class AppRoutingModule {} */
 
 const ROUTES = [
   {
-    path: 'login',
+    path: 'auth',
     loadChildren: () => import('./login/login.module').then(m => m.LoginModule),
   },
 
@@ -57,7 +57,8 @@ const ROUTES = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(ROUTES, { enableTracing: DEBUG_INFO_ENABLED, relativeLinkResolution: 'legacy' })],
+  // imports: [RouterModule.forRoot(ROUTES, { enableTracing: DEBUG_INFO_ENABLED, relativeLinkResolution: 'legacy' })],
+  imports: [RouterModule.forRoot(ROUTES, { relativeLinkResolution: 'legacy' })],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

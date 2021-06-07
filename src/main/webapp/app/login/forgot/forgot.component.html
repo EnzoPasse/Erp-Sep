@@ -1,0 +1,32 @@
+<div class="login-register" style="background-image: url(content/images/bg-financial.jpg)">
+  <div class="login-register-box">
+    <mat-card>
+      <mat-card-content>
+        <jhi-alert-error></jhi-alert-error>
+
+        <form [formGroup]="forgotForm" (ngSubmit)="onSubmit()">
+          <div class="text-center">
+            <img alt="homepage" src="content/images/logo-icon.png" />
+            <h4 class="m-t-0">Recuperacion de Contraseña</h4>
+          </div>
+          <p class="text-center font-14">
+            Ingrese su <strong>Usuario</strong> y le enviaremos a su <strong>e-mail</strong> la nueva contraseña
+          </p>
+
+          <div fxLayout="column" fxLayoutAlign="space-around">
+            <div class="pb-1">
+              <mat-form-field style="width: 100%" appearance="outline">
+                <mat-label>Usuario </mat-label>
+                <input matInput formControlName="username" />
+              </mat-form-field>
+              <small> </small>
+            </div>
+            <button mat-raised-button color="primary" type="submit" class="btn-block btn-lg m-t-20" [disabled]="!forgotForm.valid">
+              Enviar
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

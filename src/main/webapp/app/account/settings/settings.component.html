@@ -113,9 +113,9 @@
   </mat-card-header>
 
   <mat-card-content>
-    <mat-tab-group [(selectedIndex)]="selectedTab" mat-align-tabs="rigth">
-      <!-- <mat-tab *ngIf="user" [disabled]="!user || !user.id"> -->
+    <jhi-alert-error></jhi-alert-error>
 
+    <mat-tab-group [(selectedIndex)]="selectedTab" mat-align-tabs="rigth">
       <mat-tab *ngIf="user">
         <ng-template mat-tab-label>
           <mat-icon style="margin-right: 0.5rem"> compare_arrows </mat-icon>
