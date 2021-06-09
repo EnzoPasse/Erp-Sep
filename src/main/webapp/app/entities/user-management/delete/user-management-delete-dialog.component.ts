@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { User } from '../user-management.model';
+import { Usuario } from '../user-management.model';
 import { UserManagementService } from '../service/user-management.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { UserManagementService } from '../service/user-management.service';
   templateUrl: './user-management-delete-dialog.component.html',
 })
 export class UserManagementDeleteDialogComponent {
-  user?: User;
+  user?: Usuario;
 
   constructor(private userService: UserManagementService, public activeModal: NgbActiveModal) {}
 

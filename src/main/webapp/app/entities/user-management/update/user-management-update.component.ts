@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { User } from '../user-management.model';
+import { Usuario } from '../user-management.model';
 import { UserManagementService } from '../service/user-management.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { UserManagementService } from '../service/user-management.service';
   templateUrl: './user-management-update.component.html',
 })
 export class UserManagementUpdateComponent implements OnInit {
-  user!: User;
+  user!: Usuario;
   authorities: string[] = [];
   isSaving = false;
 
@@ -40,7 +40,7 @@ export class UserManagementUpdateComponent implements OnInit {
       if (user) {
         this.user = user;
         if (this.user.id === undefined) {
-          this.user.activated = true;
+          // this.user.activated = true;
         }
         this.updateForm(user);
       }
@@ -61,7 +61,7 @@ export class UserManagementUpdateComponent implements OnInit {
         () => this.onSaveError()
       );
     } else {
-      this.user.langKey = 'en';
+      // this.user.langKey = 'en';
       this.userService.create(this.user).subscribe(
         () => this.onSaveSuccess(),
         () => this.onSaveError()
@@ -69,27 +69,27 @@ export class UserManagementUpdateComponent implements OnInit {
     }
   }
 
-  private updateForm(user: User): void {
+  private updateForm(user: Usuario): void {
     this.editForm.patchValue({
       id: user.id,
-      login: user.login,
+      /*  login: user.login,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
       activated: user.activated,
       langKey: user.langKey,
-      authorities: user.authorities,
+      authorities: user.authorities, */
     });
   }
 
-  private updateUser(user: User): void {
-    user.login = this.editForm.get(['login'])!.value;
+  private updateUser(user: Usuario): void {
+    /*   user.login = this.editForm.get(['login'])!.value;
     user.firstName = this.editForm.get(['firstName'])!.value;
     user.lastName = this.editForm.get(['lastName'])!.value;
     user.email = this.editForm.get(['email'])!.value;
     user.activated = this.editForm.get(['activated'])!.value;
     user.langKey = this.editForm.get(['langKey'])!.value;
-    user.authorities = this.editForm.get(['authorities'])!.value;
+    user.authorities = this.editForm.get(['authorities'])!.value; */
   }
 
   private onSaveSuccess(): void {

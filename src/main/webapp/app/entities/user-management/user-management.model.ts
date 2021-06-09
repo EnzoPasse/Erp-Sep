@@ -1,4 +1,4 @@
-export interface IUser {
+/* export interface IUser {
   id?: number;
   login?: string;
   firstName?: string | null;
@@ -11,7 +11,7 @@ export interface IUser {
   createdDate?: Date;
   lastModifiedBy?: string;
   lastModifiedDate?: Date;
-}
+} 
 
 export class User implements IUser {
   constructor(
@@ -27,5 +27,40 @@ export class User implements IUser {
     public createdDate?: Date,
     public lastModifiedBy?: string,
     public lastModifiedDate?: Date
+  ) {}
+}
+*/
+
+import { Establecimiento } from 'app/shared/modelTodelete/establecimiento.model';
+import { GrupoTrabajo } from 'app/shared/modelTodelete/grupoTrabajo.model';
+import { Rol } from 'app/shared/modelTodelete/rol.model';
+
+export interface IUsuario {
+  id?: number;
+  nombre?: string;
+  nombreCompleto?: string;
+  clave?: string;
+  correo?: string;
+  cuil?: string;
+  token?: string;
+  imgenUrl?: string;
+  rol?: Rol;
+  establecimiento?: Establecimiento;
+  grupoTrabajo?: GrupoTrabajo;
+}
+
+export class Usuario implements IUsuario {
+  constructor(
+    public id?: number,
+    public nombre?: string,
+    public nombreCompleto?: string,
+    public clave?: string,
+    public correo?: string,
+    public cuil?: string,
+    public token?: string,
+    public imagenUrl?: string,
+    public rol?: Rol,
+    public establecimiento?: Establecimiento,
+    public grupoTrabajo?: GrupoTrabajo
   ) {}
 }

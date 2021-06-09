@@ -1,23 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpResponse, HttpHeaders } from '@angular/common/http';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { ITEMS_PER_PAGE } from 'app/config/pagination.constants';
-import { AccountService } from 'app/core/auth/account.service';
-import { Account } from 'app/core/auth/account.model';
+import { MatPaginator } from '@angular/material/paginator';
+import { QueryParamsModel } from 'app/core/request/queryParams.model';
+import { SelectionModel } from '@angular/cdk/collections';
+import { MatSort } from '@angular/material/sort';
+import { UsuarioDataSource } from '../user-datasource';
+import { IUsuario, Usuario } from '../user-management.model';
+import { fromEvent, merge, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import { UserManagementService } from '../service/user-management.service';
-import { User } from '../user-management.model';
-import { UserManagementDeleteDialogComponent } from '../delete/user-management-delete-dialog.component';
 
-@Component({
-  selector: 'jhi-user-mgmt',
-  templateUrl: './user-management.component.html',
-})
-export class UserManagementComponent implements OnInit {
+/* export class UserManagementComponent implements OnInit {
+
   currentAccount: Account | null = null;
-  users: User[] | null = null;
+  users: Usuario[] | null = null;
   isLoading = false;
   totalItems = 0;
   itemsPerPage = ITEMS_PER_PAGE;
@@ -38,26 +35,26 @@ export class UserManagementComponent implements OnInit {
     this.handleNavigation();
   }
 
-  setActive(user: User, isActivated: boolean): void {
-    this.userService.update({ ...user, activated: isActivated }).subscribe(() => this.loadAll());
+  setActive(user: Usuario, isActivated: boolean): void {
+    this.userService.update({ ...user }).subscribe();// => this.loadAll());
   }
 
-  trackIdentity(index: number, item: User): number {
+  trackIdentity(index: number, item: Usuario): number {
     return item.id!;
   }
 
-  deleteUser(user: User): void {
+  deleteUser(user: Usuario): void {
     const modalRef = this.modalService.open(UserManagementDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.user = user;
     // unsubscribe not needed because closed completes on modal close
     modalRef.closed.subscribe(reason => {
       if (reason === 'deleted') {
-        this.loadAll();
+       this.loadAll();
       }
     });
   }
 
-  loadAll(): void {
+   loadAll(): void {
     this.isLoading = true;
     this.userService
       .query({
@@ -72,7 +69,7 @@ export class UserManagementComponent implements OnInit {
         },
         () => (this.isLoading = false)
       );
-  }
+  } 
 
   transition(): void {
     this.router.navigate(['./'], {
@@ -103,8 +100,173 @@ export class UserManagementComponent implements OnInit {
     return result;
   }
 
-  private onSuccess(users: User[] | null, headers: HttpHeaders): void {
+  private onSuccess(users: Usuario[] | null, headers: HttpHeaders): void {
     this.totalItems = Number(headers.get('X-Total-Count'));
     this.users = users;
   }
+}
+ */
+
+@Component({
+  selector: 'jhi-user-mgmt',
+  templateUrl: './user-management.component.html',
+})
+export class UserManagementComponent implements OnInit, OnDestroy {
+  flag = true;
+  dataSource!: UsuarioDataSource;
+
+  displayedColumns = ['id', 'nombre', 'nombreCompleto', 'cuil', '_roles', 'actions'];
+
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator | undefined;
+  @ViewChild('sort1', { static: true }) sort: MatSort | undefined;
+  @ViewChild('searchInput', { static: true }) searchInput: ElementRef | undefined;
+
+  filtroEstado = '';
+  filtroFechaDesde = '';
+  filtroFechaHasta = '';
+  //allEstadosComprobantes: EstadoComprobante[] = [];
+
+  // lastQuery: QueryParamsModel;
+  selection = new SelectionModel<IUsuario>(true, []);
+  //deudasResult: Comprobante[] = [];
+
+  // Subscriptions
+  private subscriptions: Subscription[] = [];
+
+  /**
+   *
+   * @param activatedRoute: ActivatedRoute
+   * @param store: Store<AppState>
+   * @param router: Router
+   * @param comprobanteService: ComprobanteService
+   */
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, private usuarioService: UserManagementService) {}
+
+  ngOnInit(): void {
+    //  this.transeferenciaService.getAllEstadosComprobante().subscribe(res => this.allEstadosComprobantes = res);
+
+    // Si el usuario cambia el ordenamiento, volver a la primera pagina
+    const sortSubscription = this.sort?.sortChange.subscribe(() => (this.paginator!.pageIndex = 0));
+    if (sortSubscription) {
+      this.subscriptions.push(sortSubscription);
+    }
+
+    /* La data debe ser cargada en dos casos
+    - Cuando el evento paginacion ocurre => this.paginator.page
+    - Cuando el evento de ordenamiento ocurre => this.sort.sortChange
+    */
+    const paginatorSubscriptions = merge(this.sort!.sortChange, this.paginator!.page)
+      .pipe(tap(() => this.loadDepositoList()))
+      .subscribe();
+    this.subscriptions.push(paginatorSubscriptions);
+
+    const searchSubscription = fromEvent(this.searchInput!.nativeElement, 'keyup')
+      .pipe(
+        debounceTime(150), //que se emita solo una vez cada 150ms
+        distinctUntilChanged(), // eliminamos duplicados
+        tap(() => {
+          this.paginator!.pageIndex = 0;
+          this.loadDepositoList();
+        })
+      )
+      .subscribe();
+    this.subscriptions.push(searchSubscription);
+
+    this.dataSource = new UsuarioDataSource(this.usuarioService);
+    this.loadDepositoList();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(el => el.unsubscribe());
+  }
+
+  loadDepositoList(): void {
+    this.selection.clear();
+    const queryParams = new QueryParamsModel(
+      this.filterConfiguration(),
+      this.sort!.direction,
+      this.sort!.active,
+      this.paginator!.pageIndex + 1,
+      this.paginator!.pageSize
+    );
+    // this.store.dispatch(DeudasSolicitudPagina({ page: queryParams }));
+    this.dataSource.loadUsuarios(queryParams);
+
+    // eslint-disable-next-line no-console
+    console.log(this.dataSource);
+
+    this.selection.clear();
+  }
+
+  /** FILTRATION */
+  filterConfiguration(): any {
+    const filter: any = {};
+    const searchText: string = this.searchInput!.nativeElement.value;
+    filter.nombreCompleto = searchText;
+    filter.nombre = searchText;
+    filter.cuil = searchText;
+
+    return filter as {};
+  }
+
+  /*  deleteComprobante(_item: Comprobante) {
+     const _title: string = 'Borrar Deposito';
+     const _description: string = 'Esta seguro de borrar el Deposito permanentemente?';
+     const _waitDesciption: string = 'Borrando Deposito...';
+ 
+     const dialogRef = this.layoutUtilsService.deleteElement(_title, _description, _waitDesciption);
+     dialogRef.afterClosed().pipe(
+       map(res => res ? true : false),  // mapeo el objeto por que puede venir un undefined y explota todo
+       switchMap((dato: any) => {
+ 
+         if (dato) {
+           return this.depositoService.deleteComprobante(_item.id)
+         } else
+           return of(null); // siempre se espera que devuelva algo(observable o promise) el switchmap
+       })
+     ).subscribe(res => {
+       if (res) {
+         const _deleteMessage = `El Deposito ha sido borrado`;
+         this.layoutUtilsService.showActionNotification(_deleteMessage, MessageType.Delete, 5000, true);
+         setTimeout(() => {
+           this.loadDepositoList();
+         }, 500);
+       }
+     });
+ 
+   } */
+
+  /* 
+    getItemCssClassByStatus(status: string = 'PENDIENTE'): string {
+      switch (status) {
+        case 'EMITIDO':
+          return 'success';
+        case 'COINCILIADO':
+          return 'metal';
+      }
+      return '';
+    }
+  
+    cambiarFechaDesde(fechaSelected) {
+      this.filtroFechaDesde = fechaSelected;
+      if (this.filtroFechaHasta) {
+        this.loadDepositoList();
+      }
+    }
+  
+    cambiarFechaHasta(fechaSelected) {
+      this.filtroFechaHasta = fechaSelected;
+      if (this.filtroFechaDesde) {
+        this.loadDepositoList();
+      }
+    }
+    cambiarEstado(estado) {
+      this.filtroEstado = estado;
+      this.loadDepositoList();
+    } */
+
+  /* imprimirOrden(idOrdenPago: number) {
+    const url = `${API_CONFIG}Administracion/imprimirDeposito/?idDeposito=${idOrdenPago}&codigoReporte=${REPORTE_ORDEN_DEPOSITO}`;
+    this.layoutUtilsService.printElements(url);
+  } */
 }

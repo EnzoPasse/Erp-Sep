@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Adater } from '../util/adapter';
 import { Account } from './account.model';
 
 @Injectable({
@@ -22,8 +23,4 @@ export class AccountAdaper implements Adater<Account> {
       item.imagenUrl || ''
     );
   }
-}
-
-export interface Adater<T> {
-  adapter(item: any): T;
 }

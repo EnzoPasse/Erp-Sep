@@ -21,7 +21,7 @@ const LAYOUT_ROUTES: Routes = [
       },
 
       {
-        path: 'usuarios',
+        path: 'seguridad',
         data: {
           title: 'Usuarios',
         },
