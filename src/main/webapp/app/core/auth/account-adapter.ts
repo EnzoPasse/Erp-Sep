@@ -12,6 +12,7 @@ export class AccountAdaper implements Adater<Account> {
       item.nombre,
       item.nombreCompleto,
       item.clave,
+      item.nuevaClave,
       item.establecimiento ? item.establecimiento.nombre : '',
       item.rol ? item.rol.nombre : '',
       item.grupoTrabajo ? item.grupoTrabajo.nombre : '',

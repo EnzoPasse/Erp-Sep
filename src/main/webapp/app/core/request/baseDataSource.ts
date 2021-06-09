@@ -1,9 +1,8 @@
 // Angular
-import { CollectionViewer, DataSource } from '@angular/cdk/collections';
+import { DataSource } from '@angular/cdk/collections';
 // RxJS
 import { Observable, BehaviorSubject, Subscription, of } from 'rxjs';
 // CRUD
-
 import { skip, distinctUntilChanged } from 'rxjs/operators';
 
 // Why not use MatTableDataSource?
@@ -34,12 +33,12 @@ export class BaseDataSource<T> implements DataSource<T> {
     this.subscriptions.push(hasItemsSubscription);
   }
 
-  connect(collectionViewer: CollectionViewer): Observable<T[]> {
+  connect(): Observable<T[]> {
     // Connecting data source
     return this.entitySubject.asObservable();
   }
 
-  disconnect(collectionViewer: CollectionViewer): void {
+  disconnect(): void {
     // Disonnecting data source
     this.entitySubject.complete();
     this.paginatorTotalSubject.complete();

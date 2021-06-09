@@ -6,7 +6,7 @@ import { QueryParamsModel } from 'app/core/request/queryParams.model';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatSort } from '@angular/material/sort';
 import { UsuarioDataSource } from '../user-datasource';
-import { IUsuario, Usuario } from '../user-management.model';
+import { IUsuario } from '../user-management.model';
 import { fromEvent, merge, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import { UserManagementService } from '../service/user-management.service';
@@ -124,11 +124,11 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   filtroEstado = '';
   filtroFechaDesde = '';
   filtroFechaHasta = '';
-  //allEstadosComprobantes: EstadoComprobante[] = [];
+  // allEstadosComprobantes: EstadoComprobante[] = [];
 
   // lastQuery: QueryParamsModel;
   selection = new SelectionModel<IUsuario>(true, []);
-  //deudasResult: Comprobante[] = [];
+  // deudasResult: Comprobante[] = [];
 
   // Subscriptions
   private subscriptions: Subscription[] = [];
@@ -162,7 +162,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
     const searchSubscription = fromEvent(this.searchInput!.nativeElement, 'keyup')
       .pipe(
-        debounceTime(150), //que se emita solo una vez cada 150ms
+        debounceTime(150), // que se emita solo una vez cada 150ms
         distinctUntilChanged(), // eliminamos duplicados
         tap(() => {
           this.paginator!.pageIndex = 0;

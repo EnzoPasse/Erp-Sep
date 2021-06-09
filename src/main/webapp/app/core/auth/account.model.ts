@@ -17,6 +17,7 @@ export class Account {
     public nombre?: string,
     public nombreCompleto?: string,
     public clave?: string,
+    public nuevaClave?: string,
     public establecimiento?: string,
     public rol?: string,
     public grupoTrabajo?: string,

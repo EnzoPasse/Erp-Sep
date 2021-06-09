@@ -1,8 +1,7 @@
 import { BaseDataSource } from 'app/core/request/baseDataSource';
 import { QueryParamsModel } from 'app/core/request/queryParams.model';
-import { QueryResultsModel } from 'app/core/request/queryResult.model';
 import { of } from 'rxjs';
-import { catchError, finalize } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { UserManagementService } from './service/user-management.service';
 import { IUsuario } from './user-management.model';
 
