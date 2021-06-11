@@ -27,8 +27,8 @@ export class UsuarioDataSource extends BaseDataSource<IUsuario> {
         next: response => {
           // eslint-disable-next-line no-console
           console.log(response);
-          this.paginatorTotalSubject.next(response.totalCount ? response.totalCount : 0);
-          this.entitySubject.next(response.items ? response.items : []);
+          this.paginatorTotalSubject.next(response.totalCount);
+          this.entitySubject.next(response.items);
         },
       });
   }

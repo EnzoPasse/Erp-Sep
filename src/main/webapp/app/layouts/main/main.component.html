@@ -55,9 +55,10 @@
       <!-- sidebar toggle -->
       <!-- ============================================================== -->
 
+      <!-- (click)="snav.toggle() && clickEvent()"  que se supone que hace esto? clicEvent()-->
       <button
         mat-icon-button
-        (click)="snav.toggle() && clickEvent()"
+        (click)="snav.toggle() && (status = !status)"
         class="sidebar-toggle"
         value="sidebarclosed"
         matTooltip="Open / Close"

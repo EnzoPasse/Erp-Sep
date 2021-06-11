@@ -10,6 +10,7 @@ import { IUsuario } from '../user-management.model';
 import { fromEvent, merge, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import { UserManagementService } from '../service/user-management.service';
+import { UserAdaper } from '../service/user-management.adapter.service';
 
 /* export class UserManagementComponent implements OnInit {
 
@@ -140,7 +141,12 @@ export class UserManagementComponent implements OnInit, OnDestroy {
    * @param router: Router
    * @param comprobanteService: ComprobanteService
    */
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private usuarioService: UserManagementService) {}
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private usuarioService: UserManagementService,
+    private userAdaper: UserAdaper
+  ) {}
 
   ngOnInit(): void {
     //  this.transeferenciaService.getAllEstadosComprobante().subscribe(res => this.allEstadosComprobantes = res);

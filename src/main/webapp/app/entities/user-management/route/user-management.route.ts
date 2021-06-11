@@ -21,14 +21,14 @@ export const userManagementRoute: Routes = [
     },
   },
   {
-    path: 'new',
+    path: 'nuevoUsuario',
     component: UserManagementUpdateComponent,
     resolve: {
       user: UserManagementResolve,
     },
   },
   {
-    path: ':login/edit',
+    path: ':id/editarUsuario',
     component: UserManagementUpdateComponent,
     resolve: {
       user: UserManagementResolve,
