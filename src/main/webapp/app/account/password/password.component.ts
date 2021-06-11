@@ -1,10 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 
 import { Account } from 'app/core/auth/account.model';
 import { PasswordService } from './password.service';
 import { CustomValidators } from 'app/core/util/validators';
-import { Usuario } from 'app/entities/user-management/user-management.model';
 
 @Component({
   selector: 'jhi-password',

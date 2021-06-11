@@ -51,7 +51,7 @@ import { ObserversModule } from '@angular/cdk/observers';
 
 // providers
 import { ShowOnDirtyErrorStateMatcher, ErrorStateMatcher } from '@angular/material/core';
-import { getEspañolPaginatorIntl } from 'app/core/config/paginator-spanish';
+import { getEspañolPaginatorIntl } from 'app/config/paginator-spanish';
 
 @NgModule({
   imports: [

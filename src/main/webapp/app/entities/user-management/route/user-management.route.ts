@@ -14,7 +14,7 @@ export const userManagementRoute: Routes = [
     },
   },
   {
-    path: ':login/view',
+    path: ':id/view',
     component: UserManagementDetailComponent,
     resolve: {
       user: UserManagementResolve,
