@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { Usuario } from '../user-management.model';
+import { IUsuario, Usuario } from '../user-management.model';
 import { UserManagementService } from '../service/user-management.service';
+import { Observable } from 'rxjs';
+import { validateBasis } from '@angular/flex-layout';
+
+// Validators.pattern('^[a-zA-Z0-9!$&*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$|^[_.@A-Za-z0-9-]+$'),
 
 @Component({
   selector: 'jhi-user-mgmt-update',
@@ -11,41 +15,37 @@ import { UserManagementService } from '../service/user-management.service';
 })
 export class UserManagementUpdateComponent implements OnInit {
   user!: Usuario;
-  authorities: string[] = [];
+
   isSaving = false;
 
   editForm = this.fb.group({
-    id: [],
-    login: [
-      '',
-      [
-        Validators.required,
-        Validators.minLength(1),
-        Validators.maxLength(50),
-        Validators.pattern('^[a-zA-Z0-9!$&*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$|^[_.@A-Za-z0-9-]+$'),
-      ],
-    ],
-    firstName: ['', [Validators.maxLength(50)]],
-    lastName: ['', [Validators.maxLength(50)]],
-    email: ['', [Validators.minLength(5), Validators.maxLength(254), Validators.email]],
-    activated: [],
-    langKey: [],
-    authorities: [],
+    nombre: ['', [Validators.maxLength(50), Validators.required]],
+    nombreCompleto: ['', [Validators.maxLength(50), Validators.required]],
+    correo: ['', [Validators.minLength(5), Validators.email, Validators.required]],
+    cuil: ['', [Validators.minLength(5), Validators.required]],
+    establecimiento: ['', [Validators.required]],
+    grupoTrabajo: ['', [Validators.required]],
   });
 
   constructor(private userService: UserManagementService, private route: ActivatedRoute, private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.route.data.subscribe(({ user }) => {
-      if (user) {
-        this.user = user;
-        if (this.user.id === undefined) {
-          // this.user.activated = true;
-        }
+      if (user.id != null) {
         this.updateForm(user);
       }
     });
-    this.userService.authorities().subscribe(authorities => (this.authorities = authorities));
+  }
+
+  updateForm(user: IUsuario): void {
+    this.editForm.patchValue({
+      nombre: user.nombre,
+      nombreCompleto: user.nombreCompleto,
+      correo: user.correo,
+      cuil: user.cuil,
+      establecimiento: user.establecimiento?.nombre,
+      grupoTrabajo: user.grupoTrabajo?.nombre,
+    });
   }
 
   previousState(): void {
@@ -54,42 +54,79 @@ export class UserManagementUpdateComponent implements OnInit {
 
   save(): void {
     this.isSaving = true;
-    this.updateUser(this.user);
-    if (this.user.id !== undefined) {
-      this.userService.update(this.user).subscribe(
-        () => this.onSaveSuccess(),
-        () => this.onSaveError()
-      );
+    const user = this.createUser();
+    if (user.id !== undefined) {
+      this.subscribeToSaveResponse(this.userService.update(user));
+
+      /*  this.userService.update(this.user).subscribe(
+         () => this.onSaveSuccess(),
+         () => this.onSaveError()
+       ); */
     } else {
-      // this.user.langKey = 'en';
-      this.userService.create(this.user).subscribe(
+      this.subscribeToSaveResponse(this.userService.create(user));
+      /* this.userService.create(this.user).subscribe(
         () => this.onSaveSuccess(),
         () => this.onSaveError()
-      );
+      ); */
     }
   }
 
-  private updateForm(user: Usuario): void {
-    this.editForm.patchValue({
-      id: user.id,
-      /*  login: user.login,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      activated: user.activated,
-      langKey: user.langKey,
-      authorities: user.authorities, */
+  get nombre(): AbstractControl {
+    return this.editForm.get(['nombre']) as AbstractControl;
+  }
+  get nombreCompleto(): AbstractControl {
+    return this.editForm.get(['nombre']) as AbstractControl;
+  }
+  get correo(): AbstractControl {
+    return this.editForm.get(['nombre']) as AbstractControl;
+  }
+  get establecimiento(): AbstractControl {
+    return this.editForm.get(['nombre']) as AbstractControl;
+  }
+  get grupoTrabajo(): AbstractControl {
+    return this.editForm.get(['nombre']) as AbstractControl;
+  }
+
+  mensajeErrorNombre(): string {
+    return this.editForm.get(['nombre'])?.hasError('required') ? 'El nombre es requerido' : '';
+  }
+  mensajeErrorNombreCompleto(): string {
+    return this.editForm.get(['nombreComleto'])?.hasError('required') ? 'El nombre es requerido' : '';
+  }
+  mensajeErrorCorreo(): string {
+    return this.editForm.get(['correo'])?.hasError('required')
+      ? 'El correo es requerido'
+      : this.editForm.get(['correo'])?.hasError('email')
+      ? 'correo invalido'
+      : '';
+  }
+  mensajeErrorCuil(): string {
+    return this.editForm.get(['cuil'])?.hasError('required') ? 'El cuil es requerido' : '';
+  }
+  mensajeErrorEstablecimiento(): string {
+    return this.editForm.get(['establecimiento'])?.hasError('required') ? 'El establecimiento es requerido' : '';
+  }
+  mensajeErrorGrupoTrabajo(): string {
+    return this.editForm.get(['grupoTrabajo'])?.hasError('required') ? 'El grupo de trabajo es requerido' : '';
+  }
+
+  protected subscribeToSaveResponse(result: Observable<IUsuario>): void {
+    result.subscribe({
+      next: () => this.onSaveSuccess(),
+      error: () => this.onSaveError(),
     });
   }
 
-  private updateUser(user: Usuario): void {
-    /*   user.login = this.editForm.get(['login'])!.value;
-    user.firstName = this.editForm.get(['firstName'])!.value;
-    user.lastName = this.editForm.get(['lastName'])!.value;
-    user.email = this.editForm.get(['email'])!.value;
-    user.activated = this.editForm.get(['activated'])!.value;
-    user.langKey = this.editForm.get(['langKey'])!.value;
-    user.authorities = this.editForm.get(['authorities'])!.value; */
+  private createUser(): IUsuario {
+    return {
+      ...new Usuario(),
+      nombre: this.editForm.get(['nombre'])!.value,
+      nombreCompleto: this.editForm.get(['nombreComleto'])!.value,
+      correo: this.editForm.get(['correo'])!.value,
+      cuil: this.editForm.get(['cuil'])!.value,
+      establecimiento: this.editForm.get(['establecimiento'])!.value,
+      grupoTrabajo: this.editForm.get(['grupoTrabajo'])!.value,
+    };
   }
 
   private onSaveSuccess(): void {

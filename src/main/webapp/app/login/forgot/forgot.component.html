@@ -5,6 +5,11 @@
         <jhi-alert-error></jhi-alert-error>
 
         <form [formGroup]="forgotForm" (ngSubmit)="onSubmit()">
+          <div class="text-rigth">
+            <button mat-mini-fab color="primary" [routerLink]="['/auth/login']" matTooltip="Volver">
+              <mat-icon>arrow_back</mat-icon>
+            </button>
+          </div>
           <div class="text-center">
             <img alt="homepage" src="content/images/logo-icon.png" />
             <h4 class="m-t-0">Recuperacion de Contraseña</h4>

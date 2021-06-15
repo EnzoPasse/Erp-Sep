@@ -10,7 +10,7 @@ export const userManagementRoute: Routes = [
     path: 'usuarios',
     component: UserManagementComponent,
     data: {
-      defaultSort: 'id,asc',
+      pageTitle: 'Usuarios',
     },
   },
   {

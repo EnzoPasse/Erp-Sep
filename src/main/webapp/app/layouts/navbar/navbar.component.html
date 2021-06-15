@@ -255,9 +255,14 @@
 <!-- ============================================================== -->
 <!-- Profile - style you can find in header.scss -->
 <!-- ============================================================== -->
-<button [matMenuTriggerFor]="profile" mat-icon-button class="m-r-5" matTooltip="Cuenta de Usuario">
+
+<button mat-button matTooltip="de {{ currentAccount?.periodoContable?.fechaDesde }} a {{ currentAccount?.periodoContable?.fechaHasta }}">
+  <span> {{ currentAccount?.periodoContable?.nombre }}</span>
+</button>
+<button [matMenuTriggerFor]="profile" mat-button class="m-r-5" matTooltip="Cuenta de Usuario">
   <!-- <img src="content/images/user.jpg" alt="user" class="profile-pic">  -->
-  <mat-icon>account_circle</mat-icon>
+  <!-- <mat-icon>account_circle</mat-icon> -->
+  <span>{{ currentAccount?.nombreCompleto }}</span>
 </button>
 <mat-menu #profile="matMenu" class="mymegamenu">
   <!-- <button mat-menu-item><mat-icon>settings</mat-icon> Settings</button> -->

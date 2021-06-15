@@ -12,20 +12,23 @@ import { UserAdaper } from './user-management.adapter.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserManagementService {
-  public resourceUrl = this.applicationConfigService.getEndpointFor('/usuario/get');
+  public resourceUrl = this.applicationConfigService.getEndpointFor('/usuario');
 
   constructor(private http: HttpClient, private applicationConfigService: ApplicationConfigService, private userAdapter: UserAdaper) {}
 
   create(user: IUsuario): Observable<IUsuario> {
-    return this.http.post<IUsuario>(this.resourceUrl, user);
+    const url = `${this.resourceUrl}/create`;
+    return this.http.post<IUsuario>(url, user);
   }
 
   update(user: IUsuario): Observable<IUsuario> {
-    return this.http.put<IUsuario>(this.resourceUrl, user);
+    const url = `${this.resourceUrl}/edit`;
+    return this.http.put<IUsuario>(url, user);
   }
 
   find(id: string): Observable<IUsuario> {
-    return this.http.get<IUsuario>(`${this.resourceUrl}/${id}`).pipe(map(user => this.userAdapter.adapter(user)));
+    const url = `${this.resourceUrl}/get/${id}`;
+    return this.http.get<IUsuario>(url).pipe(map(user => this.userAdapter.adapter(user)));
   }
 
   /* query(req?: Pagination): Observable<HttpResponse<IUsuario[]>> {
@@ -42,7 +45,8 @@ export class UserManagementService {
     /*
     Adaptamos las respuesta del queryResult.items a que sean Usuaios y no any
     */
-    return this.http.post<IQueryResultsModel<IUsuario>>(this.resourceUrl, queryParams).pipe(
+    const url = `${this.resourceUrl}/get`;
+    return this.http.post<IQueryResultsModel<IUsuario>>(url, queryParams).pipe(
       map((response: IQueryResultsModel<IUsuario>) => {
         const users: IUsuario[] = response.items.map(item => this.userAdapter.adapter(item));
         return { ...response, items: users } as IQueryResultsModel<IUsuario>;
@@ -50,12 +54,9 @@ export class UserManagementService {
     );
   }
 
-  delete(login: string): Observable<{}> {
-    return this.http.delete(`${this.resourceUrl}/${login}`);
-  }
-
-  authorities(): Observable<string[]> {
-    return this.http.get<string[]>(this.applicationConfigService.getEndpointFor('api/authorities'));
+  delete(id: string): Observable<{}> {
+    const url = `${this.resourceUrl}/delete/${id}`;
+    return this.http.delete(url);
   }
 
   getUserLogin(): Observable<IUsuario> {

@@ -25,15 +25,9 @@ export class UsuarioDataSource extends BaseDataSource<IUsuario> {
       )
       .subscribe({
         next: response => {
-          // eslint-disable-next-line no-console
-          console.log(response);
           this.paginatorTotalSubject.next(response.totalCount);
           this.entitySubject.next(response.items);
         },
       });
   }
 }
-
-/* this.paginatorTotalSubject.next(response.totalCount);
-this.entitySubject.next(response.items);
- */

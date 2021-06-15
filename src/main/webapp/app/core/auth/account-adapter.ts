@@ -18,7 +18,7 @@ export class AccountAdaper implements Adater<Account> {
       item.grupoTrabajo ? item.grupoTrabajo.nombre : '',
       item.correo,
       item.token,
-      item.idPeriodoContable,
+      item.periodoContable,
       item.cuil,
       item.rol.permisosNombre,
       item.imagenUrl || ''

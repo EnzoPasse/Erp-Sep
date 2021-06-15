@@ -32,7 +32,7 @@
       <!-- Logo - style you can find in header.scss -->
       <!-- ============================================================== -->
       <div class="navbar-header">
-        <a class="navbar-brand" [routerLink]="['/accessdenied']">
+        <a class="navbar-brand" [routerLink]="['/home']">
           <!-- Logo icon -->
           <b>
             <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
@@ -61,7 +61,7 @@
         (click)="snav.toggle() && (status = !status)"
         class="sidebar-toggle"
         value="sidebarclosed"
-        matTooltip="Open / Close"
+        matTooltip="Barra Lateral"
       >
         <mat-icon>menu</mat-icon>
       </button>
@@ -96,7 +96,7 @@
       <!-- ============================================================== -->
       <!-- Right sidebar toggle - style you can find in rightsidebar.component.scss -->
       <!-- ============================================================== -->
-      <button (click)="end.toggle()" mat-icon-button class="ml-xs overflow-visible">
+      <button (click)="end.toggle()" mat-icon-button class="ml-xs overflow-visible" matTooltip="Configuraciones">
         <mat-icon>settings</mat-icon>
       </button>
     </div>

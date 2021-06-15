@@ -21,6 +21,14 @@ const LAYOUT_ROUTES: Routes = [
       },
 
       {
+        path: 'home',
+        data: {
+          title: 'HOME',
+        },
+        loadChildren: () => import('../home/home.module').then(m => m.HomeModule),
+      },
+
+      {
         path: 'seguridad',
         data: {
           title: 'Usuarios',

@@ -105,8 +105,8 @@ const MENUITEMS = [
     name: 'Documentacion',
     type: 'sub',
     icon: 'description',
-    permission: '',
-    children: [{ state: 'docs', name: 'API-SWAGGER', type: 'link', permission: '' }],
+    permission: 'Modulo Seguridad',
+    children: [{ state: 'docs', name: 'API-SWAGGER', type: 'link', permission: 'Formulario Usuarios' }],
   },
 
   /*  MULTINIVEL  

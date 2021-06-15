@@ -134,19 +134,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   // Subscriptions
   private subscriptions: Subscription[] = [];
 
-  /**
-   *
-   * @param activatedRoute: ActivatedRoute
-   * @param store: Store<AppState>
-   * @param router: Router
-   * @param comprobanteService: ComprobanteService
-   */
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private usuarioService: UserManagementService,
-    private userAdaper: UserAdaper
-  ) {}
+  constructor(private usuarioService: UserManagementService) {}
 
   ngOnInit(): void {
     //  this.transeferenciaService.getAllEstadosComprobante().subscribe(res => this.allEstadosComprobantes = res);
@@ -162,7 +150,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     - Cuando el evento de ordenamiento ocurre => this.sort.sortChange
     */
     const paginatorSubscriptions = merge(this.sort!.sortChange, this.paginator!.page)
-      .pipe(tap(() => this.loadDepositoList()))
+      .pipe(tap(() => this.loadUserList()))
       .subscribe();
     this.subscriptions.push(paginatorSubscriptions);
 
@@ -172,21 +160,21 @@ export class UserManagementComponent implements OnInit, OnDestroy {
         distinctUntilChanged(), // eliminamos duplicados
         tap(() => {
           this.paginator!.pageIndex = 0;
-          this.loadDepositoList();
+          this.loadUserList();
         })
       )
       .subscribe();
     this.subscriptions.push(searchSubscription);
 
     this.dataSource = new UsuarioDataSource(this.usuarioService);
-    this.loadDepositoList();
+    this.loadUserList();
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(el => el.unsubscribe());
   }
 
-  loadDepositoList(): void {
+  loadUserList(): void {
     this.selection.clear();
     const queryParams = new QueryParamsModel(
       this.filterConfiguration(),
@@ -195,12 +183,8 @@ export class UserManagementComponent implements OnInit, OnDestroy {
       this.paginator!.pageIndex + 1,
       this.paginator!.pageSize
     );
-    // this.store.dispatch(DeudasSolicitudPagina({ page: queryParams }));
+
     this.dataSource.loadUsuarios(queryParams);
-
-    // eslint-disable-next-line no-console
-    console.log(this.dataSource);
-
     this.selection.clear();
   }
 
