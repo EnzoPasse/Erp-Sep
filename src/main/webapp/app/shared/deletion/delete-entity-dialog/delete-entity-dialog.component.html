@@ -1,0 +1,13 @@
+<mat-card>
+  <mat-card-title>{{ data.title }}</mat-card-title>
+  <mat-card-content>
+    {{ viewLoading ? data.waitDesciption : data.description }}
+  </mat-card-content>
+  <mat-card-actions align="start">
+    <button mat-button (click)="onNoClick()">Cancelar</button>
+    <button mat-button (click)="onYesClick()" color="primary" cdkFocusInitial [disabled]="viewLoading">Eliminar</button>
+  </mat-card-actions>
+  <mat-card-footer>
+    <mat-progress-bar *ngIf="viewLoading" mode="indeterminate"></mat-progress-bar>
+  </mat-card-footer>
+</mat-card>

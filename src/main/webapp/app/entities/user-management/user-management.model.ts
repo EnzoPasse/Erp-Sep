@@ -31,9 +31,9 @@ export class User implements IUser {
 }
 */
 
-import { Establecimiento } from 'app/shared/modelTodelete/establecimiento.model';
-import { GrupoTrabajo } from 'app/shared/modelTodelete/grupoTrabajo.model';
-import { Rol } from 'app/shared/modelTodelete/rol.model';
+import { Establecimiento } from 'app/entities/establishment-management/establecimiento.model';
+import { GrupoTrabajo } from 'app/entities/group-work-management/grupoTrabajo.model';
+import { Rol } from 'app/entities/role-management/rol.model';
 
 export interface IUsuario {
   id?: number;

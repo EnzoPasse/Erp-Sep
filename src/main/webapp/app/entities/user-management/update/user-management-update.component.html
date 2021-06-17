@@ -106,28 +106,139 @@
  -->
 
 <mat-card>
-  <mat-card-header>
-    <mat-card-title>Usuario</mat-card-title>
+  <mat-card-header fxLayoutAlign="space-between start">
+    <mat-card-title>{{ titleForm }}</mat-card-title>
+    <div fxLayout="column" fxLayout.gt-xs="row">
+      <div>
+        <button
+          fxHide
+          fxShow.gt-sm
+          *jhiHasAnyAuthority="'Accion Crear Usuario'"
+          mat-raised-button
+          color="primary"
+          matTooltip="Guardar los cambios"
+          (click)="save(true)"
+          [disabled]="isSaving"
+        >
+          Guardar
+        </button>
+      </div>
+      &nbsp;
+      <div>
+        <button fxHide fxShow.gt-sm mat-raised-button color="primary" cdkFocusInitial matTooltip="Volver" (click)="previousState()">
+          Cancelar
+        </button>
+      </div>
+      <div>
+        <button *jhiHasAnyAuthority="'Accion Crear Usuario'" mat-icon-button [matMenuTriggerFor]="menu" color="primary">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item color="primary" (click)="save(true)">Guardar y Salir</button>
+          <button mat-menu-item color="primary" (click)="save(false)">Guardar y Continuar</button>
+          <button mat-menu-item color="primary" (click)="limpiar()">Limpiar Formulario</button>
+          <button fxHide.gt-sm mat-menu-item color="primary" (click)="previousState()">Salir</button>
+        </mat-menu>
+      </div>
+    </div>
   </mat-card-header>
-
+  <hr />
   <mat-card-content>
     <jhi-alert-error></jhi-alert-error>
 
     <form [formGroup]="editForm">
-      <!--  <div class="d-flex align-items-center m-b-15">
-            <img class="mat-card-avatar" [src]='local_data.imagePath'>
+      <!-- <div class="d-flex align-items-center m-b-15">
+            <img class="mat-card-avatar" src="content/images/default.png">
             <button mat-raised-button color="primary" class="m-l-15 input-file-button">
                 <input type="file" (change)="selectFile($event)" #fileInput>
             </button>
         </div> -->
-      <div fxLayout="row wrap" class="align-items-center">
+      <div fxLayout="row wrap" class="align-items-center m-b-30">
         <div fxFlex="100" fxFlex.gt-md="50">
           <div class="m-r-15 m-l-15">
             <mat-form-field>
-              <mat-label>Nombre</mat-label>
+              <mat-label>Usuario</mat-label>
               <input type="text" matInput [formControl]="nombre" />
-              <mat-error *ngIf="nombre?.invalid">
+              <mat-error *ngIf="nombre.invalid">
                 {{ mensajeErrorNombre() }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div fxFlex="100" fxFlex.gt-md="50">
+          <div class="m-r-15 m-l-15">
+            <mat-form-field>
+              <mat-label>Nombre Completo</mat-label>
+              <input type="text" matInput [formControl]="nombreCompleto" />
+              <mat-error *ngIf="nombreCompleto?.invalid">
+                {{ mensajeErrorNombreCompleto() }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div fxFlex="100" fxFlex.gt-md="50">
+          <div class="m-r-15 m-l-15">
+            <mat-form-field>
+              <mat-label>E-mail</mat-label>
+              <input type="text" matInput [formControl]="correo" />
+              <mat-error *ngIf="correo?.invalid">
+                {{ mensajeErrorCorreo() }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div fxFlex="100" fxFlex.gt-md="50">
+          <div class="m-r-15 m-l-15">
+            <mat-form-field>
+              <mat-label>Cuil</mat-label>
+              <input type="text" matInput [formControl]="cuil" />
+              <mat-error *ngIf="cuil?.invalid">
+                {{ mensajeErrorCuil() }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div fxFlex="100" fxFlex.gt-md="50">
+          <div class="m-r-15 m-l-15">
+            <mat-form-field>
+              <mat-label>Establecimiento</mat-label>
+              <mat-select [formControl]="establecimiento">
+                <mat-option *ngFor="let item of establecimientos" [value]="item.id">{{ item.nombre }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="establecimiento?.invalid">
+                {{ mensajeErrorEstablecimiento() }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div fxFlex="100" fxFlex.gt-md="50">
+          <div class="m-r-15 m-l-15">
+            <mat-form-field>
+              <mat-label>Grupo de Trabajo</mat-label>
+              <mat-select [formControl]="grupoTrabajo">
+                <mat-option *ngFor="let item of grupoTrabajos" [value]="item.id">{{ item.nombre }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="grupoTrabajo?.invalid">
+                {{ mensajeErrorGrupoTrabajo() }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div fxFlex="100" fxFlex.gt-md="50">
+          <div class="m-r-15 m-l-15">
+            <mat-form-field>
+              <mat-label class="label-light-danger">Rol Asignado</mat-label>
+              <mat-select [formControl]="rol">
+                <mat-option *ngFor="let item of roles; trackBy: trackRolOrderById" [value]="item.id">{{ item.nombre }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="grupoTrabajo?.invalid">
+                {{ mensajeErrorGrupoTrabajo() }}
               </mat-error>
             </mat-form-field>
           </div>

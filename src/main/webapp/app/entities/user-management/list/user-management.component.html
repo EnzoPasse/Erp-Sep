@@ -190,7 +190,7 @@
 
             <ng-container matColumnDef="cuil">
               <th mat-header-cell *matHeaderCellDef>CUIL</th>
-              <td mat-cell *matCellDef="let element">20-27078996-0</td>
+              <td mat-cell *matCellDef="let element">{{ element.cuil ? element.cuil : '-' }}</td>
             </ng-container>
 
             <ng-container matColumnDef="nombreCompleto">
@@ -233,7 +233,14 @@
                     >&nbsp;
                   </div>
                   <div>
-                    <button mat-icon-button color="warn" matTooltip="Borrar usuario" type="button" (click)="deleteUser(element)">
+                    <button
+                      *jhiHasAnyAuthority="'Accion Eliminar Usuario'"
+                      mat-icon-button
+                      color="warn"
+                      matTooltip="Borrar usuario"
+                      type="button"
+                      (click)="deleteUser(element)"
+                    >
                       <mat-icon class="icon-08x"> delete</mat-icon>
                     </button>
                   </div>

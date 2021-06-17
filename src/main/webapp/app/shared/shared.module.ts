@@ -16,6 +16,10 @@ import { AccordionDirective } from './accordion/accordion.directive';
 import { AccordionAnchorDirective } from './accordion/accordionanchor.directive';
 import { AccordionLinkDirective } from './accordion/accordionlink.directive';
 import { SpinnerComponent } from './spinner.component';
+import { ErrorStateMatcher } from '@angular/material/core';
+import { TouchedErrorStateMatcher } from 'app/core/util/toucheErrorState';
+import { DeleteEntityDialogComponent } from './deletion/delete-entity-dialog/delete-entity-dialog.component';
+import { PrintEntityDialogComponent } from './deletion/print-entity-dialog/print-entity-dialog.component';
 
 @NgModule({
   imports: [SharedLibsModule, MaterialModule],
@@ -34,6 +38,8 @@ import { SpinnerComponent } from './spinner.component';
     AccordionLinkDirective,
     AccordionDirective,
     SpinnerComponent,
+    DeleteEntityDialogComponent,
+    PrintEntityDialogComponent,
   ],
   exports: [
     SharedLibsModule,
@@ -52,7 +58,9 @@ import { SpinnerComponent } from './spinner.component';
     AccordionLinkDirective,
     AccordionDirective,
     SpinnerComponent,
+    DeleteEntityDialogComponent,
+    PrintEntityDialogComponent,
   ],
-  providers: [MenuItems],
+  providers: [MenuItems, { provide: ErrorStateMatcher, useClass: TouchedErrorStateMatcher }],
 })
 export class SharedModule {}

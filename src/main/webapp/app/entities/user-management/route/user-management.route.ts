@@ -9,9 +9,7 @@ export const userManagementRoute: Routes = [
   {
     path: 'usuarios',
     component: UserManagementComponent,
-    data: {
-      pageTitle: 'Usuarios',
-    },
+    data: { pageTitle: 'Usuarios' },
   },
   {
     path: ':id/view',
@@ -23,6 +21,7 @@ export const userManagementRoute: Routes = [
   {
     path: 'nuevoUsuario',
     component: UserManagementUpdateComponent,
+    data: { pageTitle: 'Nuevo Usuario' },
     resolve: {
       user: UserManagementResolve,
     },
@@ -30,6 +29,7 @@ export const userManagementRoute: Routes = [
   {
     path: ':id/editarUsuario',
     component: UserManagementUpdateComponent,
+    data: { pageTitle: 'Editar Usuario' },
     resolve: {
       user: UserManagementResolve,
     },

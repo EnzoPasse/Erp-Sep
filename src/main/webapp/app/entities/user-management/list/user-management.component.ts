@@ -1,5 +1,4 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { QueryParamsModel } from 'app/core/request/queryParams.model';
@@ -10,7 +9,7 @@ import { IUsuario } from '../user-management.model';
 import { fromEvent, merge, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import { UserManagementService } from '../service/user-management.service';
-import { UserAdaper } from '../service/user-management.adapter.service';
+import { DialogService } from 'app/shared/deletion/dialog.service';
 
 /* export class UserManagementComponent implements OnInit {
 
@@ -134,7 +133,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   // Subscriptions
   private subscriptions: Subscription[] = [];
 
-  constructor(private usuarioService: UserManagementService) {}
+  constructor(private usuarioService: UserManagementService, private dialog: DialogService) {}
 
   ngOnInit(): void {
     //  this.transeferenciaService.getAllEstadosComprobante().subscribe(res => this.allEstadosComprobantes = res);
@@ -199,32 +198,25 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     return filter as {};
   }
 
-  /*  deleteComprobante(_item: Comprobante) {
-     const _title: string = 'Borrar Deposito';
-     const _description: string = 'Esta seguro de borrar el Deposito permanentemente?';
-     const _waitDesciption: string = 'Borrando Deposito...';
- 
-     const dialogRef = this.layoutUtilsService.deleteElement(_title, _description, _waitDesciption);
-     dialogRef.afterClosed().pipe(
-       map(res => res ? true : false),  // mapeo el objeto por que puede venir un undefined y explota todo
-       switchMap((dato: any) => {
- 
-         if (dato) {
-           return this.depositoService.deleteComprobante(_item.id)
-         } else
-           return of(null); // siempre se espera que devuelva algo(observable o promise) el switchmap
-       })
-     ).subscribe(res => {
-       if (res) {
-         const _deleteMessage = `El Deposito ha sido borrado`;
-         this.layoutUtilsService.showActionNotification(_deleteMessage, MessageType.Delete, 5000, true);
-         setTimeout(() => {
-           this.loadDepositoList();
-         }, 500);
-       }
-     });
- 
-   } */
+  deleteUser(_item: IUsuario): void {
+    const _title = 'Borrar Usuario';
+    const _description = 'Esta seguro de borrar al Usuario permanentemente?';
+    const _waitDesciption = 'Borrando Usuario...';
+    // const _deleteMessage = `El Usuario ha sido borrado`;
+
+    const dialogRef = this.dialog.deleteElement(_title, _description, _waitDesciption);
+    dialogRef.afterClosed().subscribe((res: any) => {
+      if (!res) {
+        return;
+      }
+
+      /* this.store.dispatch(UserDeleted({ id: _item.id }));
+			this.layoutUtilsService.showActionNotification(_deleteMessage, MessageType.Delete, 5000, true); */
+      setTimeout(() => {
+        this.loadUserList();
+      }, 500);
+    });
+  }
 
   /* 
     getItemCssClassByStatus(status: string = 'PENDIENTE'): string {
