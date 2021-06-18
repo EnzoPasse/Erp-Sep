@@ -1,6 +1,6 @@
 // Angular
 import { Injectable } from '@angular/core';
-import { MatDialog, MatDialogActions, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { DeleteEntityDialogComponent } from './delete-entity-dialog/delete-entity-dialog.component';
 import { PrintEntityDialogComponent } from './print-entity-dialog/print-entity-dialog.component';
 

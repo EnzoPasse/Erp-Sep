@@ -224,14 +224,10 @@
                       color="primary"
                       matTooltip="Editar usario"
                     >
-                      <mat-icon class="icon-08x">create</mat-icon></button
-                    >&nbsp;
+                      <mat-icon class="icon-08x">create</mat-icon>
+                    </button>
                   </div>
-                  <div>
-                    <button [routerLink]="['/seguridad', element.id, 'view']" mat-icon-button color="primary" matTooltip="Ver usario">
-                      <mat-icon class="icon-08x">remove_red_eye</mat-icon></button
-                    >&nbsp;
-                  </div>
+                  &nbsp;
                   <div>
                     <button
                       *jhiHasAnyAuthority="'Accion Eliminar Usuario'"

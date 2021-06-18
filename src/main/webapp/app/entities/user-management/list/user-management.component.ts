@@ -9,7 +9,7 @@ import { IUsuario } from '../user-management.model';
 import { fromEvent, merge, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import { UserManagementService } from '../service/user-management.service';
-import { DialogService } from 'app/shared/deletion/dialog.service';
+import { DialogService } from 'app/shared/dialog/dialog.service';
 
 /* export class UserManagementComponent implements OnInit {
 
@@ -210,11 +210,13 @@ export class UserManagementComponent implements OnInit, OnDestroy {
         return;
       }
 
-      /* this.store.dispatch(UserDeleted({ id: _item.id }));
-			this.layoutUtilsService.showActionNotification(_deleteMessage, MessageType.Delete, 5000, true); */
-      setTimeout(() => {
-        this.loadUserList();
-      }, 500);
+      if (_item.id) {
+        this.usuarioService.delete(_item.id).subscribe({
+          next: () => {
+            this.loadUserList();
+          },
+        });
+      }
     });
   }
 

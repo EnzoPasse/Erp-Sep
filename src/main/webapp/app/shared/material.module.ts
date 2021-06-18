@@ -50,7 +50,8 @@ import { PlatformModule } from '@angular/cdk/platform';
 import { ObserversModule } from '@angular/cdk/observers';
 
 // providers
-import { ShowOnDirtyErrorStateMatcher, ErrorStateMatcher } from '@angular/material/core';
+import { ErrorStateMatcher } from '@angular/material/core';
+import { TouchedErrorStateMatcher } from 'app/core/util/toucheErrorState';
 import { getEspañolPaginatorIntl } from 'app/config/paginator-spanish';
 
 @NgModule({
@@ -160,7 +161,7 @@ import { getEspañolPaginatorIntl } from 'app/config/paginator-spanish';
   providers: [
     {
       provide: ErrorStateMatcher,
-      useClass: ShowOnDirtyErrorStateMatcher,
+      useClass: TouchedErrorStateMatcher,
     },
     {
       provide: MatPaginatorIntl,

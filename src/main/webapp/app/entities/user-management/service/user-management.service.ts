@@ -26,7 +26,7 @@ export class UserManagementService {
     return this.http.put<IUsuario>(url, user);
   }
 
-  find(id: string): Observable<IUsuario> {
+  find(id: number): Observable<IUsuario> {
     const url = `${this.resourceUrl}/get/${id}`;
     return this.http.get<IUsuario>(url).pipe(map(user => this.userAdapter.adapter(user)));
   }
@@ -54,7 +54,7 @@ export class UserManagementService {
     );
   }
 
-  delete(id: string): Observable<{}> {
+  delete(id: number): Observable<{}> {
     const url = `${this.resourceUrl}/delete/${id}`;
     return this.http.delete(url);
   }

@@ -15,11 +15,11 @@ import { MenuItems } from './menu-items/menu-items';
 import { AccordionDirective } from './accordion/accordion.directive';
 import { AccordionAnchorDirective } from './accordion/accordionanchor.directive';
 import { AccordionLinkDirective } from './accordion/accordionlink.directive';
-import { SpinnerComponent } from './spinner.component';
-import { ErrorStateMatcher } from '@angular/material/core';
-import { TouchedErrorStateMatcher } from 'app/core/util/toucheErrorState';
-import { DeleteEntityDialogComponent } from './deletion/delete-entity-dialog/delete-entity-dialog.component';
-import { PrintEntityDialogComponent } from './deletion/print-entity-dialog/print-entity-dialog.component';
+import { DeleteEntityDialogComponent } from './dialog/delete-entity-dialog/delete-entity-dialog.component';
+import { PrintEntityDialogComponent } from './dialog/print-entity-dialog/print-entity-dialog.component';
+import { SafePipe } from './safe/safe.pipe';
+import { LoaderComponent } from './loader/loader/loader.component';
+import { SpinnerComponent } from './loader/spinner.component';
 
 @NgModule({
   imports: [SharedLibsModule, MaterialModule],
@@ -30,6 +30,7 @@ import { PrintEntityDialogComponent } from './deletion/print-entity-dialog/print
     DurationPipe,
     FormatMediumDatetimePipe,
     FormatMediumDatePipe,
+    SafePipe,
     SortByDirective,
     SortDirective,
     ItemCountComponent,
@@ -40,6 +41,7 @@ import { PrintEntityDialogComponent } from './deletion/print-entity-dialog/print
     SpinnerComponent,
     DeleteEntityDialogComponent,
     PrintEntityDialogComponent,
+    LoaderComponent,
   ],
   exports: [
     SharedLibsModule,
@@ -50,6 +52,7 @@ import { PrintEntityDialogComponent } from './deletion/print-entity-dialog/print
     DurationPipe,
     FormatMediumDatetimePipe,
     FormatMediumDatePipe,
+    SafePipe,
     SortByDirective,
     SortDirective,
     ItemCountComponent,
@@ -60,7 +63,8 @@ import { PrintEntityDialogComponent } from './deletion/print-entity-dialog/print
     SpinnerComponent,
     DeleteEntityDialogComponent,
     PrintEntityDialogComponent,
+    LoaderComponent,
   ],
-  providers: [MenuItems, { provide: ErrorStateMatcher, useClass: TouchedErrorStateMatcher }],
+  providers: [MenuItems],
 })
 export class SharedModule {}
