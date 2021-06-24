@@ -5,12 +5,11 @@ import { ActivatedRoute } from '@angular/router';
 import { IUsuario, Usuario } from '../user-management.model';
 import { UserManagementService } from '../service/user-management.service';
 import { Observable, Subscription } from 'rxjs';
-import { EstablecimientoService } from 'app/entities/establishment-management/establecimiento.service';
-import { Establecimiento, IEstablecimiento } from 'app/entities/establishment-management/establecimiento.model';
-import { GrupoTrabajo, IGrupoTrabajo } from 'app/entities/group-work-management/grupoTrabajo.model';
-import { GrupoTrabajoService } from 'app/entities/group-work-management/grupoTrabajo.service';
-import { RolService } from 'app/entities/role-management/role.service';
-import { IRol, Rol } from 'app/entities/role-management/rol.model';
+import { EstablecimientoService } from 'app/entities/master-crud/establishment-management/establecimiento.service';
+import { Establecimiento, IEstablecimiento } from 'app/entities/master-crud/establishment-management/establecimiento.model';
+import { GrupoTrabajo, IGrupoTrabajo } from 'app/entities/master-crud/group-work-management/grupoTrabajo.model';
+import { GrupoTrabajoService } from 'app/entities/master-crud/group-work-management/grupoTrabajo.service';
+import { IRol, Rol, RolService } from '../../index';
 
 // Validators.pattern('^[a-zA-Z0-9!$&*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$|^[_.@A-Za-z0-9-]+$'),
 

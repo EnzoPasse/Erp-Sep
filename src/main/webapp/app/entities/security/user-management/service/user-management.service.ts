@@ -10,7 +10,9 @@ import { IQueryResultsModel } from 'app/core/request/queryResult.model';
 import { map } from 'rxjs/operators';
 import { UserAdaper } from './user-management.adapter.service';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root',
+})
 export class UserManagementService {
   public resourceUrl = this.applicationConfigService.getEndpointFor('/usuario');
 

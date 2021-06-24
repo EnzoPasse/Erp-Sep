@@ -1,8 +1,8 @@
 // Angular
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DeleteEntityDialogComponent } from './delete-entity-dialog/delete-entity-dialog.component';
-import { PrintEntityDialogComponent } from './print-entity-dialog/print-entity-dialog.component';
+import { DeleteEntityDialogComponent } from '../../shared/dialog/delete-entity-dialog/delete-entity-dialog.component';
+import { PrintEntityDialogComponent } from '../../shared/dialog/print-entity-dialog/print-entity-dialog.component';
 
 @Injectable({ providedIn: 'root' })
 export class DialogService {

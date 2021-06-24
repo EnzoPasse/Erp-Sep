@@ -6,7 +6,7 @@ import { UserManagementResolve } from './user-management.routing-resolve.service
 
 export const userManagementRoute: Routes = [
   {
-    path: 'usuarios',
+    path: '',
     component: UserManagementComponent,
     data: { pageTitle: 'Usuarios' },
   },

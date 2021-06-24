@@ -26,6 +26,8 @@ export class AccountService {
   }
 
   authenticate(identity: Account | null): void {
+    // eslint-disable-next-line no-console
+    console.log(identity);
     this.userIdentity = identity;
     this.authenticationState.next(this.userIdentity);
   }

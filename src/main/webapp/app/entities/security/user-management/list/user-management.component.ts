@@ -9,7 +9,7 @@ import { IUsuario } from '../user-management.model';
 import { fromEvent, merge, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import { UserManagementService } from '../service/user-management.service';
-import { DialogService } from 'app/shared/dialog/dialog.service';
+import { DialogService } from 'app/core/util/dialog.service';
 
 /* export class UserManagementComponent implements OnInit {
 

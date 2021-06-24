@@ -12,33 +12,20 @@ const LAYOUT_ROUTES: Routes = [
     canActivate: [],
     children: [
       {
-        path: 'admin',
-        data: {
-          title: 'Admin',
-          urls: [{ title: 'admin', url: '/admin1' }, { title: 'ADMIN' }],
-        },
-        loadChildren: () => import('../admin/admin-routing.module').then(m => m.AdminRoutingModule),
-      },
-
-      {
-        path: 'home',
-        data: {
-          title: 'HOME',
-        },
-        loadChildren: () => import('../home/home.module').then(m => m.HomeModule),
-      },
-
-      {
-        path: 'seguridad',
-        data: {
-          title: 'Usuarios',
-        },
-        loadChildren: () => import('./user-management/user-management.module').then(m => m.UserManagementModule),
-      },
-
-      {
         path: 'cuenta',
         loadChildren: () => import('../account/account.module').then(m => m.AccountModule),
+      },
+      {
+        path: 'home',
+        loadChildren: () => import('../home/home.module').then(m => m.HomeModule),
+      },
+      {
+        path: 'admin',
+        loadChildren: () => import('../admin/admin-routing.module').then(m => m.AdminRoutingModule),
+      },
+      {
+        path: 'seguridad',
+        loadChildren: () => import('./security/security-routing.module').then(m => m.SecurityRoutingModule),
       },
 
       ...ERROR_ROUTES,

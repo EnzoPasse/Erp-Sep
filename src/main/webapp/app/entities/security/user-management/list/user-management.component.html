@@ -118,7 +118,7 @@
               *jhiHasAnyAuthority="'Accion Crear Usuario'"
               mat-raised-button
               color="primary"
-              [routerLink]="['/seguridad/nuevoUsuario']"
+              [routerLink]="['nuevoUsuario']"
               matTooltip="Crear un nuevo usuario"
             >
               Nuevo Usuario
@@ -219,7 +219,8 @@
                 <div fxLayoutAlign="start space-around">
                   <div>
                     <button
-                      [routerLink]="['/seguridad', element.id, 'editarUsuario']"
+                      *jhiHasAnyAuthority="'Accion Editar Usuario'"
+                      [routerLink]="[element.id, 'editarUsuario']"
                       mat-icon-button
                       color="primary"
                       matTooltip="Editar usario"
