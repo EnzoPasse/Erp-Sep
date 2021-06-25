@@ -10,6 +10,8 @@ import { Establecimiento, IEstablecimiento } from 'app/entities/master-crud/esta
 import { GrupoTrabajo, IGrupoTrabajo } from 'app/entities/master-crud/group-work-management/grupoTrabajo.model';
 import { GrupoTrabajoService } from 'app/entities/master-crud/group-work-management/grupoTrabajo.service';
 import { IRol, Rol, RolService } from '../../index';
+import { Alert } from 'app/core/util/alert.service';
+import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 
 // Validators.pattern('^[a-zA-Z0-9!$&*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$|^[_.@A-Za-z0-9-]+$'),
 
@@ -25,6 +27,7 @@ export class UserManagementUpdateComponent implements OnInit, OnDestroy {
   roles: IRol[] = [];
   isSaving = false;
   subscriptions: Subscription[] = [];
+  alerts: Alert[] = [];
 
   editForm = this.fb.group({
     id: [],
@@ -44,7 +47,8 @@ export class UserManagementUpdateComponent implements OnInit, OnDestroy {
     private rolService: RolService,
     private establecimientoService: EstablecimientoService,
     private grupoService: GrupoTrabajoService,
-    private cdk: ChangeDetectorRef
+    private cdk: ChangeDetectorRef,
+    protected eventManager: EventManager
   ) {}
 
   ngOnInit(): void {
@@ -81,6 +85,9 @@ export class UserManagementUpdateComponent implements OnInit, OnDestroy {
   save(salir: boolean): void {
     if (this.editForm.invalid) {
       this.marcarCampos(this.editForm);
+      this.eventManager.broadcast(
+        new EventWithContent<Alert>('erpSepApp.error', { message: 'Algo no va bien!, verifica los campos', type: 'warning' })
+      );
       return;
     }
 

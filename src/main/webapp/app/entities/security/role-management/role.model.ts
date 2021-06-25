@@ -4,7 +4,7 @@ export interface IRol {
   rolPermiso?: any[];
   permisos?: number[];
   permisosNombre?: string[];
-  esAdmin?: boolean;
+  esAdmin?: number;
 }
 
 export class Rol implements IRol {
@@ -14,7 +14,7 @@ export class Rol implements IRol {
     public rolPermiso?: any[],
     public permisos?: number[],
     public permisosNombre?: string[],
-    public esAdmin?: boolean
+    public esAdmin?: number
   ) {}
 }
 

@@ -1,11 +1,14 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Alert } from 'app/core/util/alert.service';
+import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
+import { GrupoTrabajoService } from 'app/entities/master-crud';
+import { Observable, Subscription } from 'rxjs';
 import { IRol } from '../..';
-import { IPermission, ITodoItemFlatNode, Permission, TodoItemFlatNode } from '../role.model';
+import { IPermission, ITodoItemFlatNode, Permission, Rol, TodoItemFlatNode } from '../role.model';
 import { RolService } from '../service/role.service';
 
 @Component({
@@ -15,14 +18,10 @@ import { RolService } from '../service/role.service';
 })
 export class RoleUpdateComponent implements OnInit, OnDestroy {
   rol!: IRol;
-  hasFormErrors = false;
-  viewLoading = false;
-  loadingAfterSubmit = false;
   allPermissions: IPermission[] = [];
   rolePermissions: any[] = [];
   titleForm = '';
   isSaving = false;
-
   subscriptions: Subscription[] = [];
 
   /*********************** TREE  ************************************/
@@ -47,7 +46,7 @@ export class RoleUpdateComponent implements OnInit, OnDestroy {
   /** The selection for checklist */
   checklistSelection = new SelectionModel<ITodoItemFlatNode>(true /* multiple */);
 
-  constructor(private rolService: RolService, private route: ActivatedRoute, private cd: ChangeDetectorRef) {
+  constructor(private rolService: RolService, private route: ActivatedRoute, private eventManager: EventManager) {
     /* tree */
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<ITodoItemFlatNode>(this.getLevel, this.isExpandable);
@@ -85,7 +84,6 @@ export class RoleUpdateComponent implements OnInit, OnDestroy {
 
   selectionToggleExpand(node: ITodoItemFlatNode): void {
     this.checklistSelection.toggle(node);
-
     const descendants = this.treeControl.getDescendants(node);
     if (this.checklistSelection.isSelected(node)) {
       this.treeControl.expand(node);
@@ -105,7 +103,51 @@ export class RoleUpdateComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadPermissions(): void {
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  previousState(): void {
+    window.history.back();
+  }
+
+  limpiar(): void {
+    this.rol = new Rol();
+    this.isSaving = false;
+    this.createTitle(this.rol);
+    this.deselectAllNodes();
+  }
+
+  save(salir: boolean): void {
+    if (!this.rol.nombre) {
+      this.eventManager.broadcast(
+        new EventWithContent<Alert>('erpSepApp.error', { message: 'Algo no va bien!, verifica los campos', type: 'warning' })
+      );
+      return;
+    }
+
+    this.isSaving = true;
+    const rol = this.createRol();
+
+    if (rol.id !== undefined) {
+      this.subscribeToSaveResponse(this.rolService.update(rol));
+    } else {
+      this.subscribeToSaveResponse(this.rolService.create(rol));
+    }
+    if (salir) {
+      this.previousState();
+    }
+    this.limpiar();
+  }
+
+  protected subscribeToSaveResponse(result: Observable<IRol>): void {
+    result.subscribe({
+      next: () => this.onSaveSuccess(),
+      error: () => this.onSaveError(),
+    });
+  }
+
+  private loadPermissions(): void {
     this.rolService.getAllPermissions().subscribe({
       next: (res: IPermission[]) => {
         if (res.length > 0) {
@@ -119,17 +161,7 @@ export class RoleUpdateComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
-  }
-
-  checkPermissions(_allPermissions: IPermission[]): void {
-    // eslint-disable-next-line no-console
-    console.log(_allPermissions);
-
-    // eslint-disable-next-line no-console
-    console.log(this.rol);
-
+  private checkPermissions(_allPermissions: IPermission[]): void {
     // check the data tree
     _allPermissions.forEach((element: IPermission) => {
       const modulePermission = this.rol.rolPermiso!.some((t: any) => t === element.id);
@@ -158,7 +190,7 @@ export class RoleUpdateComponent implements OnInit, OnDestroy {
     });
   }
 
-  removeNull(arr: IPermission[] | null): IPermission[] | [] {
+  private removeNull(arr: IPermission[] | null): IPermission[] | [] {
     if (arr !== null) {
       return arr;
     } else {
@@ -166,103 +198,42 @@ export class RoleUpdateComponent implements OnInit, OnDestroy {
     }
   }
 
-  save(exit: boolean): void {
-    window.history.back();
+  private deselectAllNodes(): void {
+    this.treeControl.dataNodes.forEach(element => {
+      if (this.checklistSelection.isSelected(element)) {
+        element.isSelected = false;
+      }
+      this.treeControl.collapseAll();
+    });
   }
 
-  previousState(): void {
-    window.history.back();
+  private preparePermissionIds(): number[] {
+    const permisos = [];
+    for (let i = 0; this.checklistSelection.selected.length > i; i++) {
+      permisos.push(this.checklistSelection.selected[i].id);
+    }
+    return permisos;
   }
 
-  /* 
-    preparePermissionIds() {
-      let permisos: any[] = [];
-  
-      for (let i = 0; this.checklistSelection.selected.length > i; i++) {
-        permisos.push(this.checklistSelection.selected[i].id);
-      }
-  
-      return permisos;
-    }
-  
-   
-    prepareRole(): Role {
-      const _role = new Role();
-      _role.id = this.role.id;
-      _role.permisos = this.preparePermissionIds();
-  
-      _role.nombre = this.role.nombre;
-      _role.esAdmin = this.role.esAdmin;
-      return _role;
-    }
-  
-    
-    onSubmit() {
-      this.hasFormErrors = false;
-      this.loadingAfterSubmit = false;
-      if (!this.isTitleValid() || this.checklistSelection.selected.length === 0) {
-        this.hasFormErrors = true;
-        return;
-      }
-  
-      const editedRole = this.prepareRole();
-  
-      if (editedRole.id > 0) {
-        this.updateRole(editedRole);
-      } else {
-        this.createRole(editedRole);
-      }
-    }
-  
-    
-    updateRole(_role: Role) {
-      this.loadingAfterSubmit = true;
-      this.viewLoading = true;
-      const updateRole: Update<Role> = {
-        id: this.role.id,
-        changes: _role
-      };
-  
-      this.store.dispatch(RoleUpdated({ partialrole: updateRole, role: _role }));
-      this.verificarDuplicado(_role)
-  
-    }
-  
-    verificarDuplicado(_role: Role) {
-      this.componentSubscriptions = this.store.select(selectMessageError)
-        .subscribe(res => {
-          this.viewLoading = false;
-  
-          if (res) {
-            this.mensajeError = res.message
-            this.cd.markForCheck();  //TODO se cierra la ventana cuando hay un error, solucionar eso
-            return
-          } else {
-            this.dialogRef.close({ _role, isEdit: false });
-          }
-        });
-  
-    }
-  
-  
-    createRole(_role: Role) {
-      this.loadingAfterSubmit = true;
-      this.viewLoading = true;
-      this.store.dispatch(RoleOnServerCreated({ role: _role }));
-      this.verificarDuplicado(_role);
-  
-    }
-  
-  
-    onAlertClose($event?) {
-      this.hasFormErrors = false;
-      if (this.componentSubscriptions) {
-  
-        this.mensajeError = null;
-        this.store.dispatch(RoleCloseError());
-      }
-    }
-   */
+  private createRol(): IRol {
+    return {
+      ...new Rol(),
+      id: this.rol.id ?? undefined,
+      nombre: this.rol.nombre,
+      rolPermiso: [],
+      permisos: this.preparePermissionIds(),
+      permisosNombre: [],
+      esAdmin: +this.rol.esAdmin!,
+    };
+  }
+
+  private onSaveSuccess(): void {
+    this.isSaving = false;
+  }
+
+  private onSaveError(): void {
+    this.isSaving = false;
+  }
 
   private createTitle(rol: IRol): void {
     if (!rol.id) {

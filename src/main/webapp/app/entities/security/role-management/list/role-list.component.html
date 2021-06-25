@@ -19,6 +19,8 @@
         </div>
       </mat-card-header>
       <hr />
+      <jhi-alert-error></jhi-alert-error>
+
       <mat-card-content>
         <div fxLayout="row wrap" class="align-items-center">
           <div fxFlex.gt-sm="33" flFlex.gt-md="66" fxFlex="100">
@@ -30,7 +32,7 @@
           </div>
         </div>
 
-        <div class="table-responsive m-t-15 mat-elevation-z2">
+        <div class="table-responsive example-container m-t-15 mat-elevation-z2">
           <table
             mat-table
             [dataSource]="dataSource"
