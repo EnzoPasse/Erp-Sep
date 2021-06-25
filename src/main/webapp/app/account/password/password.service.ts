@@ -3,12 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
+import { Account } from 'app/core/auth/account.model';
 
 @Injectable({ providedIn: 'root' })
 export class PasswordService {
+  public resourceUrl = this.applicationConfigService.getEndpointFor('/usuario/editClave');
   constructor(private http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
 
-  save(claveNueva: string, claveActual: string): Observable<{}> {
-    return this.http.post(this.applicationConfigService.getEndpointFor('cambiarClave'), { claveNueva, claveActual });
+  save(user: Account): Observable<{}> {
+    return this.http.put(this.resourceUrl, user);
   }
 }

@@ -26,6 +26,8 @@ export class AccountService {
   }
 
   authenticate(identity: Account | null): void {
+    // eslint-disable-next-line no-console
+    console.log(identity);
     this.userIdentity = identity;
     this.authenticationState.next(this.userIdentity);
   }
@@ -82,11 +84,7 @@ export class AccountService {
   }
 
   getAllPeriod(): Observable<AccountPeriod[]> {
-    return this.http.get<AccountPeriod[]>(this.applicationConfigService.getEndpointFor('login/getperiodoContable'));
-  }
-
-  getIdentity(): Account | null {
-    return this.userIdentity;
+    return this.http.get<AccountPeriod[]>(this.applicationConfigService.getEndpointFor('/login/getperiodoContable'));
   }
 
   /*   private fetch(): Observable<Account> {

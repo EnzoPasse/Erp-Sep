@@ -15,7 +15,11 @@ import { MenuItems } from './menu-items/menu-items';
 import { AccordionDirective } from './accordion/accordion.directive';
 import { AccordionAnchorDirective } from './accordion/accordionanchor.directive';
 import { AccordionLinkDirective } from './accordion/accordionlink.directive';
-import { SpinnerComponent } from './spinner.component';
+import { DeleteEntityDialogComponent } from './dialog/delete-entity-dialog/delete-entity-dialog.component';
+import { PrintEntityDialogComponent } from './dialog/print-entity-dialog/print-entity-dialog.component';
+import { SafePipe } from './safe/safe.pipe';
+import { LoaderComponent } from './loader/loader/loader.component';
+import { SpinnerComponent } from './loader/spinner.component';
 
 @NgModule({
   imports: [SharedLibsModule, MaterialModule],
@@ -26,6 +30,7 @@ import { SpinnerComponent } from './spinner.component';
     DurationPipe,
     FormatMediumDatetimePipe,
     FormatMediumDatePipe,
+    SafePipe,
     SortByDirective,
     SortDirective,
     ItemCountComponent,
@@ -34,6 +39,9 @@ import { SpinnerComponent } from './spinner.component';
     AccordionLinkDirective,
     AccordionDirective,
     SpinnerComponent,
+    DeleteEntityDialogComponent,
+    PrintEntityDialogComponent,
+    LoaderComponent,
   ],
   exports: [
     SharedLibsModule,
@@ -44,6 +52,7 @@ import { SpinnerComponent } from './spinner.component';
     DurationPipe,
     FormatMediumDatetimePipe,
     FormatMediumDatePipe,
+    SafePipe,
     SortByDirective,
     SortDirective,
     ItemCountComponent,
@@ -52,6 +61,9 @@ import { SpinnerComponent } from './spinner.component';
     AccordionLinkDirective,
     AccordionDirective,
     SpinnerComponent,
+    DeleteEntityDialogComponent,
+    PrintEntityDialogComponent,
+    LoaderComponent,
   ],
   providers: [MenuItems],
 })

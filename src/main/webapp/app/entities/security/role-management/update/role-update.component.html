@@ -1,0 +1,109 @@
+<mat-card>
+  <mat-card-header fxLayoutAlign="space-between start">
+    <mat-card-title>{{ titleForm }}</mat-card-title>
+    <div fxLayout="column" fxLayout.gt-xs="row">
+      <div>
+        <button
+          fxHide
+          fxShow.gt-sm
+          *jhiHasAnyAuthority="'Accion Crear Rol'"
+          mat-raised-button
+          color="primary"
+          matTooltip="Guardar los cambios"
+          (click)="save(true)"
+          [disabled]="isSaving"
+        >
+          Guardar
+        </button>
+      </div>
+      &nbsp;
+      <div>
+        <button fxHide fxShow.gt-sm mat-raised-button color="primary" cdkFocusInitial matTooltip="Volver" (click)="previousState()">
+          Cancelar
+        </button>
+      </div>
+      <div>
+        <button *jhiHasAnyAuthority="'Accion Crear Rol'" mat-icon-button [matMenuTriggerFor]="menu" color="primary">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item color="primary" (click)="save(true)">Guardar y Salir</button>
+          <button mat-menu-item color="primary" (click)="save(false)">Guardar y Continuar</button>
+          <button mat-menu-item color="primary" (click)="limpiar()">Limpiar Formulario</button>
+          <button fxHide.gt-sm mat-menu-item color="primary" (click)="previousState()">Salir</button>
+        </mat-menu>
+      </div>
+    </div>
+  </mat-card-header>
+  <hr />
+  <mat-card-content>
+    <jhi-alert-error></jhi-alert-error>
+
+    <div fxLayout="row wrap" class="align-items-center m-b-30">
+      <div fxFlex="60" fxFlex.gt-md="50">
+        <div class="m-r-15">
+          <mat-form-field class="mat-form-field-fluid">
+            <input
+              [disabled]="rol?.id == 1"
+              matInput
+              type="input"
+              id="rol"
+              autocomplete="off"
+              placeholder="Nombre del rol"
+              [(ngModel)]="rol.nombre"
+              name="rol"
+              required
+            />
+            <mat-error> Rol es requerido </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div fxFlexOffset="10">
+        <mat-checkbox [(ngModel)]="rol.esAdmin" [labelPosition]="'before'" [disabled]="rol?.id == 1"> Admin </mat-checkbox>
+      </div>
+
+      <div fxFlex="100" fxFlex.gt-md="60" class="m-l-20">
+        <h5 fxFlex>
+          Permisos: &nbsp;&nbsp;&nbsp;
+          <small>Modulo / Formulario / Accion</small>
+        </h5>
+      </div>
+
+      <div fxFlex="100" fxFlex.gt-md="50" class="m-l-40">
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+          <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+            <button mat-icon-button disabled></button>
+            <mat-checkbox
+              class="checklist-leaf-node"
+              [(ngModel)]="node.isSelected"
+              [disabled]="rol?.id == 1"
+              (change)="checklistSelection.toggle(node)"
+              [color]="'primary'"
+            >
+              {{ node.item }}
+            </mat-checkbox>
+          </mat-tree-node>
+
+          <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+            <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.filename" disabled>
+              <mat-icon class="mat-icon-rtl-mirror">
+                {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+              </mat-icon>
+            </button>
+
+            <mat-checkbox
+              [(ngModel)]="node.isSelected"
+              [disabled]="rol?.id == 1"
+              (change)="selectionToggleExpand(node)"
+              [color]="'primary'"
+            >
+              {{ node.item }}
+            </mat-checkbox>
+          </mat-tree-node>
+        </mat-tree>
+      </div>
+    </div>
+
+    {{ rol | json }}
+  </mat-card-content>
+</mat-card>

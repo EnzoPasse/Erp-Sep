@@ -35,14 +35,19 @@ export class PasswordComponent {
       return;
     }
 
-    this.passwordService.save(this.newPsw?.value, this.currentPsw?.value).subscribe({
-      next: () => {
-        (this.isSaving = true), this.previousState();
-      },
-      error: () => {
-        this.isSaving = false;
-      },
-    });
+    if (this.user) {
+      this.user.clave = this.currentPsw?.value;
+      this.user.nuevaClave = this.newPsw?.value;
+
+      this.passwordService.save(this.user).subscribe({
+        next: () => {
+          (this.isSaving = true), this.previousState();
+        },
+        error: () => {
+          this.isSaving = false;
+        },
+      });
+    }
   }
 
   previousState(): void {

@@ -32,7 +32,7 @@
       <!-- Logo - style you can find in header.scss -->
       <!-- ============================================================== -->
       <div class="navbar-header">
-        <a class="navbar-brand" href="/">
+        <a class="navbar-brand" [routerLink]="['/home']">
           <!-- Logo icon -->
           <b>
             <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
@@ -55,12 +55,13 @@
       <!-- sidebar toggle -->
       <!-- ============================================================== -->
 
+      <!-- (click)="snav.toggle() && clickEvent()"  que se supone que hace esto? clicEvent()-->
       <button
         mat-icon-button
-        (click)="snav.toggle() && clickEvent()"
+        (click)="snav.toggle() && (status = !status)"
         class="sidebar-toggle"
         value="sidebarclosed"
-        matTooltip="Open / Close"
+        matTooltip="Barra Lateral"
       >
         <mat-icon>menu</mat-icon>
       </button>
@@ -95,7 +96,7 @@
       <!-- ============================================================== -->
       <!-- Right sidebar toggle - style you can find in rightsidebar.component.scss -->
       <!-- ============================================================== -->
-      <button (click)="end.toggle()" mat-icon-button class="ml-xs overflow-visible">
+      <button (click)="end.toggle()" mat-icon-button class="ml-xs overflow-visible" matTooltip="Configuraciones">
         <mat-icon>settings</mat-icon>
       </button>
     </div>
@@ -179,6 +180,8 @@
     <!-- ============================================================== -->
     <mat-sidenav-content class="page-wrapper" [ngClass]="status ? 'minitoggle' : ''">
       <!-- <jhi-breadcrumb></jhi-breadcrumb> -->
+      <jhi-loader></jhi-loader>
+
       <div class="page-content">
         <router-outlet>
           <jhi-spinner></jhi-spinner>

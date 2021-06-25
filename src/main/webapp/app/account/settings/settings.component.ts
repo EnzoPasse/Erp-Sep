@@ -50,19 +50,24 @@ export class SettingsComponent implements OnInit {
 }
  */
 
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Account } from 'app/core/auth/account.model';
 import { AccountService } from 'app/core/auth/account.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'jhi-settings',
   templateUrl: './settings.component.html',
 })
-export class SettingsComponent {
+export class SettingsComponent implements OnDestroy {
   selectedTab = 0;
   user: Account | null = null;
+  subscription: Subscription;
 
   constructor(public accountService: AccountService) {
-    this.user = this.accountService.getIdentity();
+    this.subscription = this.accountService.getAuthenticationState().subscribe(resp => (this.user = resp));
+  }
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

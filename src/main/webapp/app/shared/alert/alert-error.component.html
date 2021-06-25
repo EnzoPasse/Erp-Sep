@@ -8,14 +8,14 @@
  -->
 
 <div *ngFor="let alert of alerts">
-  <!-- <div class="alert" [ngClass]="alert.type === 'warning'? 'bg-warning' : 'bg-danger' " > -->
   <div [ngClass]="setClasses(alert)">
     <button mat-icon-button (click)="close(alert)">
-      <mat-icon>clear</mat-icon>
+      <span fxFlex>
+        <mat-icon style="align-self: center">clear</mat-icon>
+      </span>
     </button>
-    <div class="message-content">
-      <pre>  <strong>{{alert.message}} </strong> </pre>
-    </div>
+    <span style="word-wrap: break-word">
+      <strong>{{ alert.message }} </strong>
+    </span>
   </div>
 </div>
-<!-- [style.background-color]="alert.type === 'danger' ? 'red' : (alert.type === 'warning'? 'orange' : null)" -->

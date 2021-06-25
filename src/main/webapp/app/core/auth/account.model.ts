@@ -11,18 +11,21 @@
   ) {}
 } */
 
+import { IPeriodoContable } from 'app/shared/modelTodelete/periodoContable';
+
 export class Account {
   constructor(
     public id?: number,
     public nombre?: string,
     public nombreCompleto?: string,
     public clave?: string,
+    public nuevaClave?: string,
     public establecimiento?: string,
     public rol?: string,
     public grupoTrabajo?: string,
     public correo?: string,
     public token?: string,
-    public idPeriodoContable?: number,
+    public periodoContable?: IPeriodoContable,
     public cuil?: string,
     public permisosNombre?: string[],
     public imagenUrl?: string

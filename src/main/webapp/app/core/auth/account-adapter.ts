@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Adater } from '../util/adapter';
 import { Account } from './account.model';
 
 @Injectable({
@@ -11,19 +12,16 @@ export class AccountAdaper implements Adater<Account> {
       item.nombre,
       item.nombreCompleto,
       item.clave,
+      item.nuevaClave,
       item.establecimiento ? item.establecimiento.nombre : '',
       item.rol ? item.rol.nombre : '',
       item.grupoTrabajo ? item.grupoTrabajo.nombre : '',
       item.correo,
       item.token,
-      item.idPeriodoContable,
+      item.periodoContable,
       item.cuil,
       item.rol.permisosNombre,
       item.imagenUrl || ''
     );
   }
-}
-
-export interface Adater<T> {
-  adapter(item: any): T;
 }

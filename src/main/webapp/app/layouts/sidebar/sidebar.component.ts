@@ -42,4 +42,8 @@ export class SidebarComponent implements OnDestroy {
       left: 0,
     });
   }
+
+  isActive(): boolean {
+    return true;
+  }
 }

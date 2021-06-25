@@ -9,8 +9,8 @@ import { Observable } from 'rxjs';
 export class ForgotPassword {
   constructor(private http: HttpClient) {}
 
-  forgot(user: any): Observable<any> {
-    const url = `${SERVER_API_URL}forgot`;
-    return this.http.post<any>(url, { user });
+  forgot(user: string): Observable<any> {
+    const url = `${SERVER_API_URL}/login/RestaurarClave?nombre=${user}`;
+    return this.http.put<any>(url, {});
   }
 }

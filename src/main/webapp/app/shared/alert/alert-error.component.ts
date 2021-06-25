@@ -2,9 +2,9 @@ import { Component, OnDestroy } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 
-import { AlertError } from './alert-error.model';
 import { Alert, AlertService, AlertType } from 'app/core/util/alert.service';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
+// import { AlertError } from './alert-error.model';
 
 @Component({
   selector: 'jhi-alert-error',
@@ -17,15 +17,12 @@ export class AlertErrorComponent implements OnDestroy {
 
   constructor(private alertService: AlertService, private eventManager: EventManager) {
     this.errorListener = eventManager.subscribe('erpSepApp.error', (response: EventWithContent<unknown> | string) => {
-      const errorResponse = (response as EventWithContent<AlertError>).content;
-      this.addErrorAlert(errorResponse.message);
+      const errorResponse = (response as EventWithContent<Alert>).content;
+      this.addErrorAlert(errorResponse.message, errorResponse.type);
     });
 
     this.httpErrorListener = eventManager.subscribe('erpSepApp.httpError', (response: EventWithContent<unknown> | string) => {
       const httpErrorResponse = (response as EventWithContent<HttpErrorResponse>).content;
-
-      // eslint-disable-next-line no-console
-      // console.log(httpErrorResponse.status);
 
       switch (httpErrorResponse.status) {
         // connection refused, server not reachable

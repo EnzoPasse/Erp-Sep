@@ -6,6 +6,6 @@ export const docsRoute: Route = {
   path: '',
   component: DocsComponent,
   data: {
-    pageTitle: 'API',
+    pageTitle: 'Api-Docs',
   },
 };

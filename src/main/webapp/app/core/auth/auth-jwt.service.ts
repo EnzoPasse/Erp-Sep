@@ -49,9 +49,6 @@ export class AuthServerProvider {
   }
 
   private authenticateSuccess(response: any, rememberMe: boolean): void {
-    // eslint-disable-next-line no-console
-    console.log(response);
-
     const jwt = response.token;
     if (rememberMe) {
       this.$localStorage.store('authenticationToken', jwt);
