@@ -5,7 +5,6 @@ import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree'
 import { ActivatedRoute } from '@angular/router';
 import { Alert } from 'app/core/util/alert.service';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
-import { GrupoTrabajoService } from 'app/entities/master-crud';
 import { Observable, Subscription } from 'rxjs';
 import { IRol } from '../..';
 import { IPermission, ITodoItemFlatNode, Permission, Rol, TodoItemFlatNode } from '../role.model';
@@ -24,17 +23,17 @@ export class RoleUpdateComponent implements OnInit, OnDestroy {
   isSaving = false;
   subscriptions: Subscription[] = [];
 
-  /*********************** TREE  ************************************/
-  /** Map from flat node to nested node. This helps us finding the nested node to be modified */
+  /* ********************** TREE  ************************************/
+  // Map from flat node to nested node. This helps us finding the nested node to be modified
   flatNodeMap = new Map<ITodoItemFlatNode, Permission>();
 
-  /** Map from nested node to flattened node. This helps us to keep the same object for selection */
+  // Map from nested node to flattened node. This helps us to keep the same object for selection
   nestedNodeMap = new Map<Permission, ITodoItemFlatNode>();
 
-  /** A selected parent node to be inserted */
+  // A selected parent node to be inserted
   selectedParent: ITodoItemFlatNode | null = null;
 
-  /** The new item's name */
+  // The new item's name
   newItemName = '';
 
   treeControl: FlatTreeControl<ITodoItemFlatNode>;
@@ -43,18 +42,16 @@ export class RoleUpdateComponent implements OnInit, OnDestroy {
 
   dataSource: MatTreeFlatDataSource<Permission, ITodoItemFlatNode>;
 
-  /** The selection for checklist */
-  checklistSelection = new SelectionModel<ITodoItemFlatNode>(true /* multiple */);
+  // The selection for checklist
+  checklistSelection = new SelectionModel<ITodoItemFlatNode>(true); // multiple
 
   constructor(private rolService: RolService, private route: ActivatedRoute, private eventManager: EventManager) {
-    /* tree */
+    // tree
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<ITodoItemFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-    /*  */
   }
 
-  /*  TREE */
   getLevel = (node: ITodoItemFlatNode): any => node.level;
 
   isExpandable = (node: ITodoItemFlatNode): any => node.expandable;
@@ -93,7 +90,7 @@ export class RoleUpdateComponent implements OnInit, OnDestroy {
     }
   }
 
-  /*****************END TREE**********************   */
+  /* ****************END TREE**********************   */
 
   ngOnInit(): void {
     this.route.data.subscribe(({ rol }) => {

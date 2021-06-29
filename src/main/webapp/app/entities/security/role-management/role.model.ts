@@ -18,7 +18,7 @@ export class Rol implements IRol {
   ) {}
 }
 
-/** TREE ELEMENTS  */
+/* ****TREE ELEMENTS  ****/
 export interface IPermission {
   id: number;
   nombre: string;
@@ -41,7 +41,7 @@ export class Permission implements IPermission {
   ) {}
 }
 
-/**MANAGER TREE */
+/* ****MANAGER TREE ****/
 export interface ITodoItemFlatNode {
   id: number;
   item: string;
