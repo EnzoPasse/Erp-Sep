@@ -118,7 +118,7 @@ export class RoleUpdateComponent implements OnInit, OnDestroy {
   save(salir: boolean): void {
     if (!this.rol.nombre) {
       this.eventManager.broadcast(
-        new EventWithContent<Alert>('erpSepApp.error', { message: 'Algo no va bien!, verifica los campos', type: 'warning' })
+        new EventWithContent<Alert>('erpSepApp.error', { message: 'Algo no va bien, por favor verifica los campos', type: 'warning' })
       );
       return;
     }

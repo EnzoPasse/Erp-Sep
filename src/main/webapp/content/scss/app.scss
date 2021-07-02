@@ -932,6 +932,29 @@ Notify
   }
 }
 
+@keyframes heartbit {
+  0% {
+    -moz-transform: scale(0);
+    opacity: 0;
+  }
+  25% {
+    -moz-transform: scale(0.1);
+    opacity: 0.1;
+  }
+  50% {
+    -moz-transform: scale(0.5);
+    opacity: 0.3;
+  }
+  75% {
+    -moz-transform: scale(0.8);
+    opacity: 0.5;
+  }
+  100% {
+    -moz-transform: scale(1);
+    opacity: 0;
+  }
+}
+
 @-webkit-keyframes heartbit {
   0% {
     -webkit-transform: scale(0);
@@ -1069,6 +1092,7 @@ Table
     font-size: 10px;
   }
 }
+
 .mat-row:nth-child(even) {
   background-color: white;
 }
@@ -1240,5 +1264,36 @@ ul.list-style-none {
   button {
     top: 0;
     float: right;
+  }
+
+  /*********************
+Badges
+**********************/
+  .badge {
+    padding: 0;
+    margin: 0;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    font-size: 0.8rem;
+  }
+  .badge.badge--info {
+    background: transparent;
+    color: #5578eb;
+    border: 1px solid #5578eb;
+  }
+  .badge.badge--danger {
+    background: transparent;
+    color: #fd397a;
+    border: 1px solid #fd397a;
   }
 }

@@ -1,0 +1,46 @@
+<mat-card>
+  <mat-card-header fxLayoutAlign="space-between start">
+    <mat-card-title>{{ titleForm }}</mat-card-title>
+    <div fxLayout="column" fxLayout.gt-xs="row">
+      <div>
+        <button
+          fxHide
+          fxShow.gt-sm
+          *jhiHasAnyAuthority="'Accion Crear Usuario'"
+          mat-raised-button
+          color="primary"
+          matTooltip="Guardar los cambios"
+          (click)="save(true)"
+          [disabled]="isSaving"
+        >
+          Guardar
+        </button>
+      </div>
+      &nbsp;
+      <div>
+        <button fxHide fxShow.gt-sm mat-raised-button color="primary" cdkFocusInitial matTooltip="Volver" (click)="previousState()">
+          Cancelar
+        </button>
+      </div>
+      <div>
+        <button *jhiHasAnyAuthority="'Accion Crear Usuario'" mat-icon-button [matMenuTriggerFor]="menu" color="primary">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item color="primary" (click)="save(true)">Guardar y Salir</button>
+          <button mat-menu-item color="primary" (click)="save(false)">Guardar y Continuar</button>
+          <button mat-menu-item color="primary" (click)="limpiar()">Limpiar Formulario</button>
+          <button fxHide.gt-sm mat-menu-item color="primary" (click)="previousState()">Salir</button>
+        </mat-menu>
+      </div>
+    </div>
+  </mat-card-header>
+  <hr />
+  <mat-card-content>
+    <jhi-alert-error></jhi-alert-error>
+
+    <form [formGroup]="editForm"></form>
+  </mat-card-content>
+</mat-card>
+
+{{ data | json }}

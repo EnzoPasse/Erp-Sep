@@ -86,7 +86,7 @@ export class UserManagementUpdateComponent implements OnInit, OnDestroy {
     if (this.editForm.invalid) {
       this.marcarCampos(this.editForm);
       this.eventManager.broadcast(
-        new EventWithContent<Alert>('erpSepApp.error', { message: 'Algo no va bien!, verifica los campos', type: 'warning' })
+        new EventWithContent<Alert>('erpSepApp.error', { message: 'Algo no va bien, por favor verifica los campos', type: 'warning' })
       );
       return;
     }

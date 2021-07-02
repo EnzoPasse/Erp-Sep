@@ -69,7 +69,7 @@ const MENUITEMS = [
     permission: 'Modulo Deudas',
     // badge: [{ type: 'warning', value: 'new' }],
     children: [
-      { state: 'comprobantesDeuda', name: 'Deuda', type: 'link', permission: 'Formulario Comprobantes por Deuda' },
+      { state: 'comprobante', name: 'Comprobante', type: 'link', permission: 'Formulario Comprobantes por Deuda' },
       { state: 'lotesDeuda', name: 'Lote de Deuda', type: 'link', permission: 'Formulario Comprobantes por Importacion de Deuda' },
       { state: 'notaCredito', name: 'Nota Credito', type: 'link', permission: 'Formulario Comprobantes por Notas de Creditos' },
       { state: 'notaDebito', name: 'Nota Debito', type: 'link', permission: 'Formulario Comprobantes por Notas de Debitos' },
