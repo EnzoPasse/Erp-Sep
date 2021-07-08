@@ -13,7 +13,7 @@ export class EnteService {
   constructor(private http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
 
   findAutocompleteEnte(texto: string): Observable<IEnte[]> {
-    const url = `${this.resourceUrl}/?nombre=${texto}`;
+    const url = `${this.resourceUrl}/Get/?nombre=${texto}`;
     return this.http.get<IEnte[]>(url);
   }
 }

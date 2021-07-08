@@ -6,7 +6,7 @@
         <button
           fxHide
           fxShow.gt-sm
-          *jhiHasAnyAuthority="'Accion Crear Usuario'"
+          *jhiHasAnyAuthority="'Accion Crear Comprobante'"
           mat-raised-button
           color="primary"
           matTooltip="Guardar los cambios"
@@ -23,7 +23,7 @@
         </button>
       </div>
       <div>
-        <button *jhiHasAnyAuthority="'Accion Crear Usuario'" mat-icon-button [matMenuTriggerFor]="menu" color="primary">
+        <button *jhiHasAnyAuthority="'Accion Crear Comprobante'" mat-icon-button [matMenuTriggerFor]="menu" color="primary">
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
@@ -39,8 +39,208 @@
   <mat-card-content>
     <jhi-alert-error></jhi-alert-error>
 
-    <form [formGroup]="editForm"></form>
+    <form [formGroup]="editForm">
+      <div fxLayout="row wrap" fxLayoutAlign="space-between start">
+        <div fxFlex="100" fxFlex.gt-sm="50">
+          <mat-form-field appearance="outline">
+            <mat-label>Ente:</mat-label>
+            <input matInput [formControl]="ente" id="ente" [matAutocomplete]="auto" />
+            <mat-hint align="start">Escribir para buscar..</mat-hint>
+            <mat-error *ngIf="ente.invalid">{{ mensajeErrorEnte() }}</mat-error>
+          </mat-form-field>
+          <mat-autocomplete
+            #auto="matAutocomplete"
+            autoActiveFirstOption
+            [displayWith]="displayFn.bind(this)"
+            (optionSelected)="enteSelected($event.option.value)"
+          >
+            <mat-option *ngIf="loadingAutocomplete" class="is-loading">
+              <mat-spinner diameter="20"></mat-spinner>
+            </mat-option>
+            <ng-container *ngIf="!loadingAutocomplete">
+              <mat-option *ngFor="let ente of resultEnte" [value]="ente">
+                <span
+                  ><small>{{
+                    ente.persona ? ente.persona.apellido : ente.personaJuridica ? ente.personaJuridica.nombreFantasia : ''
+                  }}</small></span
+                >
+              </mat-option>
+            </ng-container>
+          </mat-autocomplete>
+        </div>
+
+        <div fxFlex="100" fxFlex.gt-sm="30" class="text-right">
+          <mat-form-field appearance="fill">
+            <mat-label>Fecha:</mat-label>
+            <input matInput type="text" mask="00/00/0000" [dropSpecialCharacters]="false" [formControl]="fechaContable" />
+            <mat-icon matSuffix>date_range</mat-icon>
+            <mat-hint align="start">'dd/mm/yyyy'</mat-hint>
+            <mat-error *ngIf="fechaContable.invalid">{{ mensajeErrorFechaContable() }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div fxFlex="100" fxFlex.gt-sm="30" class="m-t-15">
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo Comprobante:</mat-label>
+            <mat-select formControlName="tipoComprobante">
+              <mat-option *ngFor="let item of allTipoComprobantes" [value]="item.id">
+                <small>{{ item.nombre }}</small>
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="tipoComprobante.invalid">{{ mensajeErrorTipoComprobante() }} </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div fxFlex="100" fxFlex.gt-sm="30" class="m-t-15">
+          <mat-form-field appearance="outline">
+            <mat-label>Nro Comprobante:</mat-label>
+            <input matInput mask="00000-00000000" [formControl]="nroComprobante" (keyup.enter)="rellenarCeros($event.target)" />
+            <mat-hint align="start">00000-00000000</mat-hint>
+            <mat-error *ngIf="nroComprobante.invalid">{{ mensajeErrorNroComprobante() }} </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div fxFlex="100" fxFlex.gt-sm="30" class="m-t-15">
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha del Comprobante:</mat-label>
+            <input matInput mask="00/00/0000" [dropSpecialCharacters]="false" [formControl]="fechaComprobante" />
+            <mat-icon matSuffix>date_range</mat-icon>
+            <mat-hint align="start">'dd/mm/yyyy'</mat-hint>
+            <mat-error *ngIf="fechaComprobante.invalid">{{ mensajeErrorFechaComprobante() }} </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div fxFlex="100" fxFlex.gt-sm="30" class="m-t-15">
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha del Vencimiento:</mat-label>
+            <input matInput mask="00/00/0000" [dropSpecialCharacters]="false" [formControl]="fechaVto" />
+            <mat-icon matSuffix>date_range</mat-icon>
+            <mat-hint align="start">'dd/mm/yyyy'</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div fxFlex="100" fxFlex.gt-sm="30" class="m-t-15">
+          <mat-form-field appearance="outline">
+            <mat-label>Periodo:</mat-label>
+            <input matInput mask="00/0000" [dropSpecialCharacters]="false" [formControl]="periodo" />
+            <mat-icon matSuffix>date_range</mat-icon>
+            <mat-hint align="start">'mm/yyyy'</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div fxFlex="100" fxFlex.gt-sm="30" class="m-t-15">
+          <mat-form-field appearance="outline">
+            <mat-label>Observaciones:</mat-label>
+            <textarea matInput [formControl]="observaciones" cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+      &nbsp;
+      <hr />
+      &nbsp;
+      <div formArrayName="items">
+        <div *ngFor="let item of items?.controls; let i = index">
+          <div [formGroupName]="i">
+            <div fxLayout="row wrap" fxLayoutAlign="space-between start">
+              <div fxFlex="100" fxFlex.gt-sm="40">
+                <mat-form-field appearance="fill">
+                  <mat-select placeholder="Concepto" [formControl]="item.get('id')">
+                    <mat-option *ngFor="let concepto of allConceptos" [value]="concepto.id"> {{ concepto.nombre }} </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="item.controls.id.invalid"> Requerido</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="100" fxFlex.gt-sm="30">
+                <mat-form-field appearance="fill">
+                  <input type="number" matInput placeholder="SubTotal {{ i + 1 }}" [formControl]="item.get('importe')" />
+                  <span matPrefix>$&nbsp;</span>
+                  <mat-error *ngIf="item.get('importe').invalid">
+                    {{ mensajeErrorImporte(i) }}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="100" fxFlex.gt-sm="10" class="text-end">
+                <button
+                  *ngIf="editForm.get('items')?.controls.length > 1"
+                  (click)="borrarItem(i)"
+                  type="button"
+                  mat-mini-fab
+                  color="warn"
+                  matTooltip="Quitar"
+                >
+                  <mat-icon>remove</mat-icon>
+                </button>
+                <button
+                  *ngIf="items?.controls.length === i + 1"
+                  (click)="agregarItem()"
+                  type="button"
+                  mat-mini-fab
+                  color="primary"
+                  matTooltip="Agregar"
+                >
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 
+      <tbody>
+        <tr *ngFor="let row of editForm.get('items')?.controls;let index = index;">
+          <td class="p-15">
+            {{index+1}}
+          </td>
+
+          <td class="p-15">
+            <input matInput type="text" class="form-control" formControlName="id">
+          </td>
+
+          <td class="p-15">
+            <mat-form-field class="mat-form-field-fluid">
+              <input type="number" matInput placeholder="SubTotal {{ index + 1 }}" formControlName="importe"
+                style="font-size: 15px;">
+              <span matPrefix>$&nbsp;</span>
+
+              <mat-error *ngIf="item.controls.importe.invalid">
+                {{mensajeErrorImporte (index)}}
+              </mat-error>
+
+
+            </mat-form-field>
+          </td>
+
+          <td class="p-15">
+            <div *ngIf='index > 0'>
+              <button color="warn" mat-raised-button (click)="onRemoveRow(index)">Remove
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+      </table>
+      </div>
+
+      <div class="text-right m-t-30">
+        <button color="accent" mat-raised-button>Add row</button>
+
+
+
+        <h5 class="m-b-5 font-medium">Sub total: </h5>
+        <h5 class="m-t-0 font-medium">Total Vat:</h5>
+
+        <h3 class="m-b-0 b-t p-t-20">Grand Total: </h3>
+      </div>
+
+
+      </div> -->
+    </form>
   </mat-card-content>
 </mat-card>
 
-{{ data | json }}
+{{ editForm.value | json }}
+
+{{ allConceptos }}

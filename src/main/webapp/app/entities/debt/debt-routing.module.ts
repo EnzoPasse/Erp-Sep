@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { OperationType } from 'app/config/operationTypes.constants';
-import { StateVoucherType } from 'app/config/StateVoucherType.constant';
+import { StateVoucherType } from 'app/config/voucherType.constant';
 
 @NgModule({
   imports: [

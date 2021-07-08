@@ -17,7 +17,7 @@ export const voucherManagementRoute: Routes = [
       pageTitle: 'Nuevo Comprobante',
     },
     resolve: {
-      voucher: VoucherManagementResolve,
+      comprobante: VoucherManagementResolve,
     },
   },
   {
@@ -27,7 +27,7 @@ export const voucherManagementRoute: Routes = [
       pageTitle: 'Editar Comprobante',
     },
     resolve: {
-      voucher: VoucherManagementResolve,
+      comprobante: VoucherManagementResolve,
     },
   },
 
@@ -38,7 +38,7 @@ export const voucherManagementRoute: Routes = [
       pageTitle: 'Nueva Nota Crédito',
     },
     resolve: {
-      voucher: VoucherManagementResolve,
+      comprobante: VoucherManagementResolve,
     },
   },
 
@@ -49,7 +49,7 @@ export const voucherManagementRoute: Routes = [
       pageTitle: 'Editar Nota Crédito',
     },
     resolve: {
-      voucher: VoucherManagementResolve,
+      comprobante: VoucherManagementResolve,
     },
   },
 
@@ -60,7 +60,7 @@ export const voucherManagementRoute: Routes = [
       pageTitle: 'Nueva Nota Débito',
     },
     resolve: {
-      voucher: VoucherManagementResolve,
+      comprobante: VoucherManagementResolve,
     },
   },
 
@@ -71,7 +71,7 @@ export const voucherManagementRoute: Routes = [
       pageTitle: 'Editar Nota Débito',
     },
     resolve: {
-      voucher: VoucherManagementResolve,
+      comprobante: VoucherManagementResolve,
     },
   },
 ];

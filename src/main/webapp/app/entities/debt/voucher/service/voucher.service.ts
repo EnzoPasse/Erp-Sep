@@ -8,9 +8,10 @@ import { IQueryParamsModel } from 'app/core/request/queryParams.model';
 import { IQueryResultsModel } from 'app/core/request/queryResult.model';
 import { map } from 'rxjs/operators';
 import { VoucherAdaper } from './voucher-adapter.service';
-import { IComprobante, IEstadoComprobante, ITipoComprobante } from '../voucher.model';
-import { StateVoucherType } from 'app/config/StateVoucherType.constant';
+import { IComprobante, IEstadoComprobante, IItem, ITipoComprobante } from '../voucher.model';
+import { StateVoucherType } from 'app/config/voucherType.constant';
 import { OperationType } from 'app/config/operationTypes.constants';
+import { OperationTemplate, TypeTemplate } from 'app/config/template.constats';
 
 @Injectable({
   providedIn: 'root',
@@ -62,13 +63,23 @@ export class ComprobanteService {
     return this.http.delete(url);
   }
 
+  /*****ESTADOS****** */
   getAllEstados(type: number): Observable<IEstadoComprobante[]> {
     const url = this.applicationConfigService.getEndpointFor(`/estadoComprobante/get/${type}`);
     return this.http.get<IEstadoComprobante[]>(url);
   }
 
+  /******TIPOS DE COMPROBANTES********/
   getAllTiposComprobante(): Observable<ITipoComprobante[]> {
     const url = this.applicationConfigService.getEndpointFor(`/tipoComprobante/get`);
     return this.http.get<ITipoComprobante[]>(url);
+  }
+
+  /***********ITEMS ****** */
+  getItemsEnte(idEnte: number): Observable<IItem[]> {
+    const url = this.applicationConfigService.getEndpointFor(
+      `/item/get/?id=${idEnte}&dh=${OperationTemplate.DEBE}&idPlantillaTipo=${TypeTemplate.PLANTILLA_DEUDA}`
+    );
+    return this.http.get<IItem[]>(url);
   }
 }

@@ -1,23 +1,15 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Validators, FormBuilder, AbstractControl, FormGroup, FormArray } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Alert } from 'app/core/util/alert.service';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 import { CustomValidators } from 'app/core/util/validators';
-import {
-  IEstablecimiento,
-  IGrupoTrabajo,
-  EstablecimientoService,
-  GrupoTrabajoService,
-  Establecimiento,
-  GrupoTrabajo,
-  IEnte,
-} from 'app/entities/master-crud';
+import { IEnte } from 'app/entities/master-crud';
 import { EnteService } from 'app/entities/master-crud/ente/ente.service';
-import { Usuario, IRol, UserManagementService, RolService, IUsuario, Rol } from 'app/entities/security';
-import { title } from 'node:process';
-import { Subscription, Observable, merge } from 'rxjs';
-import { concatMap, debounceTime, distinctUntilChanged, filter, finalize, map, switchMap, tap } from 'rxjs/operators';
+import { IUsuario } from 'app/entities/security';
+import * as dayjs from 'dayjs';
+import { Subscription, Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, finalize, map, switchMap, tap } from 'rxjs/operators';
 import { ComprobanteService } from '../service/voucher.service';
 import { Comprobante, IComprobante, IItem, ITipoComprobante } from '../voucher.model';
 
@@ -26,11 +18,12 @@ import { Comprobante, IComprobante, IItem, ITipoComprobante } from '../voucher.m
   templateUrl: './voucher-update.component.html',
   styleUrls: ['./voucher-update.component.scss'],
 })
-export class VoucherUpdateComponent implements OnInit, OnDestroy {
+export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
+  now = dayjs().format('DD/MM/YYYY');
   itemArray = [] as any;
   allConceptos: IItem[] = [];
   comprobanteRes!: IComprobante;
-  alltipoComprobantes: ITipoComprobante[] = [];
+  allTipoComprobantes: ITipoComprobante[] = [];
   resultEnte: IEnte[] = [];
   loadingAutocomplete = false;
   titleForm = '';
@@ -40,8 +33,8 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy {
 
   editForm = this.fb.group({
     id: [],
-    fechaContable: ['', [Validators.required, CustomValidators.isValidDate]],
-    enteCrtl: ['', [Validators.required, CustomValidators.RequireMatch]],
+    fechaContable: ['08/07/2021', [Validators.required, CustomValidators.isValidDate]],
+    ente: ['', [Validators.required, CustomValidators.RequireMatch]],
     tipoComprobante: ['', [Validators.required]],
     nroComprobante: ['', Validators.required],
     fechaComprobante: ['', [Validators.required, CustomValidators.isValidDate]],
@@ -62,21 +55,26 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.subscriptions.push(this.comprobanteService.getAllTiposComprobante().subscribe({ next: res => (this.alltipoComprobantes = res) }));
+    this.subscriptions.push(this.comprobanteService.getAllTiposComprobante().subscribe({ next: res => (this.allTipoComprobantes = res) }));
 
     const routeSubscription = this.route.data.subscribe((data: any) => {
       this.comprobanteRes = data['comprobante'];
       this.data = data;
       this.titleForm = data.pageTitle;
       let titlemas = '';
-      if (data.comprobante.id !== null) {
+      if (data.comprobante!.id !== undefined) {
         titlemas = data.comprobante.id as string;
-        this.updateForm(data['comprobante']);
       }
+      this.updateForm(data['comprobante']);
       this.titleForm = this.titleForm + titlemas;
     });
     this.subscriptions.push(routeSubscription);
 
+    // eslint-disable-next-line no-console
+    console.log(this.comprobanteRes);
+  }
+
+  ngAfterViewInit(): void {
     this.ente.valueChanges
       .pipe(
         map(value => (typeof value === 'string' ? this.noWhiteSpace(value) : (value as string))),
@@ -124,10 +122,10 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy {
     this.items.removeAt(i);
   }
 
-  enteSelected(event: IEnte | undefined): void {
-    if (event) {
-      this.comprobanteService.update(event).subscribe(res => {
-        /* this.allConceptos = res; */
+  enteSelected(ente: IEnte | undefined): void {
+    if (ente) {
+      this.comprobanteService.getItemsEnte(ente.id!).subscribe(res => {
+        this.allConceptos = res;
       });
     }
   }
@@ -166,6 +164,22 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy {
       this.previousState();
     }
     this.limpiar();
+  }
+
+  rellenarCeros(event: HTMLInputElement): void {
+    const valor = event.value.includes('-');
+    if (!valor) {
+      while (5 - event.value.length !== 0) {
+        event.value = '0' + event.value;
+      }
+      this.nroComprobante.patchValue(event.value + '-');
+    } else {
+      const partes = event.value.split('-');
+      while (8 - partes[1].length !== 0) {
+        partes[1] = '0' + partes[1].valueOf();
+        this.nroComprobante.patchValue(partes[0] + '-' + partes[1]);
+      }
+    }
   }
 
   get id(): AbstractControl {
@@ -211,15 +225,6 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy {
   mensajeErrorNroComprobante(): string {
     return this.nroComprobante.hasError('required') ? 'El Nro debe ser (00000-00000000)' : '';
   }
-  /* 
-    get prefijoComprobante() {
-      if (this.deudaForm)
-        return this.deudaForm.get('prefijoComprobante');
-    } 
-  
-    mensajeErrorPrefijoComprobante() {
-      return this.prefijoComprobante.hasError('required') ? 'El Prefijo debe ser (00000)' : '';
-    } */
 
   get periodo(): AbstractControl {
     return this.editForm.get('periodo') as AbstractControl;
@@ -249,8 +254,11 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy {
       : '';
   }
 
-  displayFn(ente: IEnte): string | undefined {
-    return ente.persona ? ente.persona.apellido : ente.personaJuridica ? ente.personaJuridica.nombreFantasia : undefined;
+  displayFn(ente?: IEnte): string | undefined {
+    if (ente !== undefined) {
+      return ente.persona ? ente.persona.apellido : ente.personaJuridica ? ente.personaJuridica.nombreFantasia : undefined;
+    }
+    return undefined;
   }
 
   get fechaVto(): AbstractControl {
@@ -288,8 +296,8 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy {
   private updateForm(comprobante: IComprobante): void {
     this.editForm.patchValue({
       id: comprobante.id,
-      fechaContable: comprobante.fechaContable,
-      enteCrtl: comprobante.ente,
+      fechaContable: comprobante.fechaContable ?? this.now,
+      ente: comprobante.ente,
       tipoComprobante: comprobante.tipoComprobante,
       nroComprobante: comprobante.nroComprobante,
       fechaComprobante: comprobante.fechaComprobante,

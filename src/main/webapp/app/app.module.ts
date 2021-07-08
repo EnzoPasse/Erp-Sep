@@ -22,6 +22,10 @@ import { httpInterceptorProviders } from 'app/core/interceptor/index';
 
 import { AppComponent } from './app.component';
 
+import { NgxMaskModule, IConfig } from 'ngx-mask';
+
+export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -37,6 +41,7 @@ import { AppComponent } from './app.component';
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: true }),
     HttpClientModule,
     NgxWebstorageModule.forRoot({ prefix: 'jhi', separator: '-', caseSensitive: true }),
+    NgxMaskModule.forRoot(options),
   ],
   providers: [
     Title,

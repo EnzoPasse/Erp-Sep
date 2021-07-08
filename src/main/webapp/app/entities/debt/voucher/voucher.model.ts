@@ -71,7 +71,7 @@ export interface IComprobante {
 
 export class Comprobante implements IComprobante {
   constructor(
-    public id?: number,
+    public id: number | undefined = undefined,
     public periodo?: string,
     public fechaComprobante?: string,
     public fechaContable?: string,
@@ -83,20 +83,20 @@ export class Comprobante implements IComprobante {
     public nroComprobante?: string,
     public nroLote?: string,
 
-    public percepcionGanancia?: number,
-    public percepcionIVA?: number,
-    public percepcionIngBruto?: number,
-    public retencionGanancia?: number,
-    public retencionIVA?: number,
-    public retencionIngBruto?: number,
-    public saldo?: number,
-    public aImputar?: number,
-    public imputado?: number,
-    public totalComprobante?: number,
-    public dtoRgoOtros?: number,
+    public percepcionGanancia: number = 0,
+    public percepcionIVA: number = 0,
+    public percepcionIngBruto: number = 0,
+    public retencionGanancia: number = 0,
+    public retencionIVA: number = 0,
+    public retencionIngBruto: number = 0,
+    public saldo: number = 0,
+    public aImputar: number = 0,
+    public imputado: number = 0,
+    public totalComprobante: number = 0,
+    public dtoRgoOtros: number = 0,
 
     public grupoRef?: string,
-    public observaciones?: string | null,
+    public observaciones?: string,
     public establecimiento?: IEstablecimiento,
     public estadoComprobante?: IEstadoComprobante,
     public comprobanteRef?: IComprobante[],
@@ -105,6 +105,6 @@ export class Comprobante implements IComprobante {
     public tipoComprobante?: ITipoComprobante,
     public ente?: IEnte,
     public movimientoCajaBanco?: IMovimientoCajaBanco[],
-    public item?: IItem[]
+    public item: IItem[] = []
   ) {}
 }

@@ -8,7 +8,7 @@ import { Comprobante, IComprobante } from '../voucher.model';
 export class VoucherAdaper implements Adater<IComprobante> {
   adapter(item: any): IComprobante {
     return new Comprobante(
-      item.id,
+      item.id ? item.id : undefined,
       item.periodo,
       item.fechaComprobante,
       item.fechaContable,
