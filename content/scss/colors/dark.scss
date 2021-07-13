@@ -125,3 +125,15 @@ $border: rgba(0, 0, 0, 0.12);
 .mailbox .message-center a:hover {
   background: $inverse;
 }
+
+.mat-row:nth-child(even) {
+  background-color: $light;
+}
+
+.mat-row:nth-child(odd) {
+  background-color: $light;
+}
+
+.mat-header-row {
+  background-color: $light;
+}
