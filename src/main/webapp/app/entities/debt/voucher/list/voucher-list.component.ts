@@ -2,7 +2,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OperationType } from 'app/config/operationTypes.constants';
 import { QueryParamsModel } from 'app/core/request/queryParams.model';
 import { DialogService } from 'app/core/util/dialog.service';
@@ -39,7 +39,12 @@ export class VoucherListComponent implements OnInit, OnDestroy {
   // Subscriptions
   private subscriptions: Subscription[] = [];
 
-  constructor(private comprobanteService: ComprobanteService, private dialog: DialogService, private route: ActivatedRoute) {}
+  constructor(
+    private comprobanteService: ComprobanteService,
+    private dialog: DialogService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.route.data.subscribe((data: any) => {
@@ -157,7 +162,11 @@ export class VoucherListComponent implements OnInit, OnDestroy {
       case 'PAGADO PARCIAL':
         return 'warning';
       case 'ANULADO':
-        return 'metal';
+        return 'canceled';
+      case 'IMPUTADO PARCIAL':
+        return 'warning';
+      case 'IMPUTADO':
+        return 'success';
     }
     return '';
   }
@@ -167,10 +176,10 @@ export class VoucherListComponent implements OnInit, OnDestroy {
       this.title = 'Lista de Deudas';
     }
     if (this.dataUrl.queryOperation === OperationType.GET_NOTA_CREDITO) {
-      this.title = 'Lista de Nota Creditos';
+      this.title = 'Lista de Notas Créditos';
     }
     if (this.dataUrl.queryOperation === OperationType.GET_NOTA_DEBITO) {
-      this.title = 'Lista de Nota Debito';
+      this.title = 'Lista de Notas Débitos';
     }
   }
 

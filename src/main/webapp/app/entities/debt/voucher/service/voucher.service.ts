@@ -9,7 +9,6 @@ import { IQueryResultsModel } from 'app/core/request/queryResult.model';
 import { map } from 'rxjs/operators';
 import { VoucherAdaper } from './voucher-adapter.service';
 import { IComprobante, IEstadoComprobante, IItem, ITipoComprobante } from '../voucher.model';
-import { StateVoucherType } from 'app/config/voucherType.constant';
 import { OperationType } from 'app/config/operationTypes.constants';
 import { OperationTemplate, TypeTemplate } from 'app/config/template.constats';
 
@@ -19,6 +18,7 @@ import { OperationTemplate, TypeTemplate } from 'app/config/template.constats';
 export class ComprobanteService {
   public OperationType = OperationType;
   public resourceUrl = this.applicationConfigService.getEndpointFor('/comprobante');
+  public deudaUrl = this.applicationConfigService.getEndpointFor('/deuda');
 
   constructor(
     private http: HttpClient,
@@ -26,13 +26,13 @@ export class ComprobanteService {
     private voucherAdapter: VoucherAdaper
   ) {}
 
-  create(voucher: IComprobante): Observable<IComprobante> {
-    const url = `${this.resourceUrl}/create`;
+  create(voucher: IComprobante, operation: number): Observable<IComprobante> {
+    const url = `${this.deudaUrl}/create?operacion=${operation}`;
     return this.http.post<IComprobante>(url, voucher);
   }
 
-  update(voucher: IComprobante): Observable<IComprobante> {
-    const url = `${this.resourceUrl}/edit`;
+  update(voucher: IComprobante, operation: number): Observable<IComprobante> {
+    const url = `${this.deudaUrl}/edit?operacion=${operation}`;
     return this.http.put<IComprobante>(url, voucher);
   }
 
@@ -59,23 +59,23 @@ export class ComprobanteService {
   }
 
   delete(id: number): Observable<{}> {
-    const url = `${this.resourceUrl}/delete/${id}`;
+    const url = `${this.deudaUrl}/delete/${id}`;
     return this.http.delete(url);
   }
 
-  /*****ESTADOS****** */
+  /* ****ESTADOS****** */
   getAllEstados(type: number): Observable<IEstadoComprobante[]> {
     const url = this.applicationConfigService.getEndpointFor(`/estadoComprobante/get/${type}`);
     return this.http.get<IEstadoComprobante[]>(url);
   }
 
-  /******TIPOS DE COMPROBANTES********/
-  getAllTiposComprobante(): Observable<ITipoComprobante[]> {
-    const url = this.applicationConfigService.getEndpointFor(`/tipoComprobante/get`);
+  /* *****TIPOS DE COMPROBANTES********/
+  getAllTiposComprobante(type: number): Observable<ITipoComprobante[]> {
+    const url = this.applicationConfigService.getEndpointFor(`/tipoComprobante/getPorIdMFA/${type}`);
     return this.http.get<ITipoComprobante[]>(url);
   }
 
-  /***********ITEMS ****** */
+  /* **********ITEMS ****** */
   getItemsEnte(idEnte: number): Observable<IItem[]> {
     const url = this.applicationConfigService.getEndpointFor(
       `/item/get/?id=${idEnte}&dh=${OperationTemplate.DEBE}&idPlantillaTipo=${TypeTemplate.PLANTILLA_DEUDA}`

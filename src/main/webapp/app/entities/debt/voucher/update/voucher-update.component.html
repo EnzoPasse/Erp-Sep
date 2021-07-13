@@ -18,7 +18,7 @@
       </div>
       &nbsp;
       <div>
-        <button fxHide fxShow.gt-sm mat-raised-button color="primary" cdkFocusInitial matTooltip="Volver" (click)="previousState()">
+        <button fxHide fxShow.gt-sm mat-raised-button color="warn" cdkFocusInitial matTooltip="Volver" (click)="previousState()">
           Cancelar
         </button>
       </div>
@@ -82,8 +82,8 @@
         <div fxFlex="100" fxFlex.gt-sm="30" class="m-t-15">
           <mat-form-field appearance="outline">
             <mat-label>Tipo Comprobante:</mat-label>
-            <mat-select formControlName="tipoComprobante">
-              <mat-option *ngFor="let item of allTipoComprobantes" [value]="item.id">
+            <mat-select formControlName="tipoComprobante" [compareWith]="comparar">
+              <mat-option *ngFor="let item of allTipoComprobantes" [value]="item">
                 <small>{{ item.nombre }}</small>
               </mat-option>
             </mat-select>
@@ -135,9 +135,12 @@
           </mat-form-field>
         </div>
       </div>
+
       &nbsp;
+      <div class="text-center font-medium">Detalles</div>
       <hr />
       &nbsp;
+
       <div formArrayName="items">
         <div *ngFor="let item of items?.controls; let i = index">
           <div [formGroupName]="i">
@@ -188,59 +191,17 @@
         </div>
       </div>
 
-      <!-- 
-      <tbody>
-        <tr *ngFor="let row of editForm.get('items')?.controls;let index = index;">
-          <td class="p-15">
-            {{index+1}}
-          </td>
+      <div fxLayout="row wrap" fxLayoutAlign="end space-between">
+        <div fxFlex="100" fxFlex.gt-sm="20" class="text-left">
+          <h3 class="m-b-0 p-t-20">Total:</h3>
+          <mat-form-field appearance="fill">
+            <input matInput placeholder="Total" formControlName="totalComprobante" id="totalComprobante" style="font-size: 20px" />
+            <span matPrefix style="font-size: 20px" class="font-medium">$&nbsp;</span>
+          </mat-form-field>
+        </div>
 
-          <td class="p-15">
-            <input matInput type="text" class="form-control" formControlName="id">
-          </td>
-
-          <td class="p-15">
-            <mat-form-field class="mat-form-field-fluid">
-              <input type="number" matInput placeholder="SubTotal {{ index + 1 }}" formControlName="importe"
-                style="font-size: 15px;">
-              <span matPrefix>$&nbsp;</span>
-
-              <mat-error *ngIf="item.controls.importe.invalid">
-                {{mensajeErrorImporte (index)}}
-              </mat-error>
-
-
-            </mat-form-field>
-          </td>
-
-          <td class="p-15">
-            <div *ngIf='index > 0'>
-              <button color="warn" mat-raised-button (click)="onRemoveRow(index)">Remove
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-      </table>
+        <div fxFlex="100" fxFlex.gt-sm="20" class="text-end"></div>
       </div>
-
-      <div class="text-right m-t-30">
-        <button color="accent" mat-raised-button>Add row</button>
-
-
-
-        <h5 class="m-b-5 font-medium">Sub total: </h5>
-        <h5 class="m-t-0 font-medium">Total Vat:</h5>
-
-        <h3 class="m-b-0 b-t p-t-20">Grand Total: </h3>
-      </div>
-
-
-      </div> -->
     </form>
   </mat-card-content>
 </mat-card>
-
-{{ editForm.value | json }}
-
-{{ allConceptos }}

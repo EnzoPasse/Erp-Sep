@@ -6,7 +6,7 @@
         <div fxLayout="column" fxLayout.gt-xs="row">
           <ng-template [jhiHasAnyAuthority]="dataUrl?.createPermission">
             <!-- Para que funcione la directiva binding data, tiene que ser dentro ng-template -->
-            <button mat-raised-button color="primary" [routerLink]="dataUrl?.urlEdit" matTooltip="Crear un nuevo comprobante">
+            <button mat-raised-button color="primary" [routerLink]="dataUrl?.urlNew" matTooltip="Crear un nuevo comprobante">
               Nuevo Comprobante
             </button>
           </ng-template>
@@ -125,8 +125,8 @@
 
             <ng-container matColumnDef="Saldo">
               <mat-header-cell *matHeaderCellDef mat-sort-header>Saldo</mat-header-cell>
-              <mat-cell *matCellDef="let comprobante" style="color: red">
-                {{ comprobante.saldo | currency: 'ARS':'symbol' }}
+              <mat-cell *matCellDef="let comprobante" style="color: red" class="font-medium">
+                {{ comprobante.saldo | currency }}
               </mat-cell>
             </ng-container>
 
@@ -134,7 +134,7 @@
               <mat-header-cell *matHeaderCellDef mat-sort-header>Estado</mat-header-cell>
               <mat-cell *matCellDef="let comprobante">
                 <span class="badge badge--{{ getItemCssClassByStatus(comprobante.estadoComprobante.nombre) }}">
-                  <small>{{ comprobante.estadoComprobante.nombre }}</small>
+                  {{ comprobante.estadoComprobante.nombre }}
                 </span>
               </mat-cell>
             </ng-container>
@@ -145,7 +145,7 @@
                 <div fxLayoutAlign="start space-around">
                   <ng-template [jhiHasAnyAuthority]="dataUrl?.editPermission">
                     <button
-                      [routerLink]="[comprobante.id, dataUrl?.urlEdit]"
+                      [routerLink]="[comprobante.id, dataUrl.urlEdit]"
                       mat-icon-button
                       color="primary"
                       matTooltip="Editar comprobante"
@@ -161,7 +161,7 @@
                       color="warn"
                       matTooltip="Borrar comprobante"
                       type="button"
-                      (click)="deleteUser(comprobante)"
+                      (click)="deleteComprobante(comprobante)"
                       [disabled]="comprobante?.estadoComprobante.nombre === 'PENDIENTE' ? false : true"
                     >
                       <mat-icon class="icon-08x"> delete</mat-icon>

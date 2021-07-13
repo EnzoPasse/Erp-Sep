@@ -1,7 +1,7 @@
-import { NgModule, LOCALE_ID } from '@angular/core';
+import { NgModule, LOCALE_ID, DEFAULT_CURRENCY_CODE } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import locale from '@angular/common/locales/es';
+import locale from '@angular/common/locales/es-AR';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -23,6 +23,7 @@ import { httpInterceptorProviders } from 'app/core/interceptor/index';
 import { AppComponent } from './app.component';
 
 import { NgxMaskModule, IConfig } from 'ngx-mask';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
 
@@ -45,7 +46,12 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
   ],
   providers: [
     Title,
-    { provide: LOCALE_ID, useValue: 'es' },
+    { provide: LOCALE_ID, useValue: 'es-Ar' },
+    {
+      provide: DEFAULT_CURRENCY_CODE,
+      useValue: 'ARS',
+    },
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
     { provide: NgbDateAdapter, useClass: NgbDateDayjsAdapter },
 
     httpInterceptorProviders,
@@ -56,7 +62,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
 export class AppModule {
   constructor(applicationConfigService: ApplicationConfigService, iconLibrary: FaIconLibrary, dpConfig: NgbDatepickerConfig) {
     applicationConfigService.setEndpointPrefix(SERVER_API_URL);
-    registerLocaleData(locale);
+    registerLocaleData(locale, 'es-AR');
     iconLibrary.addIcons(...fontAwesomeIcons);
     dpConfig.minDate = { year: dayjs().subtract(100, 'year').year(), month: 1, day: 1 };
   }

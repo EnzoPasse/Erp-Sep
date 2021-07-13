@@ -35,9 +35,9 @@ export class Item implements IItem {
 export interface IComprobante {
   id?: number;
   periodo?: string;
-  fechaComprobante?: string;
-  fechaContable?: string;
-  fechaVto?: string;
+  fechaComprobanteString?: string;
+  fechaContableString?: string;
+  fechaVtoString?: string;
   nroCAI?: string;
   nroCierre?: number;
   nroCompGanancia?: string;
@@ -73,9 +73,9 @@ export class Comprobante implements IComprobante {
   constructor(
     public id: number | undefined = undefined,
     public periodo?: string,
-    public fechaComprobante?: string,
-    public fechaContable?: string,
-    public fechaVto?: string,
+    public fechaComprobanteString?: string,
+    public fechaContableString?: string,
+    public fechaVtoString?: string,
     public nroCAI?: string,
     public nroCierre?: number,
     public nroCompGanancia?: string,

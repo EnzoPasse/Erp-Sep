@@ -12,7 +12,8 @@ import { StateVoucherType } from 'app/config/voucherType.constant';
         data: {
           queryOperation: OperationType.GET_DEUDA,
           stateType: StateVoucherType.DEUDA,
-          urlEdit: 'nuevoComprobante',
+          urlNew: 'nuevoComprobante',
+          urlEdit: 'editarComprobante',
           createPermission: 'Accion Crear Comprobante',
           editPermission: 'Accion Editar Comprobante',
           deletePermission: 'Accion Eliminar Comprobante',
@@ -24,7 +25,8 @@ import { StateVoucherType } from 'app/config/voucherType.constant';
         data: {
           queryOperation: OperationType.GET_NOTA_CREDITO,
           stateType: StateVoucherType.NOTA_CREDITO,
-          urlEdit: 'nuevoNotaCredito',
+          urlNew: 'nuevoNotaCredito',
+          urlEdit: 'editarNotaCredito',
           createPermission: 'Accion Crear Nota de Credito',
           editPermission: 'Accion Editar Nota de Credito',
           deletePermission: 'Accion Eliminar Nota de Credito',
@@ -36,7 +38,8 @@ import { StateVoucherType } from 'app/config/voucherType.constant';
         data: {
           queryOperation: OperationType.GET_NOTA_DEBITO,
           stateType: StateVoucherType.NOTA_DEBITO,
-          urlEdit: 'nuevoNotaDebito',
+          urlNew: 'nuevoNotaDebito',
+          urlEdit: 'editarNotaDebito',
           createPermission: 'Accion Crear Nota de Debito',
           editPermission: 'Accion Editar Nota de Debito',
           deletePermission: 'Accion Eliminar Nota de Debito',

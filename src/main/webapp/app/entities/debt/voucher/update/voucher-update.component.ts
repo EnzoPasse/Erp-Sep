@@ -27,13 +27,13 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   resultEnte: IEnte[] = [];
   loadingAutocomplete = false;
   titleForm = '';
-  data: any;
+  urlData: any;
   isSaving = false;
   subscriptions: Subscription[] = [];
 
   editForm = this.fb.group({
     id: [],
-    fechaContable: ['08/07/2021', [Validators.required, CustomValidators.isValidDate]],
+    fechaContable: ['', [Validators.required, CustomValidators.isValidDate]],
     ente: ['', [Validators.required, CustomValidators.RequireMatch]],
     tipoComprobante: ['', [Validators.required]],
     nroComprobante: ['', Validators.required],
@@ -55,32 +55,31 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   ) {}
 
   ngOnInit(): void {
-    this.subscriptions.push(this.comprobanteService.getAllTiposComprobante().subscribe({ next: res => (this.allTipoComprobantes = res) }));
-
     const routeSubscription = this.route.data.subscribe((data: any) => {
       this.comprobanteRes = data['comprobante'];
-      this.data = data;
+      this.urlData = data;
       this.titleForm = data.pageTitle;
       let titlemas = '';
       if (data.comprobante!.id !== undefined) {
         titlemas = data.comprobante.id as string;
       }
       this.updateForm(data['comprobante']);
-      this.titleForm = this.titleForm + titlemas;
+      this.titleForm = this.titleForm + ' #' + titlemas;
     });
     this.subscriptions.push(routeSubscription);
-
-    // eslint-disable-next-line no-console
-    console.log(this.comprobanteRes);
   }
 
   ngAfterViewInit(): void {
-    this.ente.valueChanges
+    this.subscriptions.push(
+      this.comprobanteService.getAllTiposComprobante(this.urlData.stateType).subscribe({ next: res => (this.allTipoComprobantes = res) })
+    );
+
+    const enteValueChanges = this.ente.valueChanges
       .pipe(
         map(value => (typeof value === 'string' ? this.noWhiteSpace(value) : (value as string))),
-        filter(query => query.length >= 2),
-        debounceTime(150), //que se emita solo una vez cada 500ms
+        debounceTime(150), // que se emita solo una vez cada 500ms
         distinctUntilChanged(),
+        filter(query => query.length > 1),
         tap(() => (this.loadingAutocomplete = true)),
         switchMap(value => this.enteService.findAutocompleteEnte(value).pipe(finalize(() => (this.loadingAutocomplete = false))))
       )
@@ -88,6 +87,10 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
         this.resultEnte = res;
         this.cdk.markForCheck();
       });
+    this.subscriptions.push(enteValueChanges);
+
+    const itemValueChanges = this.items.valueChanges.subscribe(item => this.actualizarTotalComprobante(item));
+    this.subscriptions.push(itemValueChanges);
   }
 
   ngOnDestroy(): void {
@@ -137,6 +140,7 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   limpiar(): void {
     this.updateForm(new Comprobante());
     this.itemArray = [];
+    this.editForm.reset();
     this.editForm.markAsUntouched();
     this.editForm.updateValueAndValidity();
     this.editForm.markAsPristine();
@@ -156,14 +160,24 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     const comprobante = this.createComprobante();
 
     if (comprobante.id !== undefined) {
-      this.subscribeToSaveResponse(this.comprobanteService.update(comprobante));
+      this.subscribeToSaveResponse(this.comprobanteService.update(comprobante, this.urlData.editOperation));
     } else {
-      this.subscribeToSaveResponse(this.comprobanteService.create(comprobante));
+      this.subscribeToSaveResponse(this.comprobanteService.create(comprobante, this.urlData.createOperation));
     }
     if (salir) {
       this.previousState();
     }
     this.limpiar();
+  }
+
+  actualizarTotalComprobante(item: any): void {
+    let totalSum = 0;
+    for (const i in item) {
+      if (item) {
+        totalSum += item[i].importe;
+        this.editForm.controls['totalComprobante'].patchValue(totalSum);
+      }
+    }
   }
 
   rellenarCeros(event: HTMLInputElement): void {
@@ -254,11 +268,15 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
       : '';
   }
 
-  displayFn(ente?: IEnte): string | undefined {
-    if (ente !== undefined) {
+  displayFn(ente: IEnte | undefined | null): string | undefined {
+    if (ente !== undefined && ente !== null) {
       return ente.persona ? ente.persona.apellido : ente.personaJuridica ? ente.personaJuridica.nombreFantasia : undefined;
     }
     return undefined;
+  }
+
+  comparar(o1: any, o2: any): boolean {
+    return o1?.name === o2?.name && o1?.id === o2?.id;
   }
 
   get fechaVto(): AbstractControl {
@@ -294,15 +312,18 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   private updateForm(comprobante: IComprobante): void {
+    // eslint-disable-next-line no-console
+    console.log(comprobante);
+
     this.editForm.patchValue({
       id: comprobante.id,
-      fechaContable: comprobante.fechaContable ?? this.now,
+      fechaContable: comprobante.fechaContableString ?? this.now,
       ente: comprobante.ente,
       tipoComprobante: comprobante.tipoComprobante,
       nroComprobante: comprobante.nroComprobante,
-      fechaComprobante: comprobante.fechaComprobante,
+      fechaComprobante: comprobante.fechaComprobanteString,
       periodo: comprobante.periodo,
-      fechaVto: comprobante.fechaVto,
+      fechaVto: comprobante.fechaVtoString,
       observaciones: comprobante.observaciones,
       totalComprobante: comprobante.totalComprobante,
     });
@@ -317,9 +338,9 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
       ...new Comprobante(),
       id: this.id.value,
       periodo: this.periodo.value,
-      fechaComprobante: this.fechaComprobante.value,
-      fechaContable: this.fechaContable.value,
-      fechaVto: this.fechaVto.value,
+      fechaComprobanteString: this.fechaComprobante.value,
+      fechaContableString: this.fechaContable.value,
+      fechaVtoString: this.fechaVto.value,
       nroCAI: this.comprobanteRes.nroCAI,
       nroCierre: this.comprobanteRes.nroCierre,
       nroCompGanancia: this.comprobanteRes.nroCompGanancia,
@@ -341,12 +362,12 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
       observaciones: this.observaciones.value,
       establecimiento: { ...this.comprobanteRes.establecimiento },
       estadoComprobante: { ...this.comprobanteRes.estadoComprobante },
-      comprobanteRef: [...this.comprobanteRes.comprobanteRef!],
+      comprobanteRef: this.comprobanteRes.comprobanteRef,
       condicionIVA: { ...this.comprobanteRes.condicionIVA },
       condicionPago: { ...this.comprobanteRes.condicionPago },
       tipoComprobante: { ...this.tipoComprobante.value },
       ente: { ...this.ente.value },
-      movimientoCajaBanco: [...this.comprobanteRes.movimientoCajaBanco!],
+      movimientoCajaBanco: this.comprobanteRes.movimientoCajaBanco,
       item: this.items.value,
     };
   }

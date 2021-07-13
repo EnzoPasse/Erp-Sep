@@ -10,9 +10,9 @@ export class VoucherAdaper implements Adater<IComprobante> {
     return new Comprobante(
       item.id ? item.id : undefined,
       item.periodo,
-      item.fechaComprobante,
-      item.fechaContable,
-      item.fechaVto,
+      item.fechaComprobanteString,
+      item.fechaContableString,
+      item.fechaVtoString,
       item.nroCAI,
       item.nroCierre,
       item.nroCompGanancia,
