@@ -1,0 +1,199 @@
+<div fxLayout="row wrap">
+  <div fxFlex="100">
+    <mat-card>
+      <mat-card-header fxLayoutAlign="space-between start">
+        <mat-card-title> {{ title }} </mat-card-title>
+        <div fxLayout="column" fxLayout.gt-xs="row">
+          <ng-template [jhiHasAnyAuthority]="dataUrl?.createPermission">
+            <!-- Para que funcione la directiva binding data, tiene que ser dentro ng-template -->
+            <button mat-raised-button color="primary" [routerLink]="dataUrl?.urlNew" matTooltip="Crear un nuevo comprobante">
+              Nuevo Comprobante
+            </button>
+          </ng-template>
+        </div>
+      </mat-card-header>
+      <hr />
+      <mat-card-content>
+        <div fxLayout="row wrap" fxLayoutAlign="space-around start">
+          <div fxFlex.gt-md="20" fxFlex="100">
+            <mat-form-field>
+              <input
+                matInput
+                type="input"
+                id="searchInput"
+                autocomplete="off"
+                placeholder="Filtrar"
+                #searchInput
+                matTooltip="Busca comprobante"
+              />
+
+              <mat-hint align="start">Buscar por Ente</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <div fxFlex.gt-md="20" fxFlex="100">
+            <mat-form-field>
+              <mat-select (selectionChange)="cambiarEstado(estado.value)" #estado>
+                <mat-option *ngFor="let item of allEstadosComprobantes" [value]="item.id">
+                  <small>{{ item.nombre }}</small>
+                </mat-option>
+              </mat-select>
+              <mat-hint align="start">Filtrar por Estado</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <div fxFlex.gt-md="20" fxFlex="100">
+            <mat-form-field>
+              <input matInput [matDatepicker]="myDatepickerDesde" (dateChange)="cambiarFechaDesde(fechaDesde.value)" #fechaDesde />
+              <mat-datepicker-toggle matSuffix [for]="myDatepickerDesde"></mat-datepicker-toggle>
+              <mat-datepicker #myDatepickerDesde></mat-datepicker>
+              <mat-hint align="start">Fecha Desde 'dd/mm/yyyy'</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <div fxFlex.gt-md="20" fxFlex="100">
+            <mat-form-field>
+              <input matInput [matDatepicker]="myDatepickerHasta" (dateChange)="cambiarFechaHasta(fechaHasta.value)" #fechaHasta />
+              <mat-datepicker-toggle matSuffix [for]="myDatepickerHasta"></mat-datepicker-toggle>
+              <mat-datepicker #myDatepickerHasta></mat-datepicker>
+              <mat-hint align="start">Fecha Hasta 'dd/mm/yyyy'</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="responsive-table m-t-15 mat-elevation-z2">
+          <mat-table
+            [dataSource]="dataSource"
+            class="table-items-list"
+            #table
+            matSort
+            #sort1="matSort"
+            matSortActive="id"
+            matSortDirection="asc"
+            matSortDisableClear
+          >
+            <ng-container matColumnDef="Ente">
+              <!-- ATTRIBUTE mat-sort-header  for sorting | https://material.angular.io/components/sort/overview -->
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Ente</mat-header-cell>
+              <mat-cell *matCellDef="let comprobante">
+                <span class="header-label">Ente:</span>
+                <small>
+                  {{
+                    comprobante.ente.persona ? comprobante.ente.persona.apellido : comprobante.ente.personaJuridica?.nombreFantasia
+                  }}</small
+                >
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Cbte">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Cbte</mat-header-cell>
+              <mat-cell *matCellDef="let comprobante">
+                <small>{{ comprobante.tipoComprobante.nombre }}</small>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Nro">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Nro</mat-header-cell>
+              <mat-cell *matCellDef="let comprobante">{{ comprobante.nroComprobante }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="F.Emision">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>F.Emision</mat-header-cell>
+              <mat-cell *matCellDef="let comprobante">
+                <small>{{ comprobante.fechaComprobanteString }}</small>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="F.Vencimiento">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>F.Vencimiento</mat-header-cell>
+              <mat-cell *matCellDef="let comprobante"
+                ><small>{{ comprobante.fechaVtoString }}</small>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Periodo">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Periodo</mat-header-cell>
+              <mat-cell *matCellDef="let comprobante"
+                ><small>{{ comprobante.periodo }}</small></mat-cell
+              >
+            </ng-container>
+
+            <ng-container matColumnDef="Total">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Total</mat-header-cell>
+              <mat-cell *matCellDef="let comprobante"> {{ comprobante.totalComprobante | currency: 'ARS':'symbol' }} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Saldo">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Saldo</mat-header-cell>
+              <mat-cell *matCellDef="let comprobante" style="color: red" class="font-medium">
+                {{ comprobante.saldo | currency }}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Estado">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Estado</mat-header-cell>
+              <mat-cell *matCellDef="let comprobante">
+                <span class="badge badge--{{ getItemCssClassByStatus(comprobante.estadoComprobante.nombre) }}">
+                  {{ comprobante.estadoComprobante.nombre }}
+                </span>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Acciones">
+              <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+              <mat-cell *matCellDef="let comprobante" class="action-link">
+                <div fxLayoutAlign="start space-around">
+                  <ng-template [jhiHasAnyAuthority]="dataUrl?.editPermission">
+                    <button
+                      [routerLink]="[comprobante.id, dataUrl.urlEdit]"
+                      mat-icon-button
+                      color="primary"
+                      matTooltip="Editar comprobante"
+                      [disabled]="comprobante?.estadoComprobante.nombre === 'PAGADO' ? true : false"
+                    >
+                      <mat-icon class="icon-08x">create</mat-icon>
+                    </button>
+                  </ng-template>
+                  &nbsp;
+                  <ng-template [jhiHasAnyAuthority]="dataUrl?.deletePermission">
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      matTooltip="Borrar comprobante"
+                      type="button"
+                      (click)="deleteComprobante(comprobante)"
+                      [disabled]="comprobante?.estadoComprobante.nombre === 'PENDIENTE' ? false : true"
+                    >
+                      <mat-icon class="icon-08x"> delete</mat-icon>
+                    </button>
+                  </ng-template>
+                </div>
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+          </mat-table>
+        </div>
+
+        <!-- DataSource properties -->
+
+        <div class="font-medium text-center p-30">
+          <div *ngIf="!dataSource.hasItems">No se encontraron registros</div>
+          <div *ngIf="dataSource.isPreloadTextViewed$ | async">Cargando...</div>
+        </div>
+
+        <div fxLayoutAlign="end center">
+          <mat-spinner [diameter]="20" *ngIf="dataSource.loading$ | async"></mat-spinner>
+          <mat-paginator
+            [pageSize]="10"
+            [pageSizeOptions]="[3, 5, 10]"
+            [length]="dataSource.paginatorTotal$ | async"
+            [showFirstLastButtons]="true"
+          >
+          </mat-paginator>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

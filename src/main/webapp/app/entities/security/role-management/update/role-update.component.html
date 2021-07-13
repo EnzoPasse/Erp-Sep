@@ -18,9 +18,7 @@
       </div>
       &nbsp;
       <div>
-        <button fxHide fxShow.gt-sm mat-raised-button color="primary" cdkFocusInitial matTooltip="Volver" (click)="previousState()">
-          Cancelar
-        </button>
+        <button fxHide fxShow.gt-sm mat-raised-button color="warn" matTooltip="Volver" (click)="previousState()">Cancelar</button>
       </div>
       <div>
         <button *jhiHasAnyAuthority="'Accion Crear Rol'" mat-icon-button [matMenuTriggerFor]="menu" color="primary">
@@ -103,7 +101,5 @@
         </mat-tree>
       </div>
     </div>
-
-    {{ rol | json }}
   </mat-card-content>
 </mat-card>

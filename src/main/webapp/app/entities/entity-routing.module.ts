@@ -27,6 +27,10 @@ const LAYOUT_ROUTES: Routes = [
         path: 'seguridad',
         loadChildren: () => import('./security/security-routing.module').then(m => m.SecurityRoutingModule),
       },
+      {
+        path: 'deuda',
+        loadChildren: () => import('./debt/debt-routing.module').then(m => m.VoucherRoutingModule),
+      },
 
       ...ERROR_ROUTES,
     ],

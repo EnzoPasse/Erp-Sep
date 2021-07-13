@@ -32,11 +32,10 @@
           </div>
         </div>
 
-        <div class="table-responsive example-container m-t-15 mat-elevation-z2">
-          <table
-            mat-table
+        <div class="responsive-table m-t-15 mat-elevation-z2">
+          <mat-table
             [dataSource]="dataSource"
-            class="table employee-list no-wrap"
+            class="table-items-list"
             #table
             matSort
             #sort1="matSort"
@@ -45,25 +44,32 @@
             matSortDisableClear
           >
             <ng-container matColumnDef="id">
-              <th mat-header-cell *matHeaderCellDef>ID</th>
-              <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+              <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <span class="header-label">ID:</span>
+                {{ element.id }}</mat-cell
+              >
             </ng-container>
 
             <ng-container matColumnDef="nombre">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre Rol</th>
-              <td mat-cell *matCellDef="let element" class="font-medium">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre Rol</mat-header-cell>
+              <mat-cell *matCellDef="let element" class="font-medium">
+                <span class="header-label">Nombre:</span>
                 {{ element.nombre }}
-              </td>
+              </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="esAdmin">
-              <th mat-header-cell *matHeaderCellDef>Admin</th>
-              <td mat-cell *matCellDef="let element">{{ element.esAdmin ? 'Admin' : '-' }}</td>
+              <mat-header-cell *matHeaderCellDef>Admin</mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <span class="header-label">Admin:</span>
+                {{ element.esAdmin ? 'Admin' : '-' }}</mat-cell
+              >
             </ng-container>
 
             <ng-container matColumnDef="actions">
-              <th mat-header-cell *matHeaderCellDef>Acciones</th>
-              <td mat-cell *matCellDef="let element" class="action-link">
+              <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+              <mat-cell *matCellDef="let element" class="action-link">
                 <!-- <a class="m-r-10 cursor-pointer"><i class="fa fa-pencil"></i></a>
                   <a class="m-r-10 cursor-pointer"><i class="fa fa-trash text-danger"></i></a> -->
 
@@ -93,12 +99,12 @@
                     </button>
                   </div>
                 </div>
-              </td>
+              </mat-cell>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-          </table>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+          </mat-table>
         </div>
 
         <!-- DataSource properties -->

@@ -1,0 +1,207 @@
+<mat-card>
+  <mat-card-header fxLayoutAlign="space-between start">
+    <mat-card-title>{{ titleForm }}</mat-card-title>
+    <div fxLayout="column" fxLayout.gt-xs="row">
+      <div>
+        <button
+          fxHide
+          fxShow.gt-sm
+          *jhiHasAnyAuthority="'Accion Crear Comprobante'"
+          mat-raised-button
+          color="primary"
+          matTooltip="Guardar los cambios"
+          (click)="save(true)"
+          [disabled]="isSaving"
+        >
+          Guardar
+        </button>
+      </div>
+      &nbsp;
+      <div>
+        <button fxHide fxShow.gt-sm mat-raised-button color="warn" cdkFocusInitial matTooltip="Volver" (click)="previousState()">
+          Cancelar
+        </button>
+      </div>
+      <div>
+        <button *jhiHasAnyAuthority="'Accion Crear Comprobante'" mat-icon-button [matMenuTriggerFor]="menu" color="primary">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item color="primary" (click)="save(true)">Guardar y Salir</button>
+          <button mat-menu-item color="primary" (click)="save(false)">Guardar y Continuar</button>
+          <button mat-menu-item color="primary" (click)="limpiar()">Limpiar Formulario</button>
+          <button fxHide.gt-sm mat-menu-item color="primary" (click)="previousState()">Salir</button>
+        </mat-menu>
+      </div>
+    </div>
+  </mat-card-header>
+  <hr />
+  <mat-card-content>
+    <jhi-alert-error></jhi-alert-error>
+
+    <form [formGroup]="editForm">
+      <div fxLayout="row wrap" fxLayoutAlign="space-between start">
+        <div fxFlex="100" fxFlex.gt-sm="50">
+          <mat-form-field appearance="outline">
+            <mat-label>Ente:</mat-label>
+            <input matInput [formControl]="ente" id="ente" [matAutocomplete]="auto" />
+            <mat-hint align="start">Escribir para buscar..</mat-hint>
+            <mat-error *ngIf="ente.invalid">{{ mensajeErrorEnte() }}</mat-error>
+          </mat-form-field>
+          <mat-autocomplete
+            #auto="matAutocomplete"
+            autoActiveFirstOption
+            [displayWith]="displayFn.bind(this)"
+            (optionSelected)="enteSelected($event.option.value)"
+          >
+            <mat-option *ngIf="loadingAutocomplete" class="is-loading">
+              <mat-spinner diameter="20"></mat-spinner>
+            </mat-option>
+            <ng-container *ngIf="!loadingAutocomplete">
+              <mat-option *ngFor="let ente of resultEnte" [value]="ente">
+                <span
+                  ><small>{{
+                    ente.persona ? ente.persona.apellido : ente.personaJuridica ? ente.personaJuridica.nombreFantasia : ''
+                  }}</small></span
+                >
+              </mat-option>
+            </ng-container>
+          </mat-autocomplete>
+        </div>
+
+        <div fxFlex="100" fxFlex.gt-sm="30" class="text-right">
+          <mat-form-field appearance="fill">
+            <mat-label>Fecha:</mat-label>
+            <input matInput type="text" mask="00/00/0000" [dropSpecialCharacters]="false" [formControl]="fechaContable" />
+            <mat-icon matSuffix>date_range</mat-icon>
+            <mat-hint align="start">'dd/mm/yyyy'</mat-hint>
+            <mat-error *ngIf="fechaContable.invalid">{{ mensajeErrorFechaContable() }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div fxFlex="100" fxFlex.gt-sm="30" class="m-t-15">
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo Comprobante:</mat-label>
+            <mat-select formControlName="tipoComprobante" [compareWith]="comparar">
+              <mat-option *ngFor="let item of allTipoComprobantes" [value]="item">
+                <small>{{ item.nombre }}</small>
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="tipoComprobante.invalid">{{ mensajeErrorTipoComprobante() }} </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div fxFlex="100" fxFlex.gt-sm="30" class="m-t-15">
+          <mat-form-field appearance="outline">
+            <mat-label>Nro Comprobante:</mat-label>
+            <input matInput mask="00000-00000000" [formControl]="nroComprobante" (keyup.enter)="rellenarCeros($event.target)" />
+            <mat-hint align="start">00000-00000000</mat-hint>
+            <mat-error *ngIf="nroComprobante.invalid">{{ mensajeErrorNroComprobante() }} </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div fxFlex="100" fxFlex.gt-sm="30" class="m-t-15">
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha del Comprobante:</mat-label>
+            <input matInput mask="00/00/0000" [dropSpecialCharacters]="false" [formControl]="fechaComprobante" />
+            <mat-icon matSuffix>date_range</mat-icon>
+            <mat-hint align="start">'dd/mm/yyyy'</mat-hint>
+            <mat-error *ngIf="fechaComprobante.invalid">{{ mensajeErrorFechaComprobante() }} </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div fxFlex="100" fxFlex.gt-sm="30" class="m-t-15">
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha del Vencimiento:</mat-label>
+            <input matInput mask="00/00/0000" [dropSpecialCharacters]="false" [formControl]="fechaVto" />
+            <mat-icon matSuffix>date_range</mat-icon>
+            <mat-hint align="start">'dd/mm/yyyy'</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div fxFlex="100" fxFlex.gt-sm="30" class="m-t-15">
+          <mat-form-field appearance="outline">
+            <mat-label>Periodo:</mat-label>
+            <input matInput mask="00/0000" [dropSpecialCharacters]="false" [formControl]="periodo" />
+            <mat-icon matSuffix>date_range</mat-icon>
+            <mat-hint align="start">'mm/yyyy'</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div fxFlex="100" fxFlex.gt-sm="30" class="m-t-15">
+          <mat-form-field appearance="outline">
+            <mat-label>Observaciones:</mat-label>
+            <textarea matInput [formControl]="observaciones" cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+
+      &nbsp;
+      <div class="text-center font-medium">Detalles</div>
+      <hr />
+      &nbsp;
+
+      <div formArrayName="items">
+        <div *ngFor="let item of items?.controls; let i = index">
+          <div [formGroupName]="i">
+            <div fxLayout="row wrap" fxLayoutAlign="space-between start">
+              <div fxFlex="100" fxFlex.gt-sm="40">
+                <mat-form-field appearance="fill">
+                  <mat-select placeholder="Concepto" [formControl]="item.get('id')">
+                    <mat-option *ngFor="let concepto of allConceptos" [value]="concepto.id"> {{ concepto.nombre }} </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="item.controls.id.invalid"> Requerido</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="100" fxFlex.gt-sm="30">
+                <mat-form-field appearance="fill">
+                  <input type="number" matInput placeholder="SubTotal {{ i + 1 }}" [formControl]="item.get('importe')" />
+                  <span matPrefix>$&nbsp;</span>
+                  <mat-error *ngIf="item.get('importe').invalid">
+                    {{ mensajeErrorImporte(i) }}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="100" fxFlex.gt-sm="10" class="text-end">
+                <button
+                  *ngIf="editForm.get('items')?.controls.length > 1"
+                  (click)="borrarItem(i)"
+                  type="button"
+                  mat-mini-fab
+                  color="warn"
+                  matTooltip="Quitar"
+                >
+                  <mat-icon>remove</mat-icon>
+                </button>
+                <button
+                  *ngIf="items?.controls.length === i + 1"
+                  (click)="agregarItem()"
+                  type="button"
+                  mat-mini-fab
+                  color="primary"
+                  matTooltip="Agregar"
+                >
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div fxLayout="row wrap" fxLayoutAlign="end space-between">
+        <div fxFlex="100" fxFlex.gt-sm="20" class="text-left">
+          <h3 class="m-b-0 p-t-20">Total:</h3>
+          <mat-form-field appearance="fill">
+            <input matInput placeholder="Total" formControlName="totalComprobante" id="totalComprobante" style="font-size: 20px" />
+            <span matPrefix style="font-size: 20px" class="font-medium">$&nbsp;</span>
+          </mat-form-field>
+        </div>
+
+        <div fxFlex="100" fxFlex.gt-sm="20" class="text-end"></div>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

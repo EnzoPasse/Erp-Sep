@@ -932,6 +932,29 @@ Notify
   }
 }
 
+@keyframes heartbit {
+  0% {
+    -moz-transform: scale(0);
+    opacity: 0;
+  }
+  25% {
+    -moz-transform: scale(0.1);
+    opacity: 0.1;
+  }
+  50% {
+    -moz-transform: scale(0.5);
+    opacity: 0.3;
+  }
+  75% {
+    -moz-transform: scale(0.8);
+    opacity: 0.5;
+  }
+  100% {
+    -moz-transform: scale(1);
+    opacity: 0;
+  }
+}
+
 @-webkit-keyframes heartbit {
   0% {
     -webkit-transform: scale(0);
@@ -1043,6 +1066,12 @@ Grid
 /*******************
 Table
 *******************/
+
+.mat-table {
+  width: 100%;
+  text-align: start;
+}
+
 .table {
   width: 100%;
   text-align: start;
@@ -1063,6 +1092,7 @@ Table
     font-size: 10px;
   }
 }
+
 .mat-row:nth-child(even) {
   background-color: white;
 }
@@ -1235,4 +1265,38 @@ ul.list-style-none {
     top: 0;
     float: right;
   }
+}
+
+/*********************
+Badges
+**********************/
+.badge {
+  padding-left: 5px;
+  padding-right: 5px;
+  align-items: center;
+  border-radius: 40px 40px 40px 40px;
+  font-size: 10px;
+  font-weight: bold;
+}
+.badge.badge--danger {
+  background-color: $danger;
+  color: white;
+}
+.badge.badge--info {
+  background-color: $info;
+  color: white;
+}
+
+.badge.badge--warning {
+  background-color: $warning;
+  color: white;
+}
+
+.badge.badge--success {
+  background-color: $success;
+  color: white;
+}
+.badge.badge--canceled {
+  background-color: gray;
+  color: white;
 }

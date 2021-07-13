@@ -456,6 +456,7 @@ Overall Responsive table
   .mat-footer-cell:first-of-type,
   .mat-header-cell:first-of-type {
     padding-left: 0;
+    flex: 0 0 10%;
   }
 
   .header-label {
@@ -463,8 +464,17 @@ Overall Responsive table
   }
 
   .mat-table {
+    border-spacing: 2px;
     overflow: auto;
     max-height: 100%;
+  }
+
+  .table-items-list {
+    .mat-cell,
+    .mat-footer-cell,
+    .mat-header-cell {
+      padding: 10px !important;
+    }
   }
 }
 
@@ -543,7 +553,7 @@ Overall Responsive table
   }
 }
 
-.employee-list {
+.table-items-list {
   td.mat-cell,
   td.mat-footer-cell,
   th.mat-header-cell {
