@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { OperationType } from 'app/config/operationTypes.constants';
+import { LotDebtComponent } from '../../lot/lot-debt/lot-debt.component';
 
 import { VoucherListComponent } from '../list/voucher-list.component';
 import { VoucherUpdateComponent } from '../update/voucher-update.component';
@@ -79,6 +80,13 @@ export const voucherManagementRoute: Routes = [
     },
     resolve: {
       comprobante: VoucherManagementResolve,
+    },
+  },
+  {
+    path: 'nuevoLoteDeuda',
+    component: LotDebtComponent,
+    data: {
+      pageTitle: 'Lotes de Deudas',
     },
   },
 ];

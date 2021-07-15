@@ -45,6 +45,15 @@ import { StateVoucherType } from 'app/config/voucherType.constant';
           deletePermission: 'Accion Eliminar Nota de Debito',
         },
       },
+
+      {
+        path: 'lotesDeuda',
+        loadChildren: () => import('./lot/lot-debt.module').then(m => m.LotDebtModule),
+      },
+      {
+        path: 'ajusteSaldo',
+        loadChildren: () => import('./balance-ajustment/balance-ajustment.module').then(m => m.BalanceAjustmentModule),
+      },
     ]),
   ],
 })
