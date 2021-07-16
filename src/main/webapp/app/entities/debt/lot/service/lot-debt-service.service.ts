@@ -33,7 +33,7 @@ export class LotDebtService {
   }
 
   deleteLote(loteNro: string): Observable<{}> {
-    const urlG = `${this.deudaUrl}/bajaComprobanteLote/?nroLote=${loteNro}`;
+    const urlG = `${this.deudaUrl}/delete/?id=${loteNro}`;
     return this.http.delete(urlG);
   }
 }

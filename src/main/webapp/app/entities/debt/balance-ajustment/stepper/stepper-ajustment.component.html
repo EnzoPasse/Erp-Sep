@@ -6,31 +6,33 @@
   <mat-card-content>
     <jhi-alert-error></jhi-alert-error>
 
-    <ng-container [ngSwitch]="stepperOrientation | async">
-      <div *ngSwitchCase="'horizontal'">Make your screen smaller to see a vertical stepper</div>
-      <div *ngSwitchCase="'vertical'">Make your screen larger to see a horizontal stepper</div>
-    </ng-container>
-    <mat-stepper orientation="vertical">
-      <mat-step>
-        <ng-template matStepLabel>Step 1</ng-template>
-        <ng-template matStepContent>
-          <p>This content was rendered lazily</p>
-          <button mat-button matStepperNext>Next</button>
-        </ng-template>
+    <mat-horizontal-stepper labelPosition="bottom" #stepper>
+      <mat-step [stepControl]="form1.creditForm" errorMessage="Sección NO Completada">
+        <form>
+          <ng-template matStepLabel>Seleccionar Crédito</ng-template>
+          <jhi-credito-ente (creditSeleccionInfo)="creditSelection($event)" #form1></jhi-credito-ente>
+          <div class="text-right">
+            <button mat-stroked-button color="primary" matStepperNext>Siguiente</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step label="Descontar Deuda" errorMessage="Sección NO Completada">
+        <jhi-descontar-deuda *ngIf="creditVoucherSelected" [comprobanteIn]="creditVoucherSelected"></jhi-descontar-deuda>
+        <div class="text-right">
+          <button mat-stroked-button color="warn" matStepperPrevious>Atras</button>
+          <button mat-stroked-button color="primary" matStepperNext>Siguiente</button>
+        </div>
       </mat-step>
       <mat-step>
-        <ng-template matStepLabel>Step 2</ng-template>
-        <ng-template matStepContent>
-          <p>This content was also rendered lazily</p>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
-        </ng-template>
+        <ng-template matStepLabel>Confirmar</ng-template>
+        <jhi-confirmar-ajuste></jhi-confirmar-ajuste>
+        <div class="text-right">
+          <button mat-stroked-button color="warn" matStepperPrevious>Atras</button>
+          <button mat-raised-button color="primary" (click)="save(); stepper.reset()">Confirmar</button>
+        </div>
       </mat-step>
-      <mat-step>
-        <ng-template matStepLabel>Step 3</ng-template>
-        <p>This content was rendered eagerly</p>
-        <button mat-button matStepperPrevious>Back</button>
-      </mat-step>
-    </mat-stepper>
+    </mat-horizontal-stepper>
   </mat-card-content>
 </mat-card>
+
+{{ creditVoucherSelected | json }}

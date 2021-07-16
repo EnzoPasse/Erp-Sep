@@ -103,8 +103,15 @@
               <p mat-line><strong>Nombre:</strong> {{ item.lote.nombre }}</p>
               <p mat-line><strong>Fecha Vencimiento:</strong> {{ item.fechaVtoString }}</p>
 
-              <div *ngxPermissionsOnly="['AccionEliminarComprobantesporLote']" class="align-rigth">
-                <button mat-icon-button color="warn" matTooltip="Borrar Lote" type="button" (click)="deleteLote(item)">
+              <div class="text-rigth">
+                <button
+                  *jhiHasAnyAuthority="'Accion Eliminar Comprobantes por Lote'"
+                  mat-icon-button
+                  color="warn"
+                  matTooltip="Borrar Lote"
+                  type="button"
+                  (click)="deleteLote(item)"
+                >
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
