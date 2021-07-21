@@ -6,33 +6,35 @@
   <mat-card-content>
     <jhi-alert-error></jhi-alert-error>
 
-    <mat-horizontal-stepper labelPosition="bottom" #stepper>
+    <mat-horizontal-stepper [linear]="true" labelPosition="bottom" #stepper>
       <mat-step [stepControl]="form1.creditForm" errorMessage="Sección NO Completada">
-        <form>
-          <ng-template matStepLabel>Seleccionar Crédito</ng-template>
-          <jhi-credito-ente (creditSeleccionInfo)="creditSelection($event)" #form1></jhi-credito-ente>
-          <div class="text-right">
-            <button mat-stroked-button color="primary" matStepperNext>Siguiente</button>
-          </div>
-        </form>
+        <ng-template matStepLabel>Seleccionar Crédito</ng-template>
+        <jhi-credito-ente (creditSeleccionInfo)="creditSelection($event)" #form1></jhi-credito-ente>
+        <div class="text-right">
+          <button mat-stroked-button color="primary" matStepperNext>Siguiente</button>
+        </div>
       </mat-step>
+
       <mat-step label="Descontar Deuda" errorMessage="Sección NO Completada">
-        <jhi-descontar-deuda *ngIf="creditVoucherSelected" [comprobanteIn]="creditVoucherSelected"></jhi-descontar-deuda>
+        <jhi-descontar-deuda
+          *ngIf="creditVoucherSelected"
+          (deudaSeleccionInfo)="deudaSelection($event)"
+          [comprobanteIn]="creditVoucherSelected"
+        ></jhi-descontar-deuda>
         <div class="text-right">
           <button mat-stroked-button color="warn" matStepperPrevious>Atras</button>
           <button mat-stroked-button color="primary" matStepperNext>Siguiente</button>
         </div>
       </mat-step>
+
       <mat-step>
         <ng-template matStepLabel>Confirmar</ng-template>
         <jhi-confirmar-ajuste></jhi-confirmar-ajuste>
         <div class="text-right">
           <button mat-stroked-button color="warn" matStepperPrevious>Atras</button>
-          <button mat-raised-button color="primary" (click)="save(); stepper.reset()">Confirmar</button>
+          <button mat-raised-button color="primary" [disabled]="isSaving" (click)="save(); stepper.reset()">Confirmar</button>
         </div>
       </mat-step>
     </mat-horizontal-stepper>
   </mat-card-content>
 </mat-card>
-
-{{ creditVoucherSelected | json }}

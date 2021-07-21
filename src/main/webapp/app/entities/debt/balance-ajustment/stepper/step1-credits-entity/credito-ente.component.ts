@@ -98,6 +98,7 @@ export class CreditoEnteComponent implements OnInit, AfterViewInit, OnDestroy {
 
   loadCreditoEnteList(): void {
     this.limpiarOptions();
+    this.dataSource.entitySubject.next([]);
 
     const queryParams = new QueryParamsModel(
       this.filterConfiguration(),
@@ -107,7 +108,7 @@ export class CreditoEnteComponent implements OnInit, AfterViewInit, OnDestroy {
       this.paginator!.pageSize
     );
 
-    this.dataSource.loadComprobantes(queryParams, this.dataUrl.queryOperation);
+    this.dataSource.loadComprobantes(queryParams, this.dataUrl.queryOperationStep1);
     // this.selection.clear();
   }
 
@@ -119,20 +120,6 @@ export class CreditoEnteComponent implements OnInit, AfterViewInit, OnDestroy {
 
   limpiarOptions(): void {
     this.creditForm.get('selectedOptions')?.reset();
-  }
-
-  getItemCssClassByStatus(status: string = 'PENDIENTE'): string {
-    switch (status) {
-      case 'PENDIENTE':
-        return 'danger';
-      case 'IMPUTADO':
-        return 'success';
-      case 'IMPUTADO PARCIAL':
-        return 'warning';
-      case 'ANULADO':
-        return 'canceled';
-    }
-    return '';
   }
 
   get ente(): AbstractControl {

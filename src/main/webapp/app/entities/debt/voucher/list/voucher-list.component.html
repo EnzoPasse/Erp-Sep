@@ -129,7 +129,7 @@
               <mat-header-cell *matHeaderCellDef mat-sort-header>Total</mat-header-cell>
               <mat-cell *matCellDef="let comprobante">
                 <span class="header-label">Total:</span>
-                {{ comprobante.totalComprobante | currency: 'ARS':'symbol' }}
+                {{ comprobante.totalComprobante | currency: 'ARS':'symbol':'1.0-0' }}
               </mat-cell>
             </ng-container>
 
@@ -137,7 +137,7 @@
               <mat-header-cell *matHeaderCellDef mat-sort-header>Saldo</mat-header-cell>
               <mat-cell *matCellDef="let comprobante" style="color: red" class="font-medium">
                 <span class="header-label">Saldo:</span>
-                {{ comprobante.saldo | currency }}
+                {{ comprobante.saldo | currency: 'ARS':'symbol':'1.0-0' }}
               </mat-cell>
             </ng-container>
 
@@ -145,7 +145,7 @@
               <mat-header-cell *matHeaderCellDef mat-sort-header>Estado</mat-header-cell>
               <mat-cell *matCellDef="let comprobante">
                 <span class="header-label">Estado:</span>
-                <span class="badge badge--{{ getItemCssClassByStatus(comprobante.estadoComprobante.nombre) }}">
+                <span class="badge badge--{{ comprobanteService.getItemCssClassByStatus(comprobante.estadoComprobante.nombre) }}">
                   {{ comprobante.estadoComprobante.nombre }}
                 </span>
               </mat-cell>

@@ -153,24 +153,6 @@ export class VoucherListComponent implements OnInit, OnDestroy {
     this.loadComprobanteList();
   }
 
-  getItemCssClassByStatus(status: string = 'PENDIENTE'): string {
-    switch (status) {
-      case 'PENDIENTE':
-        return 'danger';
-      case 'PAGADO':
-        return 'success';
-      case 'PAGADO PARCIAL':
-        return 'warning';
-      case 'ANULADO':
-        return 'canceled';
-      case 'IMPUTADO PARCIAL':
-        return 'warning';
-      case 'IMPUTADO':
-        return 'success';
-    }
-    return '';
-  }
-
   createTitle(): void {
     if (this.dataUrl.queryOperation === OperationType.GET_DEUDA) {
       this.title = 'Lista de Deudas';

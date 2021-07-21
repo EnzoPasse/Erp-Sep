@@ -27,6 +27,9 @@ export class ComprobanteService {
   ) {}
 
   create(voucher: IComprobante, operation: number): Observable<IComprobante> {
+    // eslint-disable-next-line no-console
+    console.log(voucher);
+
     const url = `${this.deudaUrl}/create?operacion=${operation}`;
     return this.http.post<IComprobante>(url, voucher);
   }
@@ -81,5 +84,24 @@ export class ComprobanteService {
       `/item/get/?id=${idEnte}&dh=${OperationTemplate.DEBE}&idPlantillaTipo=${TypeTemplate.PLANTILLA_DEUDA}`
     );
     return this.http.get<IItem[]>(url);
+  }
+
+  /* **********CSS ****** */
+  getItemCssClassByStatus(status: string = 'PENDIENTE'): string {
+    switch (status) {
+      case 'PENDIENTE':
+        return 'danger';
+      case 'PAGADO':
+        return 'success';
+      case 'PAGADO PARCIAL':
+        return 'warning';
+      case 'ANULADO':
+        return 'canceled';
+      case 'IMPUTADO PARCIAL':
+        return 'warning';
+      case 'IMPUTADO':
+        return 'success';
+    }
+    return '';
   }
 }

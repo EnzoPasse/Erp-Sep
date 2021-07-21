@@ -6,7 +6,6 @@ import { EventManager, EventWithContent } from 'app/core/util/event-manager.serv
 import { CustomValidators } from 'app/core/util/validators';
 import { IEnte } from 'app/entities/master-crud';
 import { EnteService } from 'app/entities/master-crud/ente/ente.service';
-import { IUsuario } from 'app/entities/security';
 import * as dayjs from 'dayjs';
 import { Subscription, Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, finalize, map, switchMap, tap } from 'rxjs/operators';
@@ -295,7 +294,7 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
       return item.id!;
     } */
 
-  protected subscribeToSaveResponse(result: Observable<IUsuario>): void {
+  protected subscribeToSaveResponse(result: Observable<IComprobante>): void {
     result.subscribe({
       next: () => this.onSaveSuccess(),
       error: () => this.onSaveError(),
