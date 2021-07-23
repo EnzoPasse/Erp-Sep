@@ -1,5 +1,3 @@
-import { IComprobante } from 'app/entities/debt/voucher/voucher.model';
-
 export enum OperationType {
   'CREAR_DEUDA' = 1,
   'CREAR_NOTA_CREDITO' = 2,

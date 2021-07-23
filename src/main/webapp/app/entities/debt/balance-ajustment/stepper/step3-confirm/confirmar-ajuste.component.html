@@ -1,1 +1,107 @@
-<p>confirmar-ajuste works!</p>
+<mat-card>
+  <mat-card-content>
+    <!--  <div class="mb-1">
+      <h1 class="mt-0">
+        <strong>Nota Credito # {{ confirmVoucher.nroComprobante }}</strong>
+      </h1>
+    </div> -->
+
+    <div fxLayout="row wrap">
+      <div fxFlex.gt-xs="50" fxFlex="100">
+        <h4 class="font-bold">
+          {{ confirmVoucher.ente?.persona ? confirmVoucher.ente?.persona.apellido : confirmVoucher.ente?.personaJuridica.nombreFantasia }}
+        </h4>
+        <div fxLayout="column">
+          <!--  <span>E 104, Dharti-2,</span>
+          <span>Nr' Viswakarma Temple,
+            <br />Talaja Road, Bhavnagar - 364002</span> -->
+        </div>
+      </div>
+      <div fxFlex.gt-xs="50" fxFlex="100" class="text-right">
+        <h4 class="font-bold">Nota Credito # {{ confirmVoucher.nroComprobante }}</h4>
+        <div fxLayout="column">
+          <span>Fecha : {{ confirmVoucher.fechaComprobanteString }}</span>
+          <span>Estado : {{ confirmVoucher.estadoComprobante?.nombre }}</span>
+          <!--   <span>company@address.com</span>
+          <span>E 105, ODharti-2,</span>
+          <span>Nr' Viswakarma Temple,
+            <br />Talaja Road, Ahmedabad - 364002</span> -->
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <mat-card-content class="table-rasponsive">
+    <div class="responsive-table m-t-15 mat-elevation-z2">
+      <mat-table [dataSource]="dataSource" class="table-items-list" #table>
+        <ng-container matColumnDef="Cbte">
+          <mat-header-cell *matHeaderCellDef>Cbte</mat-header-cell>
+          <mat-cell *matCellDef="let comprobante">
+            <span class="header-label">Cbte:</span>
+            {{ comprobante.tipoComprobante.nombre }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="Nro">
+          <mat-header-cell *matHeaderCellDef>Nro</mat-header-cell>
+          <mat-cell *matCellDef="let comprobante" class="font-10">
+            <span class="header-label">Nro:</span>
+            {{ comprobante.nroComprobante }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="Total">
+          <mat-header-cell *matHeaderCellDef>Total</mat-header-cell>
+          <mat-cell *matCellDef="let comprobante" class="font-10">
+            <span class="header-label">Total:</span>
+            {{ comprobante.totalComprobante | currency: 'ARS':'symbol':'1.0-0' }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="Imputado">
+          <mat-header-cell *matHeaderCellDef>Imputado</mat-header-cell>
+          <mat-cell *matCellDef="let comprobante" class="font-10" style="color: teal">
+            <span class="header-label">Imputado:</span>
+            {{ comprobante.imputado | currency: 'ARS':'symbol':'1.0-0' }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="Imputar">
+          <mat-header-cell *matHeaderCellDef>a Imputar</mat-header-cell>
+          <mat-cell *matCellDef="let comprobante" class="font-10" style="color: red">
+            <span class="header-label">Imputar:</span>
+            {{ comprobante.aImputar | currency: 'ARS':'symbol':'1.0-0' }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="Saldo">
+          <mat-header-cell *matHeaderCellDef>Saldo</mat-header-cell>
+          <mat-cell *matCellDef="let comprobante" class="font-10" style="color: blue" class="font-medium">
+            <span class="header-label">Saldo:</span>
+            {{ comprobante.saldo | currency: 'ARS':'symbol':'1.0-0' }}
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      </mat-table>
+    </div>
+  </mat-card-content>
+
+  <mat-card-content class="bg-light">
+    <div class="d-flex align-items-center">
+      <div class="text-right ml-auto">
+        <h6 class="text-uppercase text-md ma-0 text-bold">Total Nota Crédito :</h6>
+        <h6 class="text-uppercase text-md ma-0 text-bold">Saldo Actual Nota Crédito :</h6>
+        <h6 class="text-uppercase text-md ma-0 text-bold">Total a Imputar :</h6>
+        <h6 class="text-uppercase text-sm ma-0 text-danger text-bold">Nuevo Saldo de Crédito :</h6>
+      </div>
+      <div class="m-l-10">
+        <h4 class="font-medium">{{ confirmVoucher?.totalComprobante | currency: 'ARS':'symbol':'1.0-0' }}</h4>
+        <h4 class="font-medium">{{ getSaldoActual() | currency: 'ARS':'symbol':'1.0-0' }}</h4>
+        <h4 class="font-medium">{{ getImputado() | currency: 'ARS':'symbol':'1.0-0' }}</h4>
+        <h4 class="text-danger font-medium">{{ confirmVoucher?.saldo | currency: 'ARS':'symbol':'1.0-0' }}</h4>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

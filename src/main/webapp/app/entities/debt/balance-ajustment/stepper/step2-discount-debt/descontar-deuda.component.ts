@@ -1,5 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute } from '@angular/router';
@@ -17,16 +18,19 @@ import { tap } from 'rxjs/operators';
   templateUrl: './descontar-deuda.component.html',
   styleUrls: ['./descontar-deuda.component.scss'],
 })
-export class DescontarDeudaComponent implements OnInit, OnChanges, OnDestroy {
+export class DescontarDeudaComponent implements OnInit, OnDestroy {
   creditoAcum!: number;
   totalDeudaAcum!: number;
-  selection = new SelectionModel<IComprobante>(true, []);
+  selection = new SelectionModel<IComprobante>(true, [], true);
   dataSource: ComprobanteDataSource = new ComprobanteDataSource(this.comprobanteService);
-  displayedColumns = ['Select', 'Cbte', 'Nro', 'F.Emision', 'F.Vencimiento', 'Periodo', 'Total', 'Saldo', 'Imputar', 'Imputado', 'Estado'];
+  displayedColumns = ['Select', 'Cbte', 'Nro', 'F.Emision', 'F.Vencimiento', 'Periodo', 'Total', 'Imputado', 'Imputar', 'Saldo', 'Estado'];
   subscriptions: Subscription[] = [];
   dataUrl: any;
   itemsDeudaOriginales: IComprobante[] = [];
   creditoResult: IComprobante[] = [];
+  descontarForm = this.fb.group({
+    deudas: ['', Validators.required],
+  });
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator | undefined;
   @ViewChild('sort1', { static: true }) sort!: MatSort | undefined;
@@ -42,12 +46,17 @@ export class DescontarDeudaComponent implements OnInit, OnChanges, OnDestroy {
     this._comprobanteIn = value;
     this.creditoAcum = 0;
     this.selection.clear();
-    // this.loadDeudaEnteList()
+    this.loadDeudaEnteList();
   }
 
   @Output() deudaSeleccionInfo: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(private route: ActivatedRoute, private comprobanteService: ComprobanteService, protected eventManager: EventManager) {}
+  constructor(
+    private route: ActivatedRoute,
+    private comprobanteService: ComprobanteService,
+    private fb: FormBuilder,
+    protected eventManager: EventManager
+  ) {}
 
   ngOnInit(): void {
     const subscriptionsDeudas = this.selection.changed.subscribe(res => {
@@ -57,6 +66,7 @@ export class DescontarDeudaComponent implements OnInit, OnChanges, OnDestroy {
       if (res.added.length > 0 && this.creditoAcum > 0) {
         this.calculoxRegistro(res.added[0]);
       }
+
       this.conservarCambios();
 
       if (!(this.creditoAcum > 0)) {
@@ -81,13 +91,7 @@ export class DescontarDeudaComponent implements OnInit, OnChanges, OnDestroy {
       .subscribe();
 
     this.subscriptions.push(paginatorSubscriptions);
-
-    this.loadDeudaEnteList();
-  }
-
-  ngOnChanges(): void {
     this.subscriptions.push(this.route.data.subscribe((data: any) => (this.dataUrl = data as {})));
-    this.loadDeudaEnteList();
   }
 
   ngOnDestroy(): void {
@@ -95,9 +99,15 @@ export class DescontarDeudaComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   loadDeudaEnteList(): void {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!this.comprobanteIn) {
+      return;
+    }
+
     this.dataSource.entitySubject.next([]); // elimino los datos de la tabla que hayan quedado.
     this.creditoAcum = this.comprobanteIn.saldo!;
     this.selection.clear();
+    this.descontarForm.get('deudas')?.reset();
 
     const queryParams = new QueryParamsModel(
       this.filterConfiguration(),
@@ -157,6 +167,13 @@ export class DescontarDeudaComponent implements OnInit, OnChanges, OnDestroy {
     } */
 
     const info = { ...this.comprobanteIn, saldo: this.creditoAcum, comprobanteRef: deudasFiltradas };
+
+    if (deudasFiltradas.length > 0) {
+      this.descontarForm.get('deudas')?.patchValue(info);
+    } else {
+      this.descontarForm.get('deudas')?.patchValue('');
+    }
+
     this.deudaSeleccionInfo.emit(info);
   }
 }

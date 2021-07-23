@@ -7,7 +7,7 @@
     <jhi-alert-error></jhi-alert-error>
 
     <mat-horizontal-stepper [linear]="true" labelPosition="bottom" #stepper>
-      <mat-step [stepControl]="form1.creditForm" errorMessage="Sección NO Completada">
+      <mat-step [stepControl]="form1.creditForm">
         <ng-template matStepLabel>Seleccionar Crédito</ng-template>
         <jhi-credito-ente (creditSeleccionInfo)="creditSelection($event)" #form1></jhi-credito-ente>
         <div class="text-right">
@@ -15,21 +15,18 @@
         </div>
       </mat-step>
 
-      <mat-step label="Descontar Deuda" errorMessage="Sección NO Completada">
-        <jhi-descontar-deuda
-          *ngIf="creditVoucherSelected"
-          (deudaSeleccionInfo)="deudaSelection($event)"
-          [comprobanteIn]="creditVoucherSelected"
-        ></jhi-descontar-deuda>
+      <mat-step label="Descontar Deuda" [stepControl]="form2.descontarForm">
+        <jhi-descontar-deuda (deudaSeleccionInfo)="deudaSelection($event)" [comprobanteIn]="creditVoucherSelected" #form2>
+        </jhi-descontar-deuda>
+
         <div class="text-right">
           <button mat-stroked-button color="warn" matStepperPrevious>Atras</button>
           <button mat-stroked-button color="primary" matStepperNext>Siguiente</button>
         </div>
       </mat-step>
 
-      <mat-step>
-        <ng-template matStepLabel>Confirmar</ng-template>
-        <jhi-confirmar-ajuste></jhi-confirmar-ajuste>
+      <mat-step label="Confirmar">
+        <jhi-confirmar-ajuste *ngIf="saveVoucher" [confirmVoucher]="saveVoucher"></jhi-confirmar-ajuste>
         <div class="text-right">
           <button mat-stroked-button color="warn" matStepperPrevious>Atras</button>
           <button mat-raised-button color="primary" [disabled]="isSaving" (click)="save(); stepper.reset()">Confirmar</button>

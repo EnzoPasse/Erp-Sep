@@ -98,7 +98,6 @@ export class CreditoEnteComponent implements OnInit, AfterViewInit, OnDestroy {
 
   loadCreditoEnteList(): void {
     this.limpiarOptions();
-    this.dataSource.entitySubject.next([]);
 
     const queryParams = new QueryParamsModel(
       this.filterConfiguration(),
@@ -120,6 +119,7 @@ export class CreditoEnteComponent implements OnInit, AfterViewInit, OnDestroy {
 
   limpiarOptions(): void {
     this.creditForm.get('selectedOptions')?.reset();
+    this.dataSource.entitySubject.next([]);
   }
 
   get ente(): AbstractControl {

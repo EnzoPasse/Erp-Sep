@@ -84,7 +84,7 @@
 
     <ng-container matColumnDef="Saldo">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Saldo</mat-header-cell>
-      <mat-cell *matCellDef="let comprobante" style="color: red" class="font-medium">
+      <mat-cell *matCellDef="let comprobante" style="color: blue" class="font-medium">
         <span class="header-label">Saldo:</span>
         {{ comprobante.saldo | currency: 'ARS':'symbol':'1.0-0' }}
       </mat-cell>
@@ -100,7 +100,7 @@
 
     <ng-container matColumnDef="Imputar">
       <mat-header-cell *matHeaderCellDef mat-sort-header>A imputar</mat-header-cell>
-      <mat-cell *matCellDef="let comprobante" style="color: blue">
+      <mat-cell *matCellDef="let comprobante" style="color: red">
         <span class="header-label">A imputar:</span>
         {{ comprobante.aImputar | currency: 'ARS':'symbol':'1.0-0' }}
       </mat-cell>
@@ -122,7 +122,7 @@
 </div>
 
 <!-- DataSource properties -->
-<div class="font-medium text-center p-30">
+<div class="font-medium text-center p-10">
   <div *ngIf="!dataSource.hasItems">
     <strong>No se encontraron registros</strong>
   </div>
