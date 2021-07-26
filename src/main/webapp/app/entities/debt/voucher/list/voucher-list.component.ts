@@ -165,6 +165,14 @@ export class VoucherListComponent implements OnInit, OnDestroy {
     }
   }
 
+  disabledByStatus(value: IComprobante): boolean {
+    if (value.estadoComprobante!.nombre === 'PAGADO' || value.estadoComprobante!.nombre === 'IMPUTADO') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   /* imprimirOrden(idOrdenPago: number) {
     const url = `${API_CONFIG}Administracion/imprimirDeposito/?idDeposito=${idOrdenPago}&codigoReporte=${REPORTE_ORDEN_DEPOSITO}`;
     this.layoutUtilsService.printElements(url);

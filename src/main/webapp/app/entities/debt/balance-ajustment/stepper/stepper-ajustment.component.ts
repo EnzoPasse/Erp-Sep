@@ -73,8 +73,6 @@ export class StepperAjustmentComponent implements OnInit {
   }
 
   deudaSelection(event: IComprobante): void {
-    // eslint-disable-next-line no-console
-    console.log(event);
     this.saveVoucher = { ...event };
   }
 

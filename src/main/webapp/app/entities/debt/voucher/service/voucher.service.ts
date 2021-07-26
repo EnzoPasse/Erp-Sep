@@ -27,9 +27,6 @@ export class ComprobanteService {
   ) {}
 
   create(voucher: IComprobante, operation: number): Observable<IComprobante> {
-    // eslint-disable-next-line no-console
-    console.log(voucher);
-
     const url = `${this.deudaUrl}/create?operacion=${operation}`;
     return this.http.post<IComprobante>(url, voucher);
   }

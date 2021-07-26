@@ -61,7 +61,7 @@
               <mat-option *ngFor="let ente of resultEnte" [value]="ente">
                 <span
                   ><small>{{
-                    ente.persona ? ente.persona.apellido : ente.personaJuridica ? ente.personaJuridica.nombreFantasia : ''
+                    ente.persona.id != 0 ? ente.persona.apellido : ente.personaJuridica ? ente.personaJuridica.nombreFantasia : ''
                   }}</small></span
                 >
               </mat-option>

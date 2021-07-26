@@ -10,7 +10,7 @@
       <mat-step [stepControl]="form1.creditForm">
         <ng-template matStepLabel>Seleccionar Crédito</ng-template>
         <jhi-credito-ente (creditSeleccionInfo)="creditSelection($event)" #form1></jhi-credito-ente>
-        <div class="text-right">
+        <div class="text-right p-t-20">
           <button mat-stroked-button color="primary" matStepperNext>Siguiente</button>
         </div>
       </mat-step>
@@ -19,7 +19,7 @@
         <jhi-descontar-deuda (deudaSeleccionInfo)="deudaSelection($event)" [comprobanteIn]="creditVoucherSelected" #form2>
         </jhi-descontar-deuda>
 
-        <div class="text-right">
+        <div class="text-right p-t-20">
           <button mat-stroked-button color="warn" matStepperPrevious>Atras</button>
           <button mat-stroked-button color="primary" matStepperNext>Siguiente</button>
         </div>
@@ -27,7 +27,7 @@
 
       <mat-step label="Confirmar">
         <jhi-confirmar-ajuste *ngIf="saveVoucher" [confirmVoucher]="saveVoucher"></jhi-confirmar-ajuste>
-        <div class="text-right">
+        <div class="text-right p-t-20">
           <button mat-stroked-button color="warn" matStepperPrevious>Atras</button>
           <button mat-raised-button color="primary" [disabled]="isSaving" (click)="save(); stepper.reset()">Confirmar</button>
         </div>

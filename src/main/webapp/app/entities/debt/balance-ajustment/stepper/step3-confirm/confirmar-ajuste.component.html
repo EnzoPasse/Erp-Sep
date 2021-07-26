@@ -31,8 +31,8 @@
     </div>
   </mat-card-content>
 
-  <mat-card-content class="table-rasponsive">
-    <div class="responsive-table m-t-15 mat-elevation-z2">
+  <mat-card-content class="mat-elevation-z6">
+    <div class="responsive-table m-t-15">
       <mat-table [dataSource]="dataSource" class="table-items-list" #table>
         <ng-container matColumnDef="Cbte">
           <mat-header-cell *matHeaderCellDef>Cbte</mat-header-cell>
@@ -44,7 +44,7 @@
 
         <ng-container matColumnDef="Nro">
           <mat-header-cell *matHeaderCellDef>Nro</mat-header-cell>
-          <mat-cell *matCellDef="let comprobante" class="font-10">
+          <mat-cell *matCellDef="let comprobante">
             <span class="header-label">Nro:</span>
             {{ comprobante.nroComprobante }}
           </mat-cell>
@@ -52,7 +52,7 @@
 
         <ng-container matColumnDef="Total">
           <mat-header-cell *matHeaderCellDef>Total</mat-header-cell>
-          <mat-cell *matCellDef="let comprobante" class="font-10">
+          <mat-cell *matCellDef="let comprobante">
             <span class="header-label">Total:</span>
             {{ comprobante.totalComprobante | currency: 'ARS':'symbol':'1.0-0' }}
           </mat-cell>
@@ -60,7 +60,7 @@
 
         <ng-container matColumnDef="Imputado">
           <mat-header-cell *matHeaderCellDef>Imputado</mat-header-cell>
-          <mat-cell *matCellDef="let comprobante" class="font-10" style="color: teal">
+          <mat-cell *matCellDef="let comprobante" style="color: teal">
             <span class="header-label">Imputado:</span>
             {{ comprobante.imputado | currency: 'ARS':'symbol':'1.0-0' }}
           </mat-cell>
@@ -68,7 +68,7 @@
 
         <ng-container matColumnDef="Imputar">
           <mat-header-cell *matHeaderCellDef>a Imputar</mat-header-cell>
-          <mat-cell *matCellDef="let comprobante" class="font-10" style="color: red">
+          <mat-cell *matCellDef="let comprobante" style="color: red">
             <span class="header-label">Imputar:</span>
             {{ comprobante.aImputar | currency: 'ARS':'symbol':'1.0-0' }}
           </mat-cell>
@@ -76,7 +76,7 @@
 
         <ng-container matColumnDef="Saldo">
           <mat-header-cell *matHeaderCellDef>Saldo</mat-header-cell>
-          <mat-cell *matCellDef="let comprobante" class="font-10" style="color: blue" class="font-medium">
+          <mat-cell *matCellDef="let comprobante" style="color: blue" class="font-medium">
             <span class="header-label">Saldo:</span>
             {{ comprobante.saldo | currency: 'ARS':'symbol':'1.0-0' }}
           </mat-cell>
@@ -88,7 +88,7 @@
     </div>
   </mat-card-content>
 
-  <mat-card-content class="bg-light">
+  <mat-card-content class="bg-light mat-elevation-z6">
     <div class="d-flex align-items-center">
       <div class="text-right ml-auto">
         <h6 class="text-uppercase text-md ma-0 text-bold">Total Nota Crédito :</h6>

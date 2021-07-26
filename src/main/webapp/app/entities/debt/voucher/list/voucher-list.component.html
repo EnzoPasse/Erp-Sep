@@ -162,7 +162,7 @@
                       mat-icon-button
                       color="primary"
                       matTooltip="Editar comprobante"
-                      [disabled]="comprobante?.estadoComprobante.nombre === 'PAGADO' ? true : false"
+                      [disabled]="disabledByStatus(comprobante)"
                     >
                       <mat-icon class="icon-08x">create</mat-icon>
                     </button>
