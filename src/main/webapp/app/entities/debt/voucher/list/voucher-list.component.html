@@ -88,52 +88,64 @@
             <ng-container matColumnDef="Cbte">
               <mat-header-cell *matHeaderCellDef mat-sort-header>Cbte</mat-header-cell>
               <mat-cell *matCellDef="let comprobante">
+                <span class="header-label">Cbte:</span>
                 <small>{{ comprobante.tipoComprobante.nombre }}</small>
               </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="Nro">
               <mat-header-cell *matHeaderCellDef mat-sort-header>Nro</mat-header-cell>
-              <mat-cell *matCellDef="let comprobante">{{ comprobante.nroComprobante }}</mat-cell>
+              <mat-cell *matCellDef="let comprobante">
+                <span class="header-label">Nro:</span>
+                {{ comprobante.nroComprobante }}
+              </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="F.Emision">
               <mat-header-cell *matHeaderCellDef mat-sort-header>F.Emision</mat-header-cell>
               <mat-cell *matCellDef="let comprobante">
+                <span class="header-label">F.Emision:</span>
                 <small>{{ comprobante.fechaComprobanteString }}</small>
               </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="F.Vencimiento">
               <mat-header-cell *matHeaderCellDef mat-sort-header>F.Vencimiento</mat-header-cell>
-              <mat-cell *matCellDef="let comprobante"
-                ><small>{{ comprobante.fechaVtoString }}</small>
+              <mat-cell *matCellDef="let comprobante">
+                <span class="header-label">F.Vto:</span>
+                <small>{{ comprobante.fechaVtoString }}</small>
               </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="Periodo">
               <mat-header-cell *matHeaderCellDef mat-sort-header>Periodo</mat-header-cell>
-              <mat-cell *matCellDef="let comprobante"
-                ><small>{{ comprobante.periodo }}</small></mat-cell
-              >
+              <mat-cell *matCellDef="let comprobante">
+                <span class="header-label">Periodo:</span>
+                <small>{{ comprobante.periodo }}</small>
+              </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="Total">
               <mat-header-cell *matHeaderCellDef mat-sort-header>Total</mat-header-cell>
-              <mat-cell *matCellDef="let comprobante"> {{ comprobante.totalComprobante | currency: 'ARS':'symbol' }} </mat-cell>
+              <mat-cell *matCellDef="let comprobante">
+                <span class="header-label">Total:</span>
+                {{ comprobante.totalComprobante | currency: 'ARS':'symbol':'1.0-0' }}
+              </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="Saldo">
               <mat-header-cell *matHeaderCellDef mat-sort-header>Saldo</mat-header-cell>
               <mat-cell *matCellDef="let comprobante" style="color: red" class="font-medium">
-                {{ comprobante.saldo | currency }}
+                <span class="header-label">Saldo:</span>
+                {{ comprobante.saldo | currency: 'ARS':'symbol':'1.0-0' }}
               </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="Estado">
               <mat-header-cell *matHeaderCellDef mat-sort-header>Estado</mat-header-cell>
               <mat-cell *matCellDef="let comprobante">
-                <span class="badge badge--{{ getItemCssClassByStatus(comprobante.estadoComprobante.nombre) }}">
+                <span class="header-label">Estado:</span>
+                <span class="badge badge--{{ comprobanteService.getItemCssClassByStatus(comprobante.estadoComprobante.nombre) }}">
                   {{ comprobante.estadoComprobante.nombre }}
                 </span>
               </mat-cell>
@@ -142,6 +154,7 @@
             <ng-container matColumnDef="Acciones">
               <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
               <mat-cell *matCellDef="let comprobante" class="action-link">
+                <span class="header-label">Acciones:</span>
                 <div fxLayoutAlign="start space-around">
                   <ng-template [jhiHasAnyAuthority]="dataUrl?.editPermission">
                     <button
@@ -149,7 +162,7 @@
                       mat-icon-button
                       color="primary"
                       matTooltip="Editar comprobante"
-                      [disabled]="comprobante?.estadoComprobante.nombre === 'PAGADO' ? true : false"
+                      [disabled]="disabledByStatus(comprobante)"
                     >
                       <mat-icon class="icon-08x">create</mat-icon>
                     </button>

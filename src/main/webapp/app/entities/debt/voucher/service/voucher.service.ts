@@ -82,4 +82,23 @@ export class ComprobanteService {
     );
     return this.http.get<IItem[]>(url);
   }
+
+  /* **********CSS ****** */
+  getItemCssClassByStatus(status: string = 'PENDIENTE'): string {
+    switch (status) {
+      case 'PENDIENTE':
+        return 'danger';
+      case 'PAGADO':
+        return 'success';
+      case 'PAGADO PARCIAL':
+        return 'warning';
+      case 'ANULADO':
+        return 'canceled';
+      case 'IMPUTADO PARCIAL':
+        return 'warning';
+      case 'IMPUTADO':
+        return 'success';
+    }
+    return '';
+  }
 }

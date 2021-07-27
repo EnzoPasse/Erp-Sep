@@ -48,6 +48,7 @@ import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { BidiModule } from '@angular/cdk/bidi';
 import { PlatformModule } from '@angular/cdk/platform';
 import { ObserversModule } from '@angular/cdk/observers';
+import { MatDayjsDateModule, MAT_DAYJS_DATE_ADAPTER_OPTIONS } from '@vanrossumict/material-dayjs-adapter';
 
 // providers
 import { ErrorStateMatcher } from '@angular/material/core';
@@ -76,6 +77,7 @@ import { getEspañolPaginatorIntl } from 'app/config/paginator-spanish';
     MatChipsModule,
     MatStepperModule,
     MatDatepickerModule,
+    MatDayjsDateModule,
     MatDialogModule,
     MatDividerModule,
     MatExpansionModule,
@@ -127,6 +129,7 @@ import { getEspañolPaginatorIntl } from 'app/config/paginator-spanish';
     MatChipsModule,
     MatStepperModule,
     MatDatepickerModule,
+    MatDayjsDateModule,
     MatDialogModule,
     MatDividerModule,
     MatExpansionModule,
@@ -166,6 +169,10 @@ import { getEspañolPaginatorIntl } from 'app/config/paginator-spanish';
     {
       provide: MatPaginatorIntl,
       useValue: getEspañolPaginatorIntl(),
+    },
+    {
+      provide: MAT_DAYJS_DATE_ADAPTER_OPTIONS,
+      useValue: { useUtc: true },
     },
   ],
 })

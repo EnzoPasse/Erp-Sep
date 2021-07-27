@@ -1,0 +1,136 @@
+<div fxLayout="row wrap" fxLayoutAlign="center center">
+  <div fxFlex.gt-sm="33.33" fxFlex="100">
+    <mat-card class="bg-purple fijo">
+      <mat-card-content>
+        <div class="stats text-center">
+          <h5 class="text-white m-0">Saldo</h5>
+          <h2 class="text-white m-0">{{ creditoAcum | currency: 'ARS':'symbol':'1.0-0' }}</h2>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<div class="responsive-table m-t-15 mat-elevation-z2">
+  <mat-table
+    [dataSource]="dataSource"
+    class="table-items-list"
+    #table
+    matSort
+    #sort1="matSort"
+    matSortActive="id"
+    matSortDirection="asc"
+    matSortDisableClear
+  >
+    <ng-container matColumnDef="Select">
+      <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+      <mat-cell *matCellDef="let row; let i" class="mat-column-checkbox">
+        <mat-checkbox
+          (click)="$event.stopPropagation()"
+          (change)="$event ? selection.toggle(row) : null"
+          [checked]="selection.isSelected(row)"
+        >
+        </mat-checkbox>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Cbte">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Cbte</mat-header-cell>
+      <mat-cell *matCellDef="let comprobante">
+        <span class="header-label">Cbte:</span>
+        <small>{{ comprobante.tipoComprobante.nombre }}</small>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Nro">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Nro</mat-header-cell>
+      <mat-cell *matCellDef="let comprobante">
+        <span class="header-label">Nro:</span>
+        {{ comprobante.nroComprobante }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="F.Emision">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>F.Emision</mat-header-cell>
+      <mat-cell *matCellDef="let comprobante">
+        <span class="header-label">F.Emision:</span>
+        <small>{{ comprobante.fechaComprobanteString }}</small>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="F.Vencimiento">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>F.Vencimiento</mat-header-cell>
+      <mat-cell *matCellDef="let comprobante">
+        <span class="header-label">F.Vto:</span>
+        <small>{{ comprobante.fechaVtoString }}</small>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Periodo">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Periodo</mat-header-cell>
+      <mat-cell *matCellDef="let comprobante">
+        <span class="header-label">Periodo:</span>
+        <small>{{ comprobante.periodo }}</small>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Total">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Total</mat-header-cell>
+      <mat-cell *matCellDef="let comprobante">
+        <span class="header-label">Total:</span>
+        {{ comprobante.totalComprobante | currency: 'ARS':'symbol':'1.0-0' }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Saldo">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Saldo</mat-header-cell>
+      <mat-cell *matCellDef="let comprobante" style="color: blue" class="font-medium">
+        <span class="header-label">Saldo:</span>
+        {{ comprobante.saldo | currency: 'ARS':'symbol':'1.0-0' }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Imputado">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Imputado</mat-header-cell>
+      <mat-cell *matCellDef="let comprobante" style="color: teal">
+        <span class="header-label">Imputado:</span>
+        {{ comprobante.imputado | currency: 'ARS':'symbol':'1.0-0' }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Imputar">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>A imputar</mat-header-cell>
+      <mat-cell *matCellDef="let comprobante" style="color: red">
+        <span class="header-label">A imputar:</span>
+        {{ comprobante.aImputar | currency: 'ARS':'symbol':'1.0-0' }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Estado">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Estado</mat-header-cell>
+      <mat-cell *matCellDef="let comprobante">
+        <span class="header-label">Estado:</span>
+        <span class="badge badge--{{ comprobanteService.getItemCssClassByStatus(comprobante.estadoComprobante.nombre) }}">
+          {{ comprobante.estadoComprobante.nombre }}
+        </span>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
+</div>
+
+<!-- DataSource properties -->
+<div class="font-medium text-center p-10">
+  <div *ngIf="!dataSource.hasItems">
+    <strong>No se encontraron registros</strong>
+  </div>
+  <div *ngIf="dataSource.isPreloadTextViewed$ | async">Cargando...</div>
+</div>
+
+<div fxLayoutAlign="end center">
+  <mat-spinner [diameter]="20" *ngIf="dataSource.loading$ | async"></mat-spinner>
+  <mat-paginator [pageSize]="10" [pageSizeOptions]="[3, 5, 10]" [length]="dataSource.paginatorTotal$ | async" [showFirstLastButtons]="true">
+  </mat-paginator>
+</div>

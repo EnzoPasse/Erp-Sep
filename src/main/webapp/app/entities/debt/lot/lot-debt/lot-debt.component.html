@@ -1,0 +1,135 @@
+<mat-card>
+  <mat-card-header fxLayoutAlign="space-between start">
+    <mat-card-title>{{ titleForm }}</mat-card-title>
+  </mat-card-header>
+  <hr />
+  <mat-card-content>
+    <jhi-alert-error></jhi-alert-error>
+
+    <form [formGroup]="loteForm">
+      <mat-accordion>
+        <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>file_upload</mat-icon>
+              Cargar lote desde un archivo
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div fxLayout="row wrap" fxLayoutAlign="space-between start">
+            <div fxFlex="100" fxFlex.gt-sm="40">
+              <mat-form-field>
+                <input matInput [matDatepicker]="myDatepickerDesde" [formControl]="fechaVencimiento" />
+                <mat-datepicker-toggle matSuffix [for]="myDatepickerDesde"></mat-datepicker-toggle>
+                <mat-datepicker #myDatepickerDesde></mat-datepicker>
+                <mat-hint align="start">Fecha Vencimiento 'dd/mm/yyyy'</mat-hint>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="40">
+              <mat-form-field>
+                <input matInput [matDatepicker]="myDatepickerHasta" [formControl]="fechaContable" />
+                <mat-datepicker-toggle matSuffix [for]="myDatepickerHasta"></mat-datepicker-toggle>
+                <mat-datepicker #myDatepickerHasta></mat-datepicker>
+                <mat-hint align="start">Fecha Contable 'dd/mm/yyyy'</mat-hint>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <br />
+
+          <div class="text-center">
+            <button
+              *jhiHasAnyAuthority="'Accion Crear Comprobantes por Lote'"
+              mat-raised-button
+              color="primary"
+              (click)="onClick()"
+              [disabled]="!(fechaContable.value && fechaVencimiento.value)"
+            >
+              <mat-icon>file_upload</mat-icon>
+              {{ text }}
+            </button>
+            <br />
+            <br />
+            <ul>
+              <li *ngFor="let file of files">
+                <span id="file-label">
+                  {{ file.data.name }}
+
+                  <button
+                    mat-icon-button
+                    *ngIf="file.canRetry"
+                    (click)="retryFile(file)"
+                    matTooltip="Reintentar"
+                    aria-label="Example icon-button with a heart icon"
+                  >
+                    <mat-icon>refresh</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    *ngIf="file.canCancel"
+                    (click)="cancelFile(file)"
+                    aria-label="Example icon-button with a heart icon"
+                    matTooltip="Cancelar"
+                  >
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </span>
+
+                <mat-progress-bar [color]="'warn'" [mode]="determinate" [value]="file.progress"> </mat-progress-bar>
+              </li>
+            </ul>
+            <!--  <input type="file" id="fileUpload" name="fileUpload" multiple="multiple" accept="{{accept}}"
+                        style="display:none;" /> -->
+            <input type="file" id="fileUpload" name="fileUpload" multiple="multiple" style="display: none" accept=".csv" />
+          </div>
+        </mat-expansion-panel>
+
+        <!-- SEGUNDO PANEL -->
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>view_list</mat-icon>
+              Listar lotes pendientes
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <mat-list *ngIf="allLotes.length > 0; else noregistros">
+            <h3 mat-subheader>Lote</h3>
+            <mat-list-item *ngFor="let item of allLotes">
+              <mat-icon mat-list-icon>note</mat-icon>
+              <p mat-line><strong>Nro Lote:</strong> {{ item.nroLote }}</p>
+              <p mat-line><strong>Nombre:</strong> {{ item.lote.nombre }}</p>
+              <p mat-line><strong>Fecha Vencimiento:</strong> {{ item.fechaVtoString }}</p>
+
+              <div class="text-rigth">
+                <button
+                  *jhiHasAnyAuthority="'Accion Eliminar Comprobantes por Lote'"
+                  mat-icon-button
+                  color="warn"
+                  matTooltip="Borrar Lote"
+                  type="button"
+                  (click)="deleteLote(item)"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+              <mat-divider></mat-divider>
+            </mat-list-item>
+          </mat-list>
+
+          <ng-template #noregistros>
+            <mat-list dense>
+              <mat-list-item>
+                <p mat-line><strong> No hay lotes pendientes</strong></p>
+              </mat-list-item>
+            </mat-list>
+          </ng-template>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </form>
+  </mat-card-content>
+
+  {{ loteForm.value | json }}</mat-card
+>
