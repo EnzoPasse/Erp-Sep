@@ -20,6 +20,7 @@ import { PrintEntityDialogComponent } from './dialog/print-entity-dialog/print-e
 import { SafePipe } from './safe/safe.pipe';
 import { LoaderComponent } from './loader/loader/loader.component';
 import { SpinnerComponent } from './loader/spinner.component';
+import { ScrollToTopComponent } from './scroll-to-top/scroll-to-top.component';
 
 @NgModule({
   imports: [SharedLibsModule, MaterialModule],
@@ -42,6 +43,7 @@ import { SpinnerComponent } from './loader/spinner.component';
     DeleteEntityDialogComponent,
     PrintEntityDialogComponent,
     LoaderComponent,
+    ScrollToTopComponent,
   ],
   exports: [
     SharedLibsModule,
@@ -64,6 +66,7 @@ import { SpinnerComponent } from './loader/spinner.component';
     DeleteEntityDialogComponent,
     PrintEntityDialogComponent,
     LoaderComponent,
+    ScrollToTopComponent,
   ],
   providers: [MenuItems],
 })
