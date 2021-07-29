@@ -2,6 +2,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { StepperOrientation, STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
 import { Alert } from 'app/core/util/alert.service';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
@@ -36,6 +37,7 @@ export class StepperAjustmentComponent implements OnInit {
   @ViewChild(CreditoEnteComponent) step1Credit!: CreditoEnteComponent;
   @ViewChild(DescontarDeudaComponent) step2Disconunt!: DescontarDeudaComponent;
   @ViewChild(ConfirmarAjusteComponent) step3Confirm!: ConfirmarAjusteComponent;
+  @ViewChild('stepper', { static: false }) stepper!: MatStepper;
 
   constructor(
     private route: ActivatedRoute,
@@ -86,6 +88,7 @@ export class StepperAjustmentComponent implements OnInit {
 
   private onSaveSuccess(): void {
     this.isSaving = false;
+    this.stepper.reset();
   }
 
   private onSaveError(): void {

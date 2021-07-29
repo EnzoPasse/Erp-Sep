@@ -29,7 +29,7 @@
         <jhi-confirmar-ajuste *ngIf="saveVoucher" [confirmVoucher]="saveVoucher"></jhi-confirmar-ajuste>
         <div class="text-right p-t-20">
           <button mat-stroked-button color="warn" matStepperPrevious>Atras</button>
-          <button mat-raised-button color="primary" [disabled]="isSaving" (click)="save(); stepper.reset()">Confirmar</button>
+          <button mat-raised-button color="primary" [disabled]="isSaving" (click)="save()">Confirmar</button>
         </div>
       </mat-step>
     </mat-horizontal-stepper>
