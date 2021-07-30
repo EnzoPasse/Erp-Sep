@@ -7,17 +7,17 @@
     <jhi-alert-error></jhi-alert-error>
 
     <mat-horizontal-stepper [linear]="true" labelPosition="bottom" #stepper>
-      <mat-step>
-        <!-- [stepControl]="form1.creditForm" -->
+      <mat-step [stepControl]="form1.tipoPagoForm">
         <ng-template matStepLabel>Tipo de Orden de Pago</ng-template>
+        <jhi-step1-tipo-orden #form1></jhi-step1-tipo-orden>
         <!-- <jhi-credito-ente (creditSeleccionInfo)="creditSelection($event)" #form1></jhi-credito-ente> -->
         <div class="text-right p-t-20">
           <button mat-stroked-button color="primary" matStepperNext>Siguiente</button>
         </div>
       </mat-step>
 
-      <mat-step label="Medio de Pago"
-        ><!-- [stepControl]="form2.descontarForm" -->
+      <mat-step label="Medio de Pago">
+        <!-- [stepControl]="form2.descontarForm" -->
         <!--  <jhi-descontar-deuda (deudaSeleccionInfo)="deudaSelection($event)" [comprobanteIn]="creditVoucherSelected" #form2>
           </jhi-descontar-deuda>
    -->

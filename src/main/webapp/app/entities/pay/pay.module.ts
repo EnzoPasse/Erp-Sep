@@ -7,9 +7,21 @@ import { ListPayComponent } from './list/list-pay.component';
 import { SharedModule } from 'app/shared/shared.module';
 import { RouterModule } from '@angular/router';
 import { PAY_ROUTE } from './route/payment.route';
+import { CuentaCorrienteComponent } from './stepper/step1-tipo-orden/cuenta-corriente/cuenta-corriente.component';
+import { DirectoComponent } from './stepper/step1-tipo-orden/directo/directo.component';
+import { LoteComponent } from './stepper/step1-tipo-orden/lote/lote.component';
 
 @NgModule({
   imports: [SharedModule, RouterModule.forChild(PAY_ROUTE)],
-  declarations: [ListPayComponent, StepperPayComponent, Step1TipoOrdenComponent, Step2MedioPagoComponent, Step3ConfirmarPagoComponent],
+  declarations: [
+    ListPayComponent,
+    StepperPayComponent,
+    Step1TipoOrdenComponent,
+    Step2MedioPagoComponent,
+    Step3ConfirmarPagoComponent,
+    CuentaCorrienteComponent,
+    DirectoComponent,
+    LoteComponent,
+  ],
 })
 export class PayModule {}

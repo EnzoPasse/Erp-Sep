@@ -1,6 +1,5 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { ScrollStrategyOptions } from '@angular/cdk/overlay';
 import { DOCUMENT, ViewportScroller } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject } from '@angular/core';
 

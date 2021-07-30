@@ -1,1 +1,42 @@
-<p>step1-tipo-orden works!</p>
+<div class="m-t-10">
+  <form [formGroup]="tipoPagoForm">
+    <div fxLayout="row wrap">
+      <div fxFlex="100">
+        <mat-radio-group
+          color="warn"
+          fxLayout="column"
+          fxLayoutAlign="center start"
+          fxLayout.gt-sm="row"
+          fxLayoutAlign.gt-sm="space-evenly center"
+          class="radio-group"
+          formControlName="tipoPagoSelected"
+          name="tipo"
+        >
+          <mat-radio-button
+            *jhiHasAnyAuthority="'Accion Crear Orden de Pago Directo'"
+            class="radio-button"
+            value="{{ PaymentsType.DIRECTO }}"
+            >DIRECTO</mat-radio-button
+          >
+          <mat-radio-button
+            *jhiHasAnyAuthority="'Accion Crear Orden de Pago a Cuenta Corriente'"
+            class="radio-button"
+            value="{{ PaymentsType.CUENTA_CORRIENTE }}"
+            >CUENTA CORRIENTE
+          </mat-radio-button>
+          <mat-radio-button *jhiHasAnyAuthority="'Accion Crear Orden de Pago a Lote'" class="radio-button" value="{{ PaymentsType.LOTE }}"
+            >LOTE</mat-radio-button
+          >
+        </mat-radio-group>
+      </div>
+    </div>
+
+    <jhi-directo *ngIf="tipoPagoForm.controls['tipoPagoSelected'].value === PaymentsType.DIRECTO"></jhi-directo>
+
+    <jhi-cuenta-corriente *ngIf="tipoPagoForm.controls['tipoPagoSelected'].value === PaymentsType.CUENTA_CORRIENTE"></jhi-cuenta-corriente>
+
+    <jhi-lote *ngIf="tipoPagoForm.controls['tipoPagoSelected'].value === PaymentsType.LOTE"></jhi-lote>
+  </form>
+</div>
+
+{{ tipoPagoForm.value | json }}
