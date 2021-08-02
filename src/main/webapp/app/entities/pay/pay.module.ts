@@ -10,9 +10,10 @@ import { PAY_ROUTE } from './route/payment.route';
 import { CuentaCorrienteComponent } from './stepper/step1-tipo-orden/cuenta-corriente/cuenta-corriente.component';
 import { DirectoComponent } from './stepper/step1-tipo-orden/directo/directo.component';
 import { LoteComponent } from './stepper/step1-tipo-orden/lote/lote.component';
+import { NgxMaskModule } from 'ngx-mask';
 
 @NgModule({
-  imports: [SharedModule, RouterModule.forChild(PAY_ROUTE)],
+  imports: [SharedModule, RouterModule.forChild(PAY_ROUTE), NgxMaskModule.forChild()],
   declarations: [
     ListPayComponent,
     StepperPayComponent,

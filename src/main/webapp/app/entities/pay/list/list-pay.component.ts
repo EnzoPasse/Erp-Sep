@@ -127,19 +127,23 @@ export class ListPayComponent implements OnInit, OnDestroy {
     const _waitDesciption = 'Borrando Comprobante...';
 
     const dialogRef = this.dialog.deleteElement(_title, _description, _waitDesciption);
-    dialogRef.afterClosed().subscribe((res: any) => {
-      if (!res) {
-        return;
-      }
+    this.subscriptions.push(
+      dialogRef.afterClosed().subscribe((res: any) => {
+        if (!res) {
+          return;
+        }
 
-      if (_item.id) {
-        this.comprobanteService.delete(_item.id).subscribe({
-          next: () => {
-            this.loadComprobanteList();
-          },
-        });
-      }
-    });
+        if (_item.id) {
+          this.subscriptions.push(
+            this.comprobanteService.delete(_item.id).subscribe({
+              next: () => {
+                this.loadComprobanteList();
+              },
+            })
+          );
+        }
+      })
+    );
   }
 
   cambiarFechaDesde(fechaSelected: any): void {

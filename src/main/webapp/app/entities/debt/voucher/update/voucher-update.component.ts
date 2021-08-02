@@ -1,6 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Validators, FormBuilder, AbstractControl, FormGroup, FormArray } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { OperationTemplate, TypeTemplate } from 'app/config/template.constats';
 import { Alert } from 'app/core/util/alert.service';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 import { CustomValidators } from 'app/core/util/validators';
@@ -127,7 +128,7 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   enteSelected(ente: IEnte | undefined): void {
     if (ente) {
       this.subscriptions.push(
-        this.comprobanteService.getItemsEnte(ente.id!).subscribe(res => {
+        this.comprobanteService.getItemsEnte(ente.id!, OperationTemplate.DEBE, TypeTemplate.PLANTILLA_DEUDA).subscribe(res => {
           this.allConceptos = res;
         })
       );

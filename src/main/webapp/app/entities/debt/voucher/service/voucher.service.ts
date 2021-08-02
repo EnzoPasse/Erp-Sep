@@ -76,11 +76,10 @@ export class ComprobanteService {
   }
 
   /* **********ITEMS ****** */
-  getItemsEnte(idEnte: number): Observable<IItem[]> {
-    const url = this.applicationConfigService.getEndpointFor(
-      `/item/get/?id=${idEnte}&dh=${OperationTemplate.DEBE}&idPlantillaTipo=${TypeTemplate.PLANTILLA_DEUDA}`
-    );
+  getItemsEnte(idEnte: number, operation: string, template: number): Observable<IItem[]> {
+    const url = this.applicationConfigService.getEndpointFor(`/item/get/?id=${idEnte}&dh=${operation}&idPlantillaTipo=${template}`);
     return this.http.get<IItem[]>(url);
+    // `/item/get/?id=${idEnte}&dh=${OperationTemplate.DEBE}&idPlantillaTipo=${TypeTemplate.PLANTILLA_DEUDA}`
   }
 
   /* **********CSS ****** */

@@ -11,6 +11,7 @@
           class="radio-group"
           formControlName="tipoPagoSelected"
           name="tipo"
+          (change)="changeTipoPago()"
         >
           <mat-radio-button
             *jhiHasAnyAuthority="'Accion Crear Orden de Pago Directo'"
@@ -31,9 +32,16 @@
       </div>
     </div>
 
-    <jhi-directo *ngIf="tipoPagoForm.controls['tipoPagoSelected'].value === PaymentsType.DIRECTO"></jhi-directo>
+    <div class="p-30">
+      <hr />
+    </div>
 
-    <jhi-cuenta-corriente *ngIf="tipoPagoForm.controls['tipoPagoSelected'].value === PaymentsType.CUENTA_CORRIENTE"></jhi-cuenta-corriente>
+    <jhi-directo
+      *ngIf="tipoPagoForm.controls['tipoPagoSelected'].value === PaymentsType.DIRECTO"
+      (totalInfo)="totalChange($event)"
+    ></jhi-directo>
+
+    <jhi-cuenta-corriente *ngIf="tipoPagoForm.controls['tipoPagoSelected'].value === PaymentsType.CUENTA_CORRIENTE"> </jhi-cuenta-corriente>
 
     <jhi-lote *ngIf="tipoPagoForm.controls['tipoPagoSelected'].value === PaymentsType.LOTE"></jhi-lote>
   </form>
