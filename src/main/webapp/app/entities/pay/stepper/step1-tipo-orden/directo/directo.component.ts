@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, PatternValidator, Validators } from '@angular/forms';
 import { OperationTemplate, TypeTemplate } from 'app/config/template.constats';
 import { StateVoucherType } from 'app/config/voucherType.constant';
 import { CustomValidators } from 'app/core/util/validators';
@@ -16,6 +16,7 @@ import { debounceTime } from 'rxjs/operators';
 })
 export class DirectoComponent implements OnInit, OnDestroy {
   now = dayjs().format('DD/MM/YYYY');
+  nroPattern = `[0-9]{5}-[0-9]{8}`;
   allConceptos: IItem[] = [];
   comprobanteRes!: IComprobante;
   allTipoComprobantes: ITipoComprobante[] = [];
@@ -23,9 +24,8 @@ export class DirectoComponent implements OnInit, OnDestroy {
 
   directoForm = this.fb.group({
     tipoComprobante: ['', [Validators.required]],
-    nroComprobante: ['', Validators.required],
+    nroComprobante: ['', [Validators.required, Validators.pattern(this.nroPattern)]],
     fechaComprobante: ['', [Validators.required, CustomValidators.isValidDate]],
-    observaciones: [''],
     totalComprobante: [{ value: '', disabled: true }],
     items: this.fb.array([]),
   });
@@ -49,8 +49,6 @@ export class DirectoComponent implements OnInit, OnDestroy {
 
     const formValid = this.directoForm.statusChanges.pipe(debounceTime(250)).subscribe((res: any) => {
       if (res === 'VALID') {
-        // eslint-disable-next-line no-console
-        console.log(this.totalComprobante.value);
         this.totalInfo.emit(this.totalComprobante.value);
       } else {
         this.totalInfo.emit(null);
@@ -121,9 +119,6 @@ export class DirectoComponent implements OnInit, OnDestroy {
   get totalComprobante(): AbstractControl {
     return this.directoForm.get('totalComprobante') as AbstractControl;
   }
-  get observaciones(): AbstractControl {
-    return this.directoForm.get('observaciones') as AbstractControl;
-  }
 
   get fechaComprobante(): AbstractControl {
     return this.directoForm.get('fechaComprobante') as AbstractControl;
@@ -146,7 +141,11 @@ export class DirectoComponent implements OnInit, OnDestroy {
   }
 
   mensajeErrorNroComprobante(): string {
-    return this.nroComprobante.hasError('required') ? 'El Nro debe ser (00000-00000000)' : '';
+    return this.nroComprobante.hasError('required')
+      ? 'El Nro de Comprobante es requerido'
+      : this.nroComprobante.hasError('pattern')
+      ? 'El Nro debe ser (00000-00000000)'
+      : '';
   }
 
   mensajeErrorImporte(indice: number): string {

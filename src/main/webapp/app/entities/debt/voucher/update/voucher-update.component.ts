@@ -36,7 +36,7 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     fechaContable: ['', [Validators.required, CustomValidators.isValidDate]],
     ente: ['', [Validators.required, CustomValidators.RequireMatch]],
     tipoComprobante: ['', [Validators.required]],
-    nroComprobante: ['', Validators.required],
+    nroComprobante: ['', [Validators.required, Validators.pattern(`[0-9]{5}-[0-9]{8}`)]],
     fechaComprobante: ['', [Validators.required, CustomValidators.isValidDate]],
     periodo: ['', [Validators.required]],
     fechaVto: ['', [Validators.required]],
@@ -239,7 +239,11 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   mensajeErrorNroComprobante(): string {
-    return this.nroComprobante.hasError('required') ? 'El Nro debe ser (00000-00000000)' : '';
+    return this.nroComprobante.hasError('required')
+      ? 'El Nro de Comprobante es requerido'
+      : this.nroComprobante.hasError('pattern')
+      ? 'El Nro debe ser (00000-00000000)'
+      : '';
   }
 
   get periodo(): AbstractControl {
