@@ -47,7 +47,7 @@ export class CreditoEnteComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.route.data.subscribe((data: any) => (this.dataUrl = data as {}));
+    this.subscriptions.push(this.route.data.subscribe((data: any) => (this.dataUrl = data as {})));
 
     const sortSubscription = this.sort?.sortChange.subscribe(() => (this.paginator!.pageIndex = 0));
     if (sortSubscription) {

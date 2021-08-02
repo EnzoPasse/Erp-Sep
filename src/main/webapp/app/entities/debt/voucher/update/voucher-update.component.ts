@@ -126,9 +126,11 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
 
   enteSelected(ente: IEnte | undefined): void {
     if (ente) {
-      this.comprobanteService.getItemsEnte(ente.id!).subscribe(res => {
-        this.allConceptos = res;
-      });
+      this.subscriptions.push(
+        this.comprobanteService.getItemsEnte(ente.id!).subscribe(res => {
+          this.allConceptos = res;
+        })
+      );
     }
   }
 
@@ -295,10 +297,11 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     } */
 
   protected subscribeToSaveResponse(result: Observable<IComprobante>): void {
-    result.subscribe({
+    const saveSubscription = result.subscribe({
       next: () => this.onSaveSuccess(),
       error: () => this.onSaveError(),
     });
+    this.subscriptions.push(saveSubscription);
   }
 
   private marcarCampos(formGroup: FormGroup): void {

@@ -1,11 +1,12 @@
 import { HttpEventType } from '@angular/common/http';
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Alert } from 'app/core/util/alert.service';
 import { DialogService } from 'app/core/util/dialog.service';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 import * as dayjs from 'dayjs';
+import { Subscription } from 'rxjs';
 import { FileUploadModel } from '../lot-debt.model';
 import { LotDebtService } from '../service/lot-debt-service.service';
 
@@ -14,7 +15,7 @@ import { LotDebtService } from '../service/lot-debt-service.service';
   templateUrl: './lot-debt.component.html',
   styleUrls: ['./lot-debt.component.scss'],
 })
-export class LotDebtComponent implements OnInit {
+export class LotDebtComponent implements OnInit, OnDestroy {
   /** Link text */
   @Input() text = 'Subir Archivo';
   /* Name used in form which will be sent in HTTP request. */
@@ -28,6 +29,7 @@ export class LotDebtComponent implements OnInit {
   // @Output() complete = new EventEmitter<string>();
 
   files: Array<FileUploadModel> = [];
+  susbscriptions: Subscription[] = [];
 
   now = dayjs(new Date()).format('DD/MM/YYYY');
   mensajeError = '';
@@ -49,18 +51,26 @@ export class LotDebtComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.data.subscribe((data: any) => {
-      this.titleForm = data.pageTitle;
-    });
+    this.susbscriptions.push(
+      this.route.data.subscribe((data: any) => {
+        this.titleForm = data.pageTitle;
+      })
+    );
     this.fechaContable.patchValue(this.now);
     this.loadLoteList();
   }
 
+  ngOnDestroy(): void {
+    this.susbscriptions.forEach(subs => subs.unsubscribe());
+  }
+
   loadLoteList(): void {
-    this.loteService.getAllLotesPendientes().subscribe(res => {
-      this.allLotes = res;
-      this.cdr.markForCheck();
-    });
+    this.susbscriptions.push(
+      this.loteService.getAllLotesPendientes().subscribe(res => {
+        this.allLotes = res;
+        this.cdr.markForCheck();
+      })
+    );
   }
 
   onClick(): void {
@@ -142,11 +152,13 @@ export class LotDebtComponent implements OnInit {
         return;
       }
       if (_item.nroLote) {
-        this.loteService.deleteLote(_item.nroLote).subscribe({
-          next: () => {
-            this.loadLoteList();
-          },
-        });
+        this.susbscriptions.push(
+          this.loteService.deleteLote(_item.nroLote).subscribe({
+            next: () => {
+              this.loadLoteList();
+            },
+          })
+        );
       }
     });
   }

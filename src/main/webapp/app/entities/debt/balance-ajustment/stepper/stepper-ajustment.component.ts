@@ -1,12 +1,13 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { StepperOrientation, STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ThrowStmt } from '@angular/compiler';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
 import { Alert } from 'app/core/util/alert.service';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ComprobanteService } from '../../voucher/service/voucher.service';
 import { IComprobante } from '../../voucher/voucher.model';
@@ -25,7 +26,7 @@ import { ConfirmarAjusteComponent } from './step3-confirm/confirmar-ajuste.compo
     },
   ],
 })
-export class StepperAjustmentComponent implements OnInit {
+export class StepperAjustmentComponent implements OnInit, OnDestroy {
   titleForm = '';
   stepperOrientation: Observable<StepperOrientation>;
   creditVoucherSelected!: IComprobante;
@@ -33,6 +34,7 @@ export class StepperAjustmentComponent implements OnInit {
   isSaving = false;
   urlData: any;
   step2!: FormGroup | null;
+  subscriptions: Subscription[] = [];
 
   @ViewChild(CreditoEnteComponent) step1Credit!: CreditoEnteComponent;
   @ViewChild(DescontarDeudaComponent) step2Disconunt!: DescontarDeudaComponent;
@@ -51,10 +53,16 @@ export class StepperAjustmentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.data.subscribe((data: any) => {
-      this.titleForm = data.pageTitle;
-      this.urlData = data;
-    });
+    this.subscriptions.push(
+      this.route.data.subscribe((data: any) => {
+        this.titleForm = data.pageTitle;
+        this.urlData = data;
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subs => subs.unsubscribe());
   }
 
   save(): void {
@@ -79,10 +87,11 @@ export class StepperAjustmentComponent implements OnInit {
   }
 
   protected subscribeToSaveResponse(result: Observable<IComprobante>): void {
-    result.subscribe({
+    const saveSubscription = result.subscribe({
       next: () => this.onSaveSuccess(),
       error: () => this.onSaveError(),
     });
+    this.subscriptions.push(saveSubscription);
     this.step1Credit.limpiarOptions();
   }
 

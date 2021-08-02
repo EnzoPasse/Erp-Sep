@@ -93,11 +93,13 @@ export class RoleUpdateComponent implements OnInit, OnDestroy {
   /* ****************END TREE**********************   */
 
   ngOnInit(): void {
-    this.route.data.subscribe(({ rol }) => {
-      this.createTitle(rol);
-      this.rol = rol;
-      this.loadPermissions();
-    });
+    this.subscriptions.push(
+      this.route.data.subscribe(({ rol }) => {
+        this.createTitle(rol);
+        this.rol = rol;
+        this.loadPermissions();
+      })
+    );
   }
 
   ngOnDestroy(): void {
@@ -138,24 +140,27 @@ export class RoleUpdateComponent implements OnInit, OnDestroy {
   }
 
   protected subscribeToSaveResponse(result: Observable<IRol>): void {
-    result.subscribe({
+    const saveSubscription = result.subscribe({
       next: () => this.onSaveSuccess(),
       error: () => this.onSaveError(),
     });
+    this.subscriptions.push(saveSubscription);
   }
 
   private loadPermissions(): void {
-    this.rolService.getAllPermissions().subscribe({
-      next: (res: IPermission[]) => {
-        if (res.length > 0) {
-          this.dataSource.data = res;
-          if (this.rol.id !== undefined) {
-            this.expandTree();
-            this.checkPermissions(res);
+    this.subscriptions.push(
+      this.rolService.getAllPermissions().subscribe({
+        next: (res: IPermission[]) => {
+          if (res.length > 0) {
+            this.dataSource.data = res;
+            if (this.rol.id !== undefined) {
+              this.expandTree();
+              this.checkPermissions(res);
+            }
           }
-        }
-      },
-    });
+        },
+      })
+    );
   }
 
   private checkPermissions(_allPermissions: IPermission[]): void {
