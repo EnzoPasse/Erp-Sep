@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, PatternValidator, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OperationTemplate, TypeTemplate } from 'app/config/template.constats';
 import { StateVoucherType } from 'app/config/voucherType.constant';
 import { CustomValidators } from 'app/core/util/validators';
@@ -31,6 +31,7 @@ export class DirectoComponent implements OnInit, OnDestroy {
   });
 
   @Output() totalInfo: EventEmitter<number | null> = new EventEmitter<number | null>();
+  @Output() formInfo: EventEmitter<FormGroup | null> = new EventEmitter<FormGroup | null>();
 
   constructor(private fb: FormBuilder, private comprobanteService: ComprobanteService) {}
 
@@ -50,8 +51,10 @@ export class DirectoComponent implements OnInit, OnDestroy {
     const formValid = this.directoForm.statusChanges.pipe(debounceTime(250)).subscribe((res: any) => {
       if (res === 'VALID') {
         this.totalInfo.emit(this.totalComprobante.value);
+        this.formInfo.emit(this.directoForm.getRawValue());
       } else {
         this.totalInfo.emit(null);
+        this.formInfo.emit(null);
       }
     });
     this.subscriptions.push(formValid);

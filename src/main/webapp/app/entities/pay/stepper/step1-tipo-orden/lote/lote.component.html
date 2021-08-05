@@ -1,1 +1,140 @@
-<p>lote works!</p>
+<div>
+  <mat-accordion>
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon>view_list</mat-icon>
+          Lotes Pendientes
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-list *ngIf="allLotes.length > 0; else noregistros">
+        <mat-list-item *ngFor="let item of allLotes">
+          <mat-radio-button color="primary" [value]="item" (change)="loteChange($event.value)">
+            <strong>Nombre:</strong> {{ item.lote.nombre }} &nbsp; <strong>Nro Lote:</strong> {{ item.nroLote }}
+            &nbsp;
+            <strong>Fecha Vencimiento:</strong> {{ item.fechaVtoString }}
+          </mat-radio-button>
+          <mat-divider></mat-divider>
+        </mat-list-item>
+      </mat-list>
+
+      <ng-template #noregistros>
+        <mat-list dense>
+          <mat-list-item>
+            <p mat-line><strong> No hay lotes pendientes</strong></p>
+          </mat-list-item>
+        </mat-list>
+      </ng-template>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+<br />
+
+<ng-container *ngIf="!loading; else elseTemplate">
+  <div class="responsive-table m-t-15 mat-elevation-z2">
+    <mat-table
+      [dataSource]="dataSource"
+      class="table-items-list"
+      #table
+      matSort
+      #sort1="matSort"
+      matSortActive="id"
+      matSortDirection="asc"
+      matSortDisableClear
+    >
+      <ng-container matColumnDef="Select">
+        <mat-header-cell *matHeaderCellDef class="mat-column-checkbox">
+          <mat-checkbox
+            color="primary"
+            (change)="$event ? masterToggle() : null"
+            [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()"
+          >
+          </mat-checkbox>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row; let i" class="mat-column-checkbox">
+          <mat-checkbox
+            (click)="$event.stopPropagation()"
+            (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)"
+          >
+          </mat-checkbox>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Ente">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Ente</mat-header-cell>
+        <mat-cell *matCellDef="let comprobante">
+          <span class="header-label">Ente:</span>
+          <small>
+            {{ comprobante.ente.persona ? comprobante.ente.persona.apellido : comprobante.ente.personaJuridica?.nombreFantasia }}</small
+          >
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="F.Vencimiento">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>F.Vencimiento</mat-header-cell>
+        <mat-cell *matCellDef="let comprobante">
+          <span class="header-label">F.Vto:</span>
+          <small>{{ comprobante.fechaVtoString }}</small>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Periodo">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Periodo</mat-header-cell>
+        <mat-cell *matCellDef="let comprobante">
+          <span class="header-label">Periodo:</span>
+          <small>{{ comprobante.periodo }}</small>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Total">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Total</mat-header-cell>
+        <mat-cell *matCellDef="let comprobante">
+          <span class="header-label">Total:</span>
+          {{ comprobante.totalComprobante | currency: 'ARS':'symbol':'1.0-0' }}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Saldo">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Saldo</mat-header-cell>
+        <mat-cell *matCellDef="let comprobante" style="color: blue" class="font-medium">
+          <span class="header-label">Saldo:</span>
+          {{ comprobante.saldo | currency: 'ARS':'symbol':'1.0-0' }}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Estado">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Estado</mat-header-cell>
+        <mat-cell *matCellDef="let comprobante">
+          <span class="header-label">Estado:</span>
+          <span class="badge badge--{{ comprobanteService.getItemCssClassByStatus(comprobante.estadoComprobante.nombre) }}">
+            {{ comprobante.estadoComprobante.nombre }}
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
+  </div>
+</ng-container>
+
+<ng-template #elseTemplate>
+  <div class="font-medium text-center p-10">
+    <div>Cargando...</div>
+  </div>
+</ng-template>
+
+<br />
+<div *ngIf="selection?.selected.length > 0">
+  <div fxLayout="column" fxLayoutAlign="end end">
+    <div fxFlex="100" fxFlex.gt-sm="50">
+      <mat-form-field appearance="fill">
+        <mat-label>Total a Pagar</mat-label>
+        <input matInput [value]="totalComprobante | currency: 'ARS':'symbol'" style="font-size: 20px; color: red" disabled />
+      </mat-form-field>
+    </div>
+  </div>
+</div>

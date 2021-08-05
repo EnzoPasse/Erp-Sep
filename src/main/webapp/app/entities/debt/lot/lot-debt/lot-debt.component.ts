@@ -7,7 +7,7 @@ import { DialogService } from 'app/core/util/dialog.service';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 import * as dayjs from 'dayjs';
 import { Subscription } from 'rxjs';
-import { FileUploadModel } from '../lot-debt.model';
+import { FileUploadModel, ILoteDto } from '../lot-debt.model';
 import { LotDebtService } from '../service/lot-debt-service.service';
 
 @Component({
@@ -34,7 +34,7 @@ export class LotDebtComponent implements OnInit, OnDestroy {
   now = dayjs(new Date()).format('DD/MM/YYYY');
   mensajeError = '';
   panelOpenState = false;
-  allLotes = [];
+  allLotes: ILoteDto[] = [];
   titleForm = '';
   loteForm = this.fb.group({
     fechaContable: ['', Validators.required],

@@ -2,6 +2,8 @@ import { HttpClient, HttpEvent, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { Observable } from 'rxjs';
+import { IComprobante } from '../../voucher/voucher.model';
+import { ILoteDto } from '../lot-debt.model';
 
 @Injectable({
   providedIn: 'root',
@@ -27,9 +29,14 @@ export class LotDebtService {
     return this.http.request(req);
   }
 
-  getAllLotesPendientes(): Observable<any> {
+  getAllLotesPendientes(): Observable<ILoteDto[]> {
     const urlG = `${this.comprobanteUrl}/getCpteLote`;
-    return this.http.get(urlG);
+    return this.http.get<ILoteDto[]>(urlG);
+  }
+
+  getDetalleLote(loteNro: string): Observable<IComprobante[]> {
+    const urlG = `${this.comprobanteUrl}/getCpteLoteDetalle?nroLote=${loteNro}`;
+    return this.http.get<IComprobante[]>(urlG);
   }
 
   deleteLote(loteNro: string): Observable<{}> {

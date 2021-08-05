@@ -68,7 +68,7 @@ export class CreditoEnteComponent implements OnInit, AfterViewInit, OnDestroy {
         map(value => (typeof value === 'string' ? this.noWhiteSpace(value) : (value as string))),
         debounceTime(150), // que se emita solo una vez cada 500ms
         distinctUntilChanged(),
-        filter(query => !!query),
+        filter(query => !!query && query.length > 2),
         tap(() => (this.loadingAutocomplete = true)),
         switchMap(value => this.enteService.findAutocompleteEnte(value).pipe(finalize(() => (this.loadingAutocomplete = false))))
       )

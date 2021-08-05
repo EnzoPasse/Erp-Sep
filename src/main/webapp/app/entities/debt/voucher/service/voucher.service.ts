@@ -10,7 +10,6 @@ import { map } from 'rxjs/operators';
 import { VoucherAdaper } from './voucher-adapter.service';
 import { IComprobante, IEstadoComprobante, IItem, ITipoComprobante } from '../voucher.model';
 import { OperationType } from 'app/config/operationTypes.constants';
-import { OperationTemplate, TypeTemplate } from 'app/config/template.constats';
 
 @Injectable({
   providedIn: 'root',
