@@ -16,4 +16,9 @@ export class MedioPagoService {
     const url = `${this.resurceUrl}/get`;
     return this.http.get<IMedioPago[]>(url);
   }
+
+  getAllPorIdMFA(type: number): Observable<IMedioPago[]> {
+    const url = `${this.resurceUrl}/get/${type}`;
+    return this.http.get<IMedioPago[]>(url);
+  }
 }

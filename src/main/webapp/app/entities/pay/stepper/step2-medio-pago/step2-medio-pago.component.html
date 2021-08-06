@@ -1,1 +1,43 @@
-<p>step2-medio-pago works!</p>
+<div fxLayout="row wrap" fxLayoutAlign="center center">
+  <div fxFlex.gt-sm="33.33" fxFlex="100">
+    <mat-card class="bg-purple fijo">
+      <mat-card-content>
+        <div class="stats text-center">
+          <h5 class="text-white m-0">Total a Pagar</h5>
+          <h2 class="text-white m-0">{{ montoTotalPago | currency: 'ARS':'symbol':'1.0-0' }}</h2>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<div class="m-t-10">
+  <form [formGroup]="medioPagoForm">
+    <div fxLayout="row wrap">
+      <div fxFlex="100">
+        <mat-radio-group
+          color="warn"
+          fxLayout="column"
+          fxLayoutAlign="center start"
+          fxLayout.gt-xs="row"
+          fxLayoutAlign.gt-sm="space-evenly center"
+          class="radio-group"
+          formControlName="medioPagoSelected"
+          name="medios"
+        >
+          <mat-radio-button class="radio-button" *ngFor="let medio of allMediosPago" [value]="medio">
+            {{ medio.nombre }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+
+    <div class="p-30">
+      <hr />
+    </div>
+
+    <jhi-efectivo *ngIf="medioPagoForm.controls['medioPagoSelected'].value.id === 1"></jhi-efectivo>
+    <jhi-cheque *ngIf="medioPagoForm.controls['medioPagoSelected'].value.id === 2"></jhi-cheque>
+    <jhi-transferencia *ngIf="medioPagoForm.controls['medioPagoSelected'].value.id === 3"></jhi-transferencia>
+  </form>
+</div>

@@ -6,7 +6,7 @@
           color="warn"
           fxLayout="column"
           fxLayoutAlign="center start"
-          fxLayout.gt-sm="row"
+          fxLayout.gt-xs="row"
           fxLayoutAlign.gt-sm="space-evenly center"
           class="radio-group"
           formControlName="tipoPagoSelected"
@@ -50,5 +50,3 @@
     <jhi-lote *ngIf="tipoPagoForm.controls['tipoPagoSelected'].value === PaymentsType.LOTE" (formInfo)="formEmited($event)"> </jhi-lote>
   </form>
 </div>
-
-{{ tipoPagoForm.value | json }}

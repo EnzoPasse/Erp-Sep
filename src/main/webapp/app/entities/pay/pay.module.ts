@@ -11,6 +11,9 @@ import { CuentaCorrienteComponent } from './stepper/step1-tipo-orden/cuenta-corr
 import { DirectoComponent } from './stepper/step1-tipo-orden/directo/directo.component';
 import { LoteComponent } from './stepper/step1-tipo-orden/lote/lote.component';
 import { NgxMaskModule } from 'ngx-mask';
+import { EfectivoComponent } from './stepper/step2-medio-pago/efectivo/efectivo.component';
+import { ChequeComponent } from './stepper/step2-medio-pago/cheque/cheque.component';
+import { TransferenciaComponent } from './stepper/step2-medio-pago/transferencia/transferencia.component';
 
 @NgModule({
   imports: [SharedModule, RouterModule.forChild(PAY_ROUTE), NgxMaskModule.forChild()],
@@ -23,6 +26,9 @@ import { NgxMaskModule } from 'ngx-mask';
     CuentaCorrienteComponent,
     DirectoComponent,
     LoteComponent,
+    EfectivoComponent,
+    ChequeComponent,
+    TransferenciaComponent,
   ],
 })
 export class PayModule {}

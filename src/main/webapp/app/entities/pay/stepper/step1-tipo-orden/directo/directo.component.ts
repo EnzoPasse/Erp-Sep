@@ -25,9 +25,9 @@ export class DirectoComponent implements OnInit, OnDestroy {
   directoForm = this.fb.group({
     tipoComprobante: ['', [Validators.required]],
     nroComprobante: ['', [Validators.required, Validators.pattern(this.nroPattern)]],
-    fechaComprobante: ['', [Validators.required, CustomValidators.isValidDate]],
+    fechaComprobanteString: ['', [Validators.required, CustomValidators.isValidDate]],
     totalComprobante: [{ value: '', disabled: true }],
-    items: this.fb.array([]),
+    item: this.fb.array([]),
   });
 
   @Output() totalInfo: EventEmitter<number | null> = new EventEmitter<number | null>();
@@ -45,7 +45,7 @@ export class DirectoComponent implements OnInit, OnDestroy {
         .subscribe({ next: res => (this.allConceptos = res) })
     );
 
-    const itemValueChanges = this.items.valueChanges.subscribe(item => this.actualizarTotalComprobante(item));
+    const itemValueChanges = this.item.valueChanges.subscribe(item => this.actualizarTotalComprobante(item));
     this.subscriptions.push(itemValueChanges);
 
     const formValid = this.directoForm.statusChanges.pipe(debounceTime(250)).subscribe((res: any) => {
@@ -59,7 +59,7 @@ export class DirectoComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(formValid);
 
-    this.fechaComprobante.patchValue(this.now);
+    this.fechaComprobanteString.patchValue(this.now);
     this.agregarItem();
   }
 
@@ -75,11 +75,11 @@ export class DirectoComponent implements OnInit, OnDestroy {
   }
 
   agregarItem(): void {
-    this.items.push(this.crearItem());
+    this.item.push(this.crearItem());
   }
 
   borrarItem(i: number): void {
-    this.items.removeAt(i);
+    this.item.removeAt(i);
   }
 
   actualizarTotalComprobante(item: any): void {
@@ -112,8 +112,8 @@ export class DirectoComponent implements OnInit, OnDestroy {
     return o1?.name === o2?.name && o1?.id === o2?.id;
   }
 
-  get items(): FormArray {
-    return this.directoForm.get('items') as FormArray;
+  get item(): FormArray {
+    return this.directoForm.get('item') as FormArray;
   }
 
   get tipoComprobante(): AbstractControl {
@@ -123,8 +123,8 @@ export class DirectoComponent implements OnInit, OnDestroy {
     return this.directoForm.get('totalComprobante') as AbstractControl;
   }
 
-  get fechaComprobante(): AbstractControl {
-    return this.directoForm.get('fechaComprobante') as AbstractControl;
+  get fechaComprobanteString(): AbstractControl {
+    return this.directoForm.get('fechaComprobanteString') as AbstractControl;
   }
 
   get nroComprobante(): AbstractControl {
@@ -135,10 +135,10 @@ export class DirectoComponent implements OnInit, OnDestroy {
     return this.tipoComprobante.hasError('required') ? 'El Comprobante es requerido' : '';
   }
 
-  mensajeErrorFechaComprobante(): string {
-    return this.fechaComprobante.hasError('required')
+  mensajeErrorfechaComprobanteString(): string {
+    return this.fechaComprobanteString.hasError('required')
       ? 'La Fecha es requerida'
-      : this.fechaComprobante.hasError('isValidDate')
+      : this.fechaComprobanteString.hasError('isValidDate')
       ? 'Ingrese una fecha Valida dd/mm/yyyy'
       : '';
   }
@@ -152,9 +152,9 @@ export class DirectoComponent implements OnInit, OnDestroy {
   }
 
   mensajeErrorImporte(indice: number): string {
-    return this.items.controls[indice].get('importe')!.hasError('required')
+    return this.item.controls[indice].get('importe')!.hasError('required')
       ? 'El importe es requerido'
-      : this.items.controls[indice].get('importe')!.hasError('excedido')
+      : this.item.controls[indice].get('importe')!.hasError('excedido')
       ? 'Supero el limite'
       : '';
   }

@@ -26,7 +26,7 @@ export class CuentaCorrienteComponent implements OnInit, AfterViewInit, OnDestro
     ente: ['', [Validators.required, CustomValidators.RequireMatch]],
     totalComprobante: [0, Validators.min(1)],
     montoSeleccionado: [{ value: 0, disabled: true }], //
-    diferencia: [''],
+    // diferencia: [''],
     comprobanteRef: this.fb.array([]),
   });
 
@@ -197,7 +197,7 @@ export class CuentaCorrienteComponent implements OnInit, AfterViewInit, OnDestro
     const imputar = this.enteDeudaForm.controls['totalComprobante'].value;
     const seleccionado = this.enteDeudaForm.controls['montoSeleccionado'].value;
     this.diferencia = seleccionado - imputar;
-    this.enteDeudaForm.controls['diferencia'].setValue(this.diferencia);
+    // this.enteDeudaForm.controls['diferencia'].setValue(this.diferencia);
 
     if (this.diferencia < 0) {
       this.eventManager.broadcast(

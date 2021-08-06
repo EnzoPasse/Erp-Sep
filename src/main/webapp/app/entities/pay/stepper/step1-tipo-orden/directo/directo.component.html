@@ -25,10 +25,10 @@
     <div fxFlex="100" fxFlex.gt-sm="30" class="m-t-15">
       <mat-form-field appearance="outline">
         <mat-label>Fecha del Comprobante:</mat-label>
-        <input matInput mask="00/00/0000" [dropSpecialCharacters]="false" [formControl]="fechaComprobante" />
+        <input matInput mask="00/00/0000" [dropSpecialCharacters]="false" [formControl]="fechaComprobanteString" />
         <mat-icon matSuffix>date_range</mat-icon>
         <mat-hint align="start">'dd/mm/yyyy'</mat-hint>
-        <mat-error *ngIf="fechaComprobante.invalid">{{ mensajeErrorFechaComprobante() }} </mat-error>
+        <mat-error *ngIf="fechaComprobanteString.invalid">{{ mensajeErrorfechaComprobanteString() }} </mat-error>
       </mat-form-field>
     </div>
   </div>
@@ -38,8 +38,8 @@
   <hr />
   &nbsp;
 
-  <div formArrayName="items">
-    <div *ngFor="let item of items?.controls; let i = index">
+  <div formArrayName="item">
+    <div *ngFor="let item of item?.controls; let i = index">
       <div [formGroupName]="i">
         <div fxLayout="row wrap" fxLayoutAlign="space-between start">
           <div fxFlex="100" fxFlex.gt-sm="40">
@@ -63,7 +63,7 @@
 
           <div fxFlex="100" fxFlex.gt-sm="10" class="text-end">
             <button
-              *ngIf="directoForm.get('items')?.controls.length > 1"
+              *ngIf="directoForm.get('item')?.controls.length > 1"
               (click)="borrarItem(i)"
               type="button"
               mat-mini-fab
@@ -73,7 +73,7 @@
               <mat-icon>remove</mat-icon>
             </button>
             <button
-              *ngIf="items?.controls.length === i + 1"
+              *ngIf="directoForm.get('item')?.controls.length === i + 1"
               (click)="agregarItem()"
               type="button"
               mat-mini-fab
