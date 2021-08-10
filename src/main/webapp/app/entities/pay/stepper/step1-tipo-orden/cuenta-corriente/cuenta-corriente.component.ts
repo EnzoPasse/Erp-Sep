@@ -12,7 +12,7 @@ import { ComprobanteService } from 'app/entities/debt/voucher/service/voucher.se
 import { ComprobanteDataSource } from 'app/entities/debt/voucher/voucher.datasource';
 import { IComprobante } from 'app/entities/debt/voucher/voucher.model';
 import { IEnte } from 'app/entities/master-crud';
-import { EnteService } from 'app/entities/master-crud/ente/ente.service';
+import { EnteService } from 'app/entities/master-crud/ente-management/ente.service';
 import { merge, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, finalize, map, switchMap, tap } from 'rxjs/operators';
 

@@ -65,7 +65,7 @@ export interface IComprobante {
   condicionPago?: ICondicionPago;
   tipoComprobante?: ITipoComprobante;
   ente?: IEnte;
-  movimientoCajaBanco?: IMovimientoCajaBanco[];
+  movimientoCajaBanco: IMovimientoCajaBanco[];
   item?: IItem[];
 }
 
@@ -104,7 +104,7 @@ export class Comprobante implements IComprobante {
     public condicionPago?: ICondicionPago,
     public tipoComprobante?: ITipoComprobante,
     public ente?: IEnte,
-    public movimientoCajaBanco?: IMovimientoCajaBanco[],
+    public movimientoCajaBanco: IMovimientoCajaBanco[] = [],
     public item: IItem[] = []
   ) {}
 }

@@ -6,7 +6,7 @@ import { Alert } from 'app/core/util/alert.service';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 import { CustomValidators } from 'app/core/util/validators';
 import { IEnte } from 'app/entities/master-crud';
-import { EnteService } from 'app/entities/master-crud/ente/ente.service';
+import { EnteService } from 'app/entities/master-crud/ente-management/ente.service';
 import * as dayjs from 'dayjs';
 import { Subscription, Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, finalize, map, switchMap, tap } from 'rxjs/operators';

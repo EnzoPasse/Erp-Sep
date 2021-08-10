@@ -36,8 +36,14 @@
       <hr />
     </div>
 
-    <jhi-efectivo *ngIf="medioPagoForm.controls['medioPagoSelected'].value.id === 1"></jhi-efectivo>
+    <jhi-efectivo
+      *ngIf="medioPagoSelected.value"
+      [medioPago]="medioPagoSelected.value"
+      (movimientoCajaBancoInfo)="movimientoCaja($event)"
+    ></jhi-efectivo>
     <jhi-cheque *ngIf="medioPagoForm.controls['medioPagoSelected'].value.id === 2"></jhi-cheque>
     <jhi-transferencia *ngIf="medioPagoForm.controls['medioPagoSelected'].value.id === 3"></jhi-transferencia>
   </form>
 </div>
+
+{{ medioPagoForm.value | json }}

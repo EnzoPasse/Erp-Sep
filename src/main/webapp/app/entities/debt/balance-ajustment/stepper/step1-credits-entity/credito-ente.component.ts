@@ -8,7 +8,7 @@ import { CustomValidators } from 'app/core/util/validators';
 import { ComprobanteService } from 'app/entities/debt/voucher/service/voucher.service';
 import { ComprobanteDataSource } from 'app/entities/debt/voucher/voucher.datasource';
 import { IEnte } from 'app/entities/master-crud';
-import { EnteService } from 'app/entities/master-crud/ente/ente.service';
+import { EnteService } from 'app/entities/master-crud/ente-management/ente.service';
 import { merge, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, finalize, map, switchMap, tap } from 'rxjs/operators';
 
