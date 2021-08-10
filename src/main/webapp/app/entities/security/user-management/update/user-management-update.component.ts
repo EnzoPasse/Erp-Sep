@@ -174,10 +174,11 @@ export class UserManagementUpdateComponent implements OnInit, OnDestroy {
   }
 
   protected subscribeToSaveResponse(result: Observable<IUsuario>): void {
-    result.subscribe({
+    const saveSubscription = result.subscribe({
       next: () => this.onSaveSuccess(),
       error: () => this.onSaveError(),
     });
+    this.subscriptions.push(saveSubscription);
   }
 
   private marcarCampos(formGroup: FormGroup): void {

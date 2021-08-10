@@ -93,19 +93,23 @@ export class RoleListComponent implements OnInit, OnDestroy {
     const _waitDesciption = 'Borrando Rol...';
 
     const dialogRef = this.dialog.deleteElement(_title, _description, _waitDesciption);
-    dialogRef.afterClosed().subscribe((res: any) => {
-      if (!res) {
-        return;
-      }
+    this.subscriptions.push(
+      dialogRef.afterClosed().subscribe((res: any) => {
+        if (!res) {
+          return;
+        }
 
-      if (_item.id) {
-        this.rolService.delete(_item.id).subscribe({
-          next: () => {
-            this.loadRolList();
-          },
-        });
-      }
-    });
+        if (_item.id) {
+          this.subscriptions.push(
+            this.rolService.delete(_item.id).subscribe({
+              next: () => {
+                this.loadRolList();
+              },
+            })
+          );
+        }
+      })
+    );
   }
 
   /* 

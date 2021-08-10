@@ -83,7 +83,7 @@ const MENUITEMS = [
     icon: 'monetization_on',
     permission: 'Modulo Pagos',
     // badge: [{ type: 'red', value: '17' }],
-    children: [{ state: 'oredenesPago', name: 'Ordenes de Pago', type: 'link', permission: 'Formulario Ordenes de Pago' }],
+    children: [{ state: 'ordenesPago', name: 'Ordenes de Pago', type: 'link', permission: 'Formulario Ordenes de Pago' }],
   },
   {
     state: 'administracion',

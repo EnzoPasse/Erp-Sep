@@ -31,6 +31,10 @@ const LAYOUT_ROUTES: Routes = [
         path: 'deuda',
         loadChildren: () => import('./debt/debt-routing.module').then(m => m.VoucherRoutingModule),
       },
+      {
+        path: 'pago',
+        loadChildren: () => import('./pay/pay.module').then(m => m.PayModule),
+      },
 
       ...ERROR_ROUTES,
     ],

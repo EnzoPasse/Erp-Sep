@@ -1,0 +1,104 @@
+<!-- <div  class="mat-elevation-z4 p-10"> -->
+<form [formGroup]="directoForm">
+  <div fxLayout="row wrap" fxLayoutAlign="space-between start">
+    <div fxFlex="100" fxFlex.gt-sm="30" class="m-t-15">
+      <mat-form-field appearance="outline">
+        <mat-label>Tipo Comprobante:</mat-label>
+        <mat-select formControlName="tipoComprobante" [compareWith]="comparar">
+          <mat-option *ngFor="let item of allTipoComprobantes" [value]="item">
+            <small>{{ item.nombre }}</small>
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="tipoComprobante.invalid">{{ mensajeErrorTipoComprobante() }} </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="30" class="m-t-15">
+      <mat-form-field appearance="outline">
+        <mat-label>Nro Comprobante:</mat-label>
+        <input matInput mask="00000-00000000" [formControl]="nroComprobante" (keyup.enter)="rellenarCeros($event.target)" />
+        <!-- <mat-hint align="start">00000-00000000</mat-hint> -->
+        <mat-error *ngIf="nroComprobante.invalid">{{ mensajeErrorNroComprobante() }} </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="30" class="m-t-15">
+      <mat-form-field appearance="outline">
+        <mat-label>Fecha del Comprobante:</mat-label>
+        <input matInput mask="00/00/0000" [dropSpecialCharacters]="false" [formControl]="fechaComprobanteString" />
+        <mat-icon matSuffix>date_range</mat-icon>
+        <mat-hint align="start">'dd/mm/yyyy'</mat-hint>
+        <mat-error *ngIf="fechaComprobanteString.invalid">{{ mensajeErrorfechaComprobanteString() }} </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  &nbsp;
+  <div class="text-center font-medium">Detalles</div>
+  <hr />
+  &nbsp;
+
+  <div formArrayName="item">
+    <div *ngFor="let item of item?.controls; let i = index">
+      <div [formGroupName]="i">
+        <div fxLayout="row wrap" fxLayoutAlign="space-between start">
+          <div fxFlex="100" fxFlex.gt-sm="40">
+            <mat-form-field appearance="fill">
+              <mat-select placeholder="Concepto" [formControl]="item.get('id')">
+                <mat-option *ngFor="let concepto of allConceptos" [value]="concepto.id"> {{ concepto.nombre }} </mat-option>
+              </mat-select>
+              <mat-error *ngIf="item.controls.id.invalid"> Requerido</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div fxFlex="100" fxFlex.gt-sm="30">
+            <mat-form-field appearance="fill">
+              <input type="number" matInput placeholder="SubTotal {{ i + 1 }}" [formControl]="item.get('importe')" />
+              <span matPrefix>$&nbsp;</span>
+              <mat-error *ngIf="item.get('importe').invalid">
+                {{ mensajeErrorImporte(i) }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div fxFlex="100" fxFlex.gt-sm="10" class="text-end">
+            <button
+              *ngIf="directoForm.get('item')?.controls.length > 1"
+              (click)="borrarItem(i)"
+              type="button"
+              mat-mini-fab
+              color="warn"
+              matTooltip="Quitar"
+            >
+              <mat-icon>remove</mat-icon>
+            </button>
+            <button
+              *ngIf="directoForm.get('item')?.controls.length === i + 1"
+              (click)="agregarItem()"
+              type="button"
+              mat-mini-fab
+              color="primary"
+              matTooltip="Agregar"
+            >
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div fxLayout="row wrap" fxLayoutAlign="end space-between">
+    <div fxFlex="100" fxFlex.gt-sm="20" class="text-left">
+      <!-- <h4 class="m-b-0 p-t-20">Total a Pagar:</h4> -->
+      <mat-form-field appearance="fill">
+        <mat-label> Total a Pagar </mat-label>
+        <input matInput formControlName="totalComprobante" id="totalComprobante" style="font-size: 20px; color: red" />
+        <span matPrefix style="font-size: 20px" class="font-medium">$&nbsp;</span>
+      </mat-form-field>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="20" class="text-end"></div>
+  </div>
+</form>
+<!-- </div> -->

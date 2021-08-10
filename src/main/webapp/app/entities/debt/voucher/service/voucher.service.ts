@@ -10,7 +10,6 @@ import { map } from 'rxjs/operators';
 import { VoucherAdaper } from './voucher-adapter.service';
 import { IComprobante, IEstadoComprobante, IItem, ITipoComprobante } from '../voucher.model';
 import { OperationType } from 'app/config/operationTypes.constants';
-import { OperationTemplate, TypeTemplate } from 'app/config/template.constats';
 
 @Injectable({
   providedIn: 'root',
@@ -76,11 +75,10 @@ export class ComprobanteService {
   }
 
   /* **********ITEMS ****** */
-  getItemsEnte(idEnte: number): Observable<IItem[]> {
-    const url = this.applicationConfigService.getEndpointFor(
-      `/item/get/?id=${idEnte}&dh=${OperationTemplate.DEBE}&idPlantillaTipo=${TypeTemplate.PLANTILLA_DEUDA}`
-    );
+  getItemsEnte(idEnte: number, operation: string, template: number): Observable<IItem[]> {
+    const url = this.applicationConfigService.getEndpointFor(`/item/get/?id=${idEnte}&dh=${operation}&idPlantillaTipo=${template}`);
     return this.http.get<IItem[]>(url);
+    // `/item/get/?id=${idEnte}&dh=${OperationTemplate.DEBE}&idPlantillaTipo=${TypeTemplate.PLANTILLA_DEUDA}`
   }
 
   /* **********CSS ****** */

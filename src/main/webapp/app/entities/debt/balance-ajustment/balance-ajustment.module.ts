@@ -10,5 +10,6 @@ import { ConfirmarAjusteComponent } from './stepper/step3-confirm/confirmar-ajus
 @NgModule({
   imports: [SharedModule, RouterModule.forChild(BalanceAjustmentRoute)],
   declarations: [StepperAjustmentComponent, CreditoEnteComponent, DescontarDeudaComponent, ConfirmarAjusteComponent],
+  exports: [],
 })
 export class BalanceAjustmentModule {}

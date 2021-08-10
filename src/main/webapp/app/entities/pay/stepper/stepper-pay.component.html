@@ -1,0 +1,38 @@
+<mat-card>
+  <mat-card-header fxLayoutAlign="space-between start">
+    <mat-card-title>{{ titleForm }}</mat-card-title>
+  </mat-card-header>
+  <hr />
+  <mat-card-content>
+    <jhi-alert-error></jhi-alert-error>
+
+    <mat-horizontal-stepper [linear]="true" labelPosition="bottom" #stepper>
+      <mat-step [stepControl]="form1.tipoPagoForm">
+        <ng-template matStepLabel>Tipo de Orden de Pago</ng-template>
+        <jhi-step1-tipo-orden (totalPagoInfo)="totalPagoSelected($event)" #form1></jhi-step1-tipo-orden>
+        <!-- <jhi-credito-ente (creditSeleccionInfo)="creditSelection($event)" #form1></jhi-credito-ente> -->
+        <div class="text-right p-t-20">
+          <button mat-stroked-button color="primary" matStepperNext>Siguiente</button>
+        </div>
+      </mat-step>
+
+      <mat-step label="Medio de Pago" [stepControl]="form2.medioPagoForm">
+        <jhi-step2-medio-pago [montoTotalPago]="totalPago" #form2> </jhi-step2-medio-pago>
+
+        <div class="text-right p-t-20">
+          <button mat-stroked-button color="warn" matStepperPrevious>Atras</button>
+          <button mat-stroked-button color="primary" matStepperNext>Siguiente</button>
+        </div>
+      </mat-step>
+
+      <mat-step label="Confirmar">
+        <!-- <jhi-confirmar-ajuste *ngIf="saveVoucher" [confirmVoucher]="saveVoucher"></jhi-confirmar-ajuste> -->
+        <div class="text-right p-t-20">
+          <button mat-stroked-button color="warn" matStepperPrevious>Atras</button>
+          <button mat-raised-button color="primary" [disabled]="isSaving">Confirmar</button
+          ><!-- (click)="save()" -->
+        </div>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </mat-card-content>
+</mat-card>

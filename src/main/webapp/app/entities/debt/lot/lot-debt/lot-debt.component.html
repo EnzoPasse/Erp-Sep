@@ -44,7 +44,7 @@
               mat-raised-button
               color="primary"
               (click)="onClick()"
-              [disabled]="!(fechaContable.value && fechaVencimiento.value)"
+              [disabled]="loteForm.invalid"
             >
               <mat-icon>file_upload</mat-icon>
               {{ text }}
@@ -130,6 +130,4 @@
       </mat-accordion>
     </form>
   </mat-card-content>
-
-  {{ loteForm.value | json }}</mat-card
->
+</mat-card>

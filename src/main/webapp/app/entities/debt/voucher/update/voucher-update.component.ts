@@ -1,11 +1,12 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Validators, FormBuilder, AbstractControl, FormGroup, FormArray } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { OperationTemplate, TypeTemplate } from 'app/config/template.constats';
 import { Alert } from 'app/core/util/alert.service';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 import { CustomValidators } from 'app/core/util/validators';
 import { IEnte } from 'app/entities/master-crud';
-import { EnteService } from 'app/entities/master-crud/ente/ente.service';
+import { EnteService } from 'app/entities/master-crud/ente-management/ente.service';
 import * as dayjs from 'dayjs';
 import { Subscription, Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, finalize, map, switchMap, tap } from 'rxjs/operators';
@@ -35,7 +36,7 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     fechaContable: ['', [Validators.required, CustomValidators.isValidDate]],
     ente: ['', [Validators.required, CustomValidators.RequireMatch]],
     tipoComprobante: ['', [Validators.required]],
-    nroComprobante: ['', Validators.required],
+    nroComprobante: ['', [Validators.required, Validators.pattern(`[0-9]{5}-[0-9]{8}`)]],
     fechaComprobante: ['', [Validators.required, CustomValidators.isValidDate]],
     periodo: ['', [Validators.required]],
     fechaVto: ['', [Validators.required]],
@@ -126,9 +127,11 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
 
   enteSelected(ente: IEnte | undefined): void {
     if (ente) {
-      this.comprobanteService.getItemsEnte(ente.id!).subscribe(res => {
-        this.allConceptos = res;
-      });
+      this.subscriptions.push(
+        this.comprobanteService.getItemsEnte(ente.id!, OperationTemplate.DEBE, TypeTemplate.PLANTILLA_DEUDA).subscribe(res => {
+          this.allConceptos = res;
+        })
+      );
     }
   }
 
@@ -236,7 +239,11 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   mensajeErrorNroComprobante(): string {
-    return this.nroComprobante.hasError('required') ? 'El Nro debe ser (00000-00000000)' : '';
+    return this.nroComprobante.hasError('required')
+      ? 'El Nro de Comprobante es requerido'
+      : this.nroComprobante.hasError('pattern')
+      ? 'El Nro debe ser (00000-00000000)'
+      : '';
   }
 
   get periodo(): AbstractControl {
@@ -295,10 +302,11 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     } */
 
   protected subscribeToSaveResponse(result: Observable<IComprobante>): void {
-    result.subscribe({
+    const saveSubscription = result.subscribe({
       next: () => this.onSaveSuccess(),
       error: () => this.onSaveError(),
     });
+    this.subscriptions.push(saveSubscription);
   }
 
   private marcarCampos(formGroup: FormGroup): void {

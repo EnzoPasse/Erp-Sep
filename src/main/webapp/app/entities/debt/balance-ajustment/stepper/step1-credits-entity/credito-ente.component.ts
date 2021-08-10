@@ -8,7 +8,7 @@ import { CustomValidators } from 'app/core/util/validators';
 import { ComprobanteService } from 'app/entities/debt/voucher/service/voucher.service';
 import { ComprobanteDataSource } from 'app/entities/debt/voucher/voucher.datasource';
 import { IEnte } from 'app/entities/master-crud';
-import { EnteService } from 'app/entities/master-crud/ente/ente.service';
+import { EnteService } from 'app/entities/master-crud/ente-management/ente.service';
 import { merge, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, finalize, map, switchMap, tap } from 'rxjs/operators';
 
@@ -47,7 +47,7 @@ export class CreditoEnteComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.route.data.subscribe((data: any) => (this.dataUrl = data as {}));
+    this.subscriptions.push(this.route.data.subscribe((data: any) => (this.dataUrl = data as {})));
 
     const sortSubscription = this.sort?.sortChange.subscribe(() => (this.paginator!.pageIndex = 0));
     if (sortSubscription) {
@@ -68,7 +68,7 @@ export class CreditoEnteComponent implements OnInit, AfterViewInit, OnDestroy {
         map(value => (typeof value === 'string' ? this.noWhiteSpace(value) : (value as string))),
         debounceTime(150), // que se emita solo una vez cada 500ms
         distinctUntilChanged(),
-        filter(query => !!query),
+        filter(query => !!query && query.length > 2),
         tap(() => (this.loadingAutocomplete = true)),
         switchMap(value => this.enteService.findAutocompleteEnte(value).pipe(finalize(() => (this.loadingAutocomplete = false))))
       )

@@ -118,7 +118,7 @@ export class DescontarDeudaComponent implements OnInit, OnDestroy {
     );
 
     this.dataSource.loadComprobantes(queryParams, this.dataUrl.queryOperationStep2);
-    this.dataSource.entitySubject.subscribe(res => (this.creditoResult = res));
+    this.subscriptions.push(this.dataSource.entitySubject.subscribe(res => (this.creditoResult = res)));
     // this.selection.clear();
   }
 

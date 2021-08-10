@@ -47,11 +47,13 @@ export class VoucherListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.route.data.subscribe((data: any) => {
-      this.dataUrl = data as {};
-      this.createTitle();
-      this.comprobanteService.getAllEstados(data.stateType).subscribe((res: IEstadoComprobante[]) => (this.allEstadosComprobantes = res));
-    });
+    this.subscriptions.push(
+      this.route.data.subscribe((data: any) => {
+        this.dataUrl = data as {};
+        this.createTitle();
+        this.comprobanteService.getAllEstados(data.stateType).subscribe((res: IEstadoComprobante[]) => (this.allEstadosComprobantes = res));
+      })
+    );
 
     // Si el usuario cambia el ordenamiento, volver a la primera pagina
     const sortSubscription = this.sort?.sortChange.subscribe(() => (this.paginator!.pageIndex = 0));
@@ -126,11 +128,13 @@ export class VoucherListComponent implements OnInit, OnDestroy {
       }
 
       if (_item.id) {
-        this.comprobanteService.delete(_item.id).subscribe({
-          next: () => {
-            this.loadComprobanteList();
-          },
-        });
+        this.subscriptions.push(
+          this.comprobanteService.delete(_item.id).subscribe({
+            next: () => {
+              this.loadComprobanteList();
+            },
+          })
+        );
       }
     });
   }
