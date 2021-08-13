@@ -26,7 +26,7 @@ export class EfectivoComponent implements OnInit, OnChanges, OnDestroy {
   banco = '';
 
   @Input() medioPago!: IMedioPago;
-  @Output() movimientoCajaBancoInfo: EventEmitter<MovimientoCajaBanco | null> = new EventEmitter();
+  @Output() formInfo: EventEmitter<MovimientoCajaBanco | null> = new EventEmitter();
 
   constructor(private fb: FormBuilder, private CajaBancoService: MovimientoCajaBancoService) {}
 
@@ -35,9 +35,9 @@ export class EfectivoComponent implements OnInit, OnChanges, OnDestroy {
     console.log(this.medioPago);
     this.efectivoForm.statusChanges.pipe(debounceTime(250)).subscribe(res => {
       if (res === 'VALID') {
-        this.movimientoCajaBancoInfo.emit(this.efectivoForm.getRawValue());
+        this.formInfo.emit(this.efectivoForm.getRawValue());
       } else {
-        this.movimientoCajaBancoInfo.emit(null);
+        this.formInfo.emit(null);
       }
     });
   }

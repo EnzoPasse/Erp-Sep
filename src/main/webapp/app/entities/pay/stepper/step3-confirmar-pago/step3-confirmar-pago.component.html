@@ -1,1 +1,54 @@
-<p>step3-confirmar-pago works!</p>
+<mat-card *ngIf="comprobante$ | async as confirmVoucher">
+  <mat-card-content class="bg-light mat-elevation-z6">
+    <ng-container *ngIf="tipoOrden$ | async as tipoOrden">
+      <span [ngSwitch]="tipoOrden.tipoPago">
+        <div *ngSwitchCase="PaymentsType.DIRECTO">entro al directo</div>
+        <div *ngSwitchCase="PaymentsType.CUENTA_CORRIENTE">
+          <div fxLayout="row wrap">
+            <div fxFlex.gt-xs="50" fxFlex="100">
+              <h4 class="font-bold">
+                {{
+                  confirmVoucher.ente?.persona ? confirmVoucher.ente?.persona.apellido : confirmVoucher.ente?.personaJuridica.nombreFantasia
+                }}
+              </h4>
+              <div fxLayout="column">
+                <span>Tipo Orden : {{ tipoOrden.tipoPago }}</span>
+                <span>Medio Pago : {{ confirmVoucher.movimientoCajaBanco[0]?.medioPago.nombre }}</span>
+              </div>
+            </div>
+            <div fxFlex.gt-xs="50" fxFlex="100" class="text-right">
+              <h4 class="font-bold">{{ confirmVoucher.movimientoCajaBanco[0]?.cajaCuentaBanco.tipoCajaCuentaBanco.nombre }}</h4>
+              <div fxLayout="column">
+                <span>{{ confirmVoucher.movimientoCajaBanco[0]?.cajaCuentaBanco.nombre }}</span>
+                <span *ngIf="confirmVoucher.movimientoCajaBanco[0]?.medioPago.id !== 1" style="color: blue">
+                  {{ confirmVoucher.movimientoCajaBanco[0]?.cajaCuentaBanco.banco?.nombre }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngSwitchDefault></div>
+      </span>
+    </ng-container>
+    <!--         <div fxLayout="row wrap">
+            <div fxFlex.gt-xs="50" fxFlex="100">
+                <h4 class="font-bold">
+                    {{ confirmVoucher.ente?.persona ? confirmVoucher.ente?.persona.apellido :
+                    confirmVoucher.ente?.personaJuridica.nombreFantasia }}
+                </h4>
+                <div fxLayout="column">
+                </div>
+            </div>
+            <div fxFlex.gt-xs="50" fxFlex="100" class="text-right">
+                <h4 class="font-bold">Nota Credito # {{ confirmVoucher.nroComprobante }}</h4>
+                <div fxLayout="column">
+                    <span>Fecha : {{ confirmVoucher.fechaComprobanteString | formatMediumDate }}</span>
+                    <span>Estado : {{ confirmVoucher.estadoComprobante?.nombre }}</span>
+                </div>
+            </div>
+        </div>
+ -->
+  </mat-card-content>
+</mat-card>
+
+{{ comprobante$ | async | json }}

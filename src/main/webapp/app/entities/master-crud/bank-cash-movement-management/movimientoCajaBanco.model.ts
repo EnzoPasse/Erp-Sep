@@ -59,10 +59,10 @@ export class CajaCuentaBanco implements ICajaCuentaBanco {
 }
 
 export interface ITipoCajaCuentaBanco {
-  id: number;
-  nombre: string;
+  id?: number;
+  nombre?: string;
 }
 
 export class TipoCajaCuentaBanco implements ITipoCajaCuentaBanco {
-  constructor(public id: number, public nombre: string) {}
+  constructor(public id?: number, public nombre?: string) {}
 }

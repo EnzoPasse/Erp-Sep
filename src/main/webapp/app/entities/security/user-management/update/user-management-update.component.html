@@ -113,7 +113,7 @@
         <button
           fxHide
           fxShow.gt-sm
-          *jhiHasAnyAuthority="'Accion Crear Usuario'"
+          *jhiHasAnyAuthority="['Accion Editar Usuario', 'Accion Editar Usuario']"
           mat-raised-button
           color="primary"
           matTooltip="Guardar los cambios"
@@ -128,7 +128,12 @@
         <button fxHide fxShow.gt-sm mat-raised-button color="warn" matTooltip="Volver" (click)="previousState()">Cancelar</button>
       </div>
       <div>
-        <button *jhiHasAnyAuthority="'Accion Crear Usuario'" mat-icon-button [matMenuTriggerFor]="menu" color="primary">
+        <button
+          *jhiHasAnyAuthority="['Accion Crear Usuario', 'Accion Editar Usuario']"
+          mat-icon-button
+          [matMenuTriggerFor]="menu"
+          color="primary"
+        >
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">

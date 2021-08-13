@@ -4,7 +4,7 @@
       <mat-card-content>
         <div class="stats text-center">
           <h5 class="text-white m-0">Saldo</h5>
-          <h2 class="text-white m-0">{{ creditoAcum | currency: 'ARS':'symbol':'1.0-0' }}</h2>
+          <h2 class="text-white m-0">{{ creditoAcum | currency: 'ARS':'symbol' }}</h2>
         </div>
       </mat-card-content>
     </mat-card>
@@ -78,7 +78,7 @@
       <mat-header-cell *matHeaderCellDef mat-sort-header>Total</mat-header-cell>
       <mat-cell *matCellDef="let comprobante">
         <span class="header-label">Total:</span>
-        {{ comprobante.totalComprobante | currency: 'ARS':'symbol':'1.0-0' }}
+        {{ comprobante.totalComprobante | currency: 'ARS':'symbol' }}
       </mat-cell>
     </ng-container>
 
@@ -86,7 +86,7 @@
       <mat-header-cell *matHeaderCellDef mat-sort-header>Saldo</mat-header-cell>
       <mat-cell *matCellDef="let comprobante" style="color: blue" class="font-medium">
         <span class="header-label">Saldo:</span>
-        {{ comprobante.saldo | currency: 'ARS':'symbol':'1.0-0' }}
+        {{ comprobante.saldo | currency: 'ARS':'symbol' }}
       </mat-cell>
     </ng-container>
 
@@ -94,7 +94,7 @@
       <mat-header-cell *matHeaderCellDef mat-sort-header>Imputado</mat-header-cell>
       <mat-cell *matCellDef="let comprobante" style="color: teal">
         <span class="header-label">Imputado:</span>
-        {{ comprobante.imputado | currency: 'ARS':'symbol':'1.0-0' }}
+        {{ comprobante.imputado | currency: 'ARS':'symbol' }}
       </mat-cell>
     </ng-container>
 
@@ -102,7 +102,7 @@
       <mat-header-cell *matHeaderCellDef mat-sort-header>A imputar</mat-header-cell>
       <mat-cell *matCellDef="let comprobante" style="color: red">
         <span class="header-label">A imputar:</span>
-        {{ comprobante.aImputar | currency: 'ARS':'symbol':'1.0-0' }}
+        {{ comprobante.aImputar | currency: 'ARS':'symbol' }}
       </mat-cell>
     </ng-container>
 

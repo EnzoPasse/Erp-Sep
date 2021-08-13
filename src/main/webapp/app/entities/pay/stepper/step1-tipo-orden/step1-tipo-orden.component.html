@@ -38,15 +38,15 @@
 
     <jhi-directo
       *ngIf="tipoPagoForm.controls['tipoPagoSelected'].value === PaymentsType.DIRECTO"
-      (formInfo)="formEmited($event)"
+      (formInfo)="formValid($event)"
     ></jhi-directo>
 
     <jhi-cuenta-corriente
       *ngIf="tipoPagoForm.controls['tipoPagoSelected'].value === PaymentsType.CUENTA_CORRIENTE"
-      (formInfo)="formEmited($event)"
+      (formInfo)="formValid($event)"
     >
     </jhi-cuenta-corriente>
 
-    <jhi-lote *ngIf="tipoPagoForm.controls['tipoPagoSelected'].value === PaymentsType.LOTE" (formInfo)="formEmited($event)"> </jhi-lote>
+    <jhi-lote *ngIf="tipoPagoForm.controls['tipoPagoSelected'].value === PaymentsType.LOTE" (formInfo)="formValid($event)"> </jhi-lote>
   </form>
 </div>

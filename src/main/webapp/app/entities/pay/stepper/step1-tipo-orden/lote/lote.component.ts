@@ -5,7 +5,7 @@ import { LotDebtService } from 'app/entities/debt/lot/service/lot-debt-service.s
 import { ComprobanteService } from 'app/entities/debt/voucher/service/voucher.service';
 import { IComprobante } from 'app/entities/debt/voucher/voucher.model';
 import { Subscription } from 'rxjs';
-import { DataForm } from '../step1-tipo-orden.component';
+import { DataFormStep1 } from '../step1-tipo-orden.component';
 
 @Component({
   selector: 'jhi-lote',
@@ -21,8 +21,8 @@ export class LoteComponent implements OnInit, OnDestroy {
   allLotes: ILoteDto[] = [];
   totalComprobante!: number;
   loading = false;
-  @Output() totalInfo: EventEmitter<number | null> = new EventEmitter<number | null>();
-  @Output() formInfo: EventEmitter<DataForm | null> = new EventEmitter<DataForm | null>();
+
+  @Output() formInfo: EventEmitter<DataFormStep1 | null> = new EventEmitter<DataFormStep1 | null>();
 
   constructor(private loteService: LotDebtService, private comprobanteService: ComprobanteService) {}
 
@@ -39,14 +39,12 @@ export class LoteComponent implements OnInit, OnDestroy {
             this.totalComprobante = sumaParcial;
           });
 
-          const dataForm: DataForm = {
-            comprobanteRef: this.selection.selected,
+          const dataForm: DataFormStep1 = {
+            datos: { comprobanteRef: this.selection.selected, totalComprobante: sumaParcial }, // este objeto inventado es necesario
             totalComprobante: sumaParcial,
           };
-          this.totalInfo.emit(sumaParcial);
           this.formInfo.emit(dataForm);
         } else {
-          this.totalInfo.emit(null);
           this.formInfo.emit(null);
         }
       })

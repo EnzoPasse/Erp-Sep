@@ -10,7 +10,6 @@ export class StepperPayComponent implements OnInit {
   titleForm = '';
   urlData: any;
   isSaving = false;
-  totalPago!: number | null;
 
   constructor(private route: ActivatedRoute) {}
 
@@ -19,9 +18,5 @@ export class StepperPayComponent implements OnInit {
       this.titleForm = data.pageTitle;
       this.urlData = data;
     });
-  }
-
-  totalPagoSelected(event: number | null): void {
-    this.totalPago = event;
   }
 }

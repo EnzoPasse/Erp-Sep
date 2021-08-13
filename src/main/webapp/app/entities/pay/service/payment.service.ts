@@ -1,62 +1,102 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Comprobante, IComprobante } from 'app/entities/debt/voucher/voucher.model';
-import { IDocumento, IMedioPago, IMovimientoCajaBanco, MovimientoCajaBanco } from 'app/entities/master-crud';
+import { Comprobante, IComprobante, IItem } from 'app/entities/debt/voucher/voucher.model';
+import { Documento, IDocumento, IMovimientoCajaBanco, MovimientoCajaBanco } from 'app/entities/master-crud';
 import { BehaviorSubject } from 'rxjs';
+import { DataFormStep1 } from '../stepper/step1-tipo-orden/step1-tipo-orden.component';
+import { DataFormStep2 } from '../stepper/step2-medio-pago/step2-medio-pago.component';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PaymentService {
-  private readonly _compro: BehaviorSubject<IComprobante | null> = new BehaviorSubject<IComprobante | null>(null);
-  private readonly _mCBanco: BehaviorSubject<IMovimientoCajaBanco[] | null> = new BehaviorSubject<IMovimientoCajaBanco[] | null>(null);
-  private readonly _doc: BehaviorSubject<IDocumento | null> = new BehaviorSubject<IDocumento | null>(null);
+  _comprobante = new BehaviorSubject<IComprobante>(new Comprobante());
+  _movimientoCajaBanco = new BehaviorSubject<IMovimientoCajaBanco[]>([]);
+  _documento = new BehaviorSubject<IDocumento>(new Documento());
+  _tipoOrden = new BehaviorSubject<DataFormStep1>({});
 
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  comprobante!: IComprobante;
+  comprobante$ = this._comprobante.asObservable();
+  tipoOrden$ = this._tipoOrden.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  /* 
-    set comprobante (val: IComprobante):void{
-      this._compro.next(val);
-    }
-  
-    private addMovimientoCajabanco(val: IMovimientoCajaBanco):void{
-      this.movimientoCajaBanco?.push(val)
-    }
-    
-    get comprobante(): IComprobante | null {
-      return this._compro.getValue();
-    } 
-    get movimientoCajaBanco(): IMovimientoCajaBanco[] | null {
-      return this._mCBanco.getValue();
-    }
-  
-    get documento(): IDocumento | null {
-      return this._doc.getValue();
-    } */
-
-  crearComprobanteStep1(datos: any): void {
-    const comprobante = { ...new Comprobante(), ...datos };
-    // eslint-disable-next-line no-console
-    console.log(comprobante);
+  set comprobante(val: IComprobante) {
+    this._comprobante.next(val);
+  }
+  get comprobante(): IComprobante {
+    return this._comprobante.getValue()!;
+  }
+  set movimientoCajaBanco(val: IMovimientoCajaBanco[]) {
+    this._movimientoCajaBanco.next(val);
+  }
+  get movimientoCajaBanco(): IMovimientoCajaBanco[] {
+    return this._movimientoCajaBanco.getValue()!;
+  }
+  set documento(val: IDocumento) {
+    this._documento.next(val);
+  }
+  get documento(): IDocumento {
+    return this._documento.getValue()!;
+  }
+  set tipoOrden(val: DataFormStep1) {
+    this._tipoOrden.next(val);
+  }
+  get tipoOrden(): DataFormStep1 {
+    return this._tipoOrden.getValue();
   }
 
-  crearMovimientoCajaBanco(datos: any, medioPago: IMedioPago, importe: number): void {
-    (this.comprobante.fechaContableString = datos.fechaContableString), (this.comprobante.periodo = datos.periodo);
+  crearComprobante(val: DataFormStep1): void {
+    const { datos } = val.datos; // solo necesito los datos de la estructura que viene como parametro
+    this.tipoOrden = { ...this.tipoOrden, ...val };
+    this.comprobante = { ...this.comprobante, ...datos }; // piso la info del comprobante en una nueva copia, state-magement.
 
-    const movimientoCajaBanco = new MovimientoCajaBanco();
-    (movimientoCajaBanco.cajaCuentaBanco = datos.cajaCuentaBanco),
-      (movimientoCajaBanco.receptor = datos.receptor),
-      (movimientoCajaBanco.importe = importe),
-      (movimientoCajaBanco.medioPago = medioPago);
+    /* necesario para poder mapear el item a la forma {id, importe} 
+    const newItem =  this.comprobante.item as any [];
+    this.comprobante.item = newItem.map(it => ({id: it.id.id, importe: it.importe}))
+  */
 
-    this.comprobante.movimientoCajaBanco.push(movimientoCajaBanco);
+    // eslint-disable-next-line no-console
+    console.log(this.comprobante);
+  }
+
+  newComprobante(): void {
+    this.comprobante = new Comprobante();
+    this.newMovimientoCajaBanco();
+  }
+
+  crearMovimientoCajaBanco(val: DataFormStep2): void {
+    const { datos } = val;
+    // eslint-disable-next-line no-console
+    console.log(datos);
+    const mCB = new MovimientoCajaBanco();
+
+    this.comprobante.fechaContableString = datos.fechaContableString;
+    this.comprobante.periodo = datos.periodo;
+
+    /* movimientoCajaBanco */
+    mCB.cajaCuentaBanco = datos.cajaCuentaBanco;
+    mCB.receptor = datos.receptor;
+    mCB.importe = val.importe;
+    mCB.medioPago = val.medioPago;
+
+    this.movimientoCajaBanco.push(mCB);
+
+    this.comprobante = { ...this.comprobante, movimientoCajaBanco: this.movimientoCajaBanco };
 
     // eslint-disable-next-line no-console
     console.log(this.comprobante);
 
     // TODO: ver como resolver que no se agregen los movimientoCajasBancos cuando voy y vengo por el stepper
   }
+
+  newMovimientoCajaBanco(): void {
+    this.movimientoCajaBanco = [];
+  }
+
+  /*   crearMCB(document: any, importe: number, asignado: IEnte): IDocumento {
+      const doc = new Documento();
+  
+  
+      return doc
+    } */
 }

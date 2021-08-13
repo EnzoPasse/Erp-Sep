@@ -45,7 +45,7 @@
           <div fxFlex="100" fxFlex.gt-sm="40">
             <mat-form-field appearance="fill">
               <mat-select placeholder="Concepto" [formControl]="item.get('id')">
-                <mat-option *ngFor="let concepto of allConceptos" [value]="concepto.id"> {{ concepto.nombre }} </mat-option>
+                <mat-option *ngFor="let concepto of allConceptos" [value]="concepto"> {{ concepto.nombre }} </mat-option>
               </mat-select>
               <mat-error *ngIf="item.controls.id.invalid"> Requerido</mat-error>
             </mat-form-field>

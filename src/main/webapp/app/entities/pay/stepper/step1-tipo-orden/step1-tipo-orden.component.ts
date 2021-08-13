@@ -1,14 +1,14 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { PaymentsType } from 'app/config/payment-type';
-import { IComprobante } from 'app/entities/debt/voucher/voucher.model';
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { PaymentService } from '../../service/payment.service';
 
-export interface DataForm {
-  comprobanteRef: IComprobante[];
-  totalComprobante: number;
+export interface DataFormStep1 {
+  datos?: any;
+  totalComprobante?: number;
+  tipoPago?: PaymentsType;
 }
 
 @Component({
@@ -18,34 +18,44 @@ export interface DataForm {
 })
 export class Step1TipoOrdenComponent implements OnInit {
   PaymentsType = PaymentsType;
+  data: any;
   tipoPagoForm = this.fb.group({
     tipoPagoSelected: ['', Validators.required],
     total: ['', Validators.required],
   });
 
   subscription!: Subscription;
-  @Output() totalPagoInfo: EventEmitter<number | null> = new EventEmitter();
+  @Output() tipoPagoInfo: EventEmitter<DataFormStep1 | null> = new EventEmitter();
 
   constructor(private fb: FormBuilder, private payService: PaymentService) {}
 
   ngOnInit(): void {
     this.subscription = this.tipoPagoForm.statusChanges.pipe(debounceTime(250)).subscribe(res => {
       if (res === 'VALID') {
-        this.totalPagoInfo.emit(this.tipoPagoForm.get('total')?.value);
+        const dataForm: DataFormStep1 = {
+          datos: this.data,
+          totalComprobante: this.tipoPagoForm.get('total')?.value,
+          tipoPago: this.tipoPagoForm.get('tipoPagoSelected')?.value,
+        };
+
+        this.tipoPagoInfo.emit(dataForm);
+        this.payService.crearComprobante(dataForm);
       } else {
-        this.totalPagoInfo.emit(null);
+        this.tipoPagoInfo.emit(null);
       }
     });
   }
 
   changeTipoPago(): void {
     this.tipoPagoForm.get('total')?.patchValue(null);
+    this.payService.newComprobante();
   }
 
-  formEmited(event: any): void {
+  formValid(event: DataFormStep1 | null): void {
     if (event) {
-      this.tipoPagoForm.get('total')?.patchValue(event?.totalComprobante);
-      this.payService.crearComprobanteStep1(event);
+      const { totalComprobante } = event;
+      this.tipoPagoForm.get('total')?.patchValue(totalComprobante);
+      this.data = event;
     } else {
       this.changeTipoPago();
     }

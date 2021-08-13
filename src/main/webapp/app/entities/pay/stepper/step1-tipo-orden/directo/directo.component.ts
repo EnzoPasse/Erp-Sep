@@ -8,6 +8,7 @@ import { IComprobante, IItem, ITipoComprobante } from 'app/entities/debt/voucher
 import * as dayjs from 'dayjs';
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { DataFormStep1 } from '../step1-tipo-orden.component';
 
 @Component({
   selector: 'jhi-directo',
@@ -30,8 +31,7 @@ export class DirectoComponent implements OnInit, OnDestroy {
     item: this.fb.array([]),
   });
 
-  @Output() totalInfo: EventEmitter<number | null> = new EventEmitter<number | null>();
-  @Output() formInfo: EventEmitter<FormGroup | null> = new EventEmitter<FormGroup | null>();
+  @Output() formInfo: EventEmitter<DataFormStep1 | null> = new EventEmitter<DataFormStep1 | null>();
 
   constructor(private fb: FormBuilder, private comprobanteService: ComprobanteService) {}
 
@@ -50,10 +50,12 @@ export class DirectoComponent implements OnInit, OnDestroy {
 
     const formValid = this.directoForm.statusChanges.pipe(debounceTime(250)).subscribe((res: any) => {
       if (res === 'VALID') {
-        this.totalInfo.emit(this.totalComprobante.value);
-        this.formInfo.emit(this.directoForm.getRawValue());
+        const dataForm: DataFormStep1 = {
+          datos: this.directoForm.getRawValue(),
+          totalComprobante: this.totalComprobante.value,
+        };
+        this.formInfo.emit(dataForm);
       } else {
-        this.totalInfo.emit(null);
         this.formInfo.emit(null);
       }
     });

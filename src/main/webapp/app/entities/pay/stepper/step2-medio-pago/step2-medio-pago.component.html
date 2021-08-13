@@ -1,10 +1,16 @@
 <div fxLayout="row wrap" fxLayoutAlign="center center">
   <div fxFlex.gt-sm="33.33" fxFlex="100">
     <mat-card class="bg-purple fijo">
+      <!-- <mat-card-content>
+        <div class="stats text-center" *ngIf="(tipoOrden | async)">
+          <h5 class="text-white m-0">Total a Pagar</h5>
+          <h2 class="text-white m-0">{{ (tipoOrden | async).totalComprobante | currency: 'ARS':'symbol'}}</h2>
+        </div>
+      </mat-card-content> -->
       <mat-card-content>
         <div class="stats text-center">
           <h5 class="text-white m-0">Total a Pagar</h5>
-          <h2 class="text-white m-0">{{ montoTotalPago | currency: 'ARS':'symbol':'1.0-0' }}</h2>
+          <h2 class="text-white m-0">{{ tipoOrden.totalComprobante | currency: 'ARS':'symbol' }}</h2>
         </div>
       </mat-card-content>
     </mat-card>
@@ -24,6 +30,7 @@
           class="radio-group"
           formControlName="medioPagoSelected"
           name="medios"
+          (change)="changeMedioPago()"
         >
           <mat-radio-button class="radio-button" *ngFor="let medio of allMediosPago" [value]="medio">
             {{ medio.nombre }}
@@ -36,11 +43,7 @@
       <hr />
     </div>
 
-    <jhi-efectivo
-      *ngIf="medioPagoSelected.value"
-      [medioPago]="medioPagoSelected.value"
-      (movimientoCajaBancoInfo)="movimientoCaja($event)"
-    ></jhi-efectivo>
+    <jhi-efectivo *ngIf="medioPagoSelected.value" [medioPago]="medioPagoSelected.value" (formInfo)="formValid($event)"></jhi-efectivo>
     <jhi-cheque *ngIf="medioPagoForm.controls['medioPagoSelected'].value.id === 2"></jhi-cheque>
     <jhi-transferencia *ngIf="medioPagoForm.controls['medioPagoSelected'].value.id === 3"></jhi-transferencia>
   </form>
