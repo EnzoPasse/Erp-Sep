@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { BoxTypes } from 'app/config/boxType';
 import { CustomValidators } from 'app/core/util/validators';
-import { ICajaCuentaBanco, IMedioPago, MovimientoCajaBanco } from 'app/entities/master-crud';
+import { ICajaCuentaBanco, MovimientoCajaBanco } from 'app/entities/master-crud';
 import { MovimientoCajaBancoService } from 'app/entities/master-crud/bank-cash-movement-management/movimientoCajaBanco.service';
 import * as dayjs from 'dayjs';
 import { Subscription } from 'rxjs';
@@ -13,7 +13,7 @@ import { debounceTime } from 'rxjs/operators';
   templateUrl: './efectivo.component.html',
   styleUrls: ['./efectivo.component.scss'],
 })
-export class EfectivoComponent implements OnInit, OnChanges, OnDestroy {
+export class EfectivoComponent implements OnInit, OnDestroy {
   efectivoForm = this.fb.group({
     fechaContableString: [dayjs().format('DD/MM/YYYY'), [Validators.required, CustomValidators.isValidDate]],
     periodo: ['', Validators.required],
@@ -25,14 +25,13 @@ export class EfectivoComponent implements OnInit, OnChanges, OnDestroy {
   subscriptions: Subscription[] = [];
   banco = '';
 
-  @Input() medioPago!: IMedioPago;
   @Output() formInfo: EventEmitter<MovimientoCajaBanco | null> = new EventEmitter();
 
-  constructor(private fb: FormBuilder, private CajaBancoService: MovimientoCajaBancoService) {}
+  constructor(private fb: FormBuilder, private cajaBancoService: MovimientoCajaBancoService) {}
 
   ngOnInit(): void {
-    // eslint-disable-next-line no-console
-    console.log(this.medioPago);
+    this.subscriptions.push(this.cajaBancoService.getCajas(BoxTypes.CAJA_USUARIO).subscribe(res => (this.allCajasBanco = res)));
+
     this.efectivoForm.statusChanges.pipe(debounceTime(250)).subscribe(res => {
       if (res === 'VALID') {
         this.formInfo.emit(this.efectivoForm.getRawValue());
@@ -40,14 +39,6 @@ export class EfectivoComponent implements OnInit, OnChanges, OnDestroy {
         this.formInfo.emit(null);
       }
     });
-  }
-
-  ngOnChanges(): void {
-    if (this.medioPago.id === 1) {
-      this.subscriptions.push(this.CajaBancoService.getCajas(BoxTypes.CAJA_USUARIO).subscribe(res => (this.allCajasBanco = res)));
-    } else {
-      this.subscriptions.push(this.CajaBancoService.getCajas(BoxTypes.CAJA_BANCO).subscribe(res => (this.allCajasBanco = res)));
-    }
   }
 
   ngOnDestroy(): void {

@@ -2,7 +2,7 @@ import { HttpClient, HttpEvent, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { Observable } from 'rxjs';
-import { IComprobante } from '../../voucher/voucher.model';
+import { IComprobante } from '../../../../core/voucher/voucher.model';
 import { ILoteDto } from '../lot-debt.model';
 
 @Injectable({

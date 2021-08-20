@@ -1,6 +1,10 @@
 <mat-card>
   <mat-card-header fxLayoutAlign="space-between start">
     <mat-card-title>{{ titleForm }}</mat-card-title>
+
+    <div fxLayout="column" fxLayout.gt-xs="row">
+      <button mat-raised-button color="primary" [routerLink]="['../ordenesPago']" matTooltip="Volver al Listado">Volver</button>
+    </div>
   </mat-card-header>
   <hr />
   <mat-card-content>
@@ -28,8 +32,7 @@
         <jhi-step3-confirmar-pago *ngIf="form2.medioPagoForm"></jhi-step3-confirmar-pago>
         <div class="text-right p-t-20">
           <button mat-stroked-button color="warn" matStepperPrevious>Atras</button>
-          <button mat-raised-button color="primary" [disabled]="isSaving">Confirmar</button
-          ><!-- (click)="save()" -->
+          <button mat-raised-button color="primary" [disabled]="isSaving" (click)="save()">Confirmar</button>
         </div>
       </mat-step>
     </mat-horizontal-stepper>

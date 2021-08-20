@@ -1,1 +1,45 @@
-<p>cheque works!</p>
+<form [formGroup]="chequeForm">
+  <div fxLayout="row wrap" fxLayoutAlign="space-between start">
+    <div fxFlex="100" fxFlex.gt-sm="25">
+      <mat-form-field appearance="outline">
+        <!-- <mat-label> {{ medioPago.id === 1 ? 'Caja' : 'Cuenta Corriente' }} </mat-label> -->
+        <mat-label> Cuenta Corriente: </mat-label>
+        <mat-select formControlName="cajaCuentaBanco" (selectionChange)="cambiarCaja($event.value)">
+          <mat-option *ngFor="let item of allCajasBanco" [value]="item">
+            {{ item.nombre }}
+          </mat-option>
+        </mat-select>
+        <mat-hint style="color: blue"> {{ banco }} </mat-hint>
+        <mat-error *ngIf="chequeForm.get('cajaCuentaBanco')?.invalid">{{ mensajeErrorCajaCuentaBanco() }} </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+</form>
+
+<!-- 
+{
+  "periodo":"08/2021",
+  "fechaComprobanteString":"19/08/2021",
+  "fechaContableString":"19/08/2021",
+  "nroComprobante":"00001-00000125",
+  "percepcionGanancia":0,
+  "percepcionIVA":0,
+  "percepcionIngBruto":0,
+  "retencionGanancia":0,
+  "retencionIVA":0,
+  "retencionIngBruto":0,
+  "saldo":0,
+  "aImputar":0,
+  "imputado":0,
+  "totalComprobante":11500,
+  "dtoRgoOtros":0,
+  "establecimiento":null,
+  "estadoComprobante":null,
+  "comprobanteRef":[],
+  "condicionIVA":null,
+  "condicionPago":null,
+  "tipoComprobante":{"id":2,"nombre":"FACTURA-A","letra":"A","idTipoCbteFe":0,"ci":0,"activo":1,"rowNumber":1,"recordCount":1,"mensaje":null},
+  "ente":null,
+  "movimientoCajaBanco":[{"cajaCuentaBanco":{"id":4,"tipoCajaCuentaBanco":{"id":3,"nombre":"CAJA"},"moneda":{"id":1,"codigoMoneda":null,"nombre":"PESO","nombrePlural":null,"idTipoMonedaFE":null,"activo":0},"banco":{"id":0,"nombre":"SIN ASIGNAR"},"establecimiento":{"id":0,"idSede":0,"nombre":"SIN ASIGNAR","personaJuridica":null,"activo":0,"rowNumber":0,"recordCount":0,"usuario":null},"cuentaContable":111010010,"fechaApertura":"0001-01-01T00:00:00Z","codigo":null,"nombre":"HACIENDA OPERATIVA","cbu":null,"alias":null,"bloqueo":0,"tipoCierre":0,"activo":1,"rowNumber":4,"recordCount":62},"importe":11500,"medioPago":{"id":1,"nombre":"EFECTIVO","activo":1},"receptor":"MONTOTo"}],
+  "item":[{"id":53,"importe":3500},{"id":58,"importe":8000}]
+} -->

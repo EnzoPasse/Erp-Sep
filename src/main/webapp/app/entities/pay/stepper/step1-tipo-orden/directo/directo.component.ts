@@ -3,8 +3,8 @@ import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '
 import { OperationTemplate, TypeTemplate } from 'app/config/template.constats';
 import { StateVoucherType } from 'app/config/voucherType.constant';
 import { CustomValidators } from 'app/core/util/validators';
-import { ComprobanteService } from 'app/entities/debt/voucher/service/voucher.service';
-import { IComprobante, IItem, ITipoComprobante } from 'app/entities/debt/voucher/voucher.model';
+import { IComprobante, IItem, ITipoComprobante } from 'app/core/voucher/voucher.model';
+import { ComprobanteService } from 'app/core/voucher/voucher.service';
 import * as dayjs from 'dayjs';
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';

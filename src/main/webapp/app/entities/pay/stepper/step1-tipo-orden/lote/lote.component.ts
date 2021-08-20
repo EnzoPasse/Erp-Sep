@@ -2,10 +2,10 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ILoteDto } from 'app/entities/debt/lot/lot-debt.model';
 import { LotDebtService } from 'app/entities/debt/lot/service/lot-debt-service.service';
-import { ComprobanteService } from 'app/entities/debt/voucher/service/voucher.service';
-import { IComprobante } from 'app/entities/debt/voucher/voucher.model';
+import { IComprobante } from 'app/core/voucher/voucher.model';
 import { Subscription } from 'rxjs';
 import { DataFormStep1 } from '../step1-tipo-orden.component';
+import { ComprobanteService } from 'app/core/voucher/voucher.service';
 
 @Component({
   selector: 'jhi-lote',

@@ -8,32 +8,19 @@ import { IQueryParamsModel } from 'app/core/request/queryParams.model';
 import { IQueryResultsModel } from 'app/core/request/queryResult.model';
 import { map } from 'rxjs/operators';
 import { VoucherAdaper } from './voucher-adapter.service';
-import { IComprobante, IEstadoComprobante, IItem, ITipoComprobante } from '../voucher.model';
-import { OperationType } from 'app/config/operationTypes.constants';
+import { IComprobante, IEstadoComprobante, ITipoComprobante, IItem } from './voucher.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ComprobanteService {
-  public OperationType = OperationType;
-  public resourceUrl = this.applicationConfigService.getEndpointFor('/comprobante');
-  public deudaUrl = this.applicationConfigService.getEndpointFor('/deuda');
+  public resourceUrl = this.applicationConfigService.getEndpointFor('comprobante');
 
   constructor(
     private http: HttpClient,
     private applicationConfigService: ApplicationConfigService,
     private voucherAdapter: VoucherAdaper
   ) {}
-
-  create(voucher: IComprobante, operation: number): Observable<IComprobante> {
-    const url = `${this.deudaUrl}/create?operacion=${operation}`;
-    return this.http.post<IComprobante>(url, voucher);
-  }
-
-  update(voucher: IComprobante, operation: number): Observable<IComprobante> {
-    const url = `${this.deudaUrl}/edit?operacion=${operation}`;
-    return this.http.put<IComprobante>(url, voucher);
-  }
 
   find(id: number): Observable<IComprobante> {
     const url = `${this.resourceUrl}/get/${id}`;
@@ -55,11 +42,6 @@ export class ComprobanteService {
         return { ...response, items: vouchers } as IQueryResultsModel<IComprobante>;
       })
     );
-  }
-
-  delete(id: number): Observable<{}> {
-    const url = `${this.deudaUrl}/delete/${id}`;
-    return this.http.delete(url);
   }
 
   /* ****ESTADOS****** */

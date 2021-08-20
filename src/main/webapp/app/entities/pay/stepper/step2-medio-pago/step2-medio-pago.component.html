@@ -43,9 +43,9 @@
       <hr />
     </div>
 
-    <jhi-efectivo *ngIf="medioPagoSelected.value" [medioPago]="medioPagoSelected.value" (formInfo)="formValid($event)"></jhi-efectivo>
-    <jhi-cheque *ngIf="medioPagoForm.controls['medioPagoSelected'].value.id === 2"></jhi-cheque>
-    <jhi-transferencia *ngIf="medioPagoForm.controls['medioPagoSelected'].value.id === 3"></jhi-transferencia>
+    <jhi-efectivo *ngIf="medioPagoSelected.value?.id === 1" (formInfo)="formValid($event)"></jhi-efectivo>
+    <jhi-cheque *ngIf="medioPagoSelected?.value?.id === 2"></jhi-cheque>
+    <jhi-transferencia *ngIf="medioPagoSelected.value?.id === 3"></jhi-transferencia>
   </form>
 </div>
 

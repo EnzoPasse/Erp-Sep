@@ -2,11 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PaymentsType } from 'app/config/payment-type';
 import { StateVoucherType } from 'app/config/voucherType.constant';
+import { IMovimientoCajaBanco } from 'app/entities/master-crud';
 import { IMedioPago } from 'app/entities/master-crud/payment-method-management/medio-pago.model';
 import { MedioPagoService } from 'app/entities/master-crud/payment-method-management/medio-pago.service';
-import { Subject, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { concatMap, debounceTime, map, takeUntil, tap } from 'rxjs/operators';
-import { PaymentService } from '../../service/payment.service';
+import { PayVoucherStateService } from '../../service/payVoucherState.service';
 import { DataFormStep1 } from '../step1-tipo-orden/step1-tipo-orden.component';
 
 export interface DataFormStep2 {
@@ -29,12 +30,13 @@ export class Step2MedioPagoComponent implements OnInit, OnDestroy {
 
   // tipoOrden!: Observable<DataFormStep1>;
   tipoOrden!: DataFormStep1;
+  mcb$!: Observable<IMovimientoCajaBanco[]>;
 
   data: any;
   private subscriptions: Subscription[] = [];
   private destroy$ = new Subject<void>();
 
-  constructor(private medioPagoService: MedioPagoService, private fb: FormBuilder, private payService: PaymentService) {}
+  constructor(private medioPagoService: MedioPagoService, private fb: FormBuilder, private payService: PayVoucherStateService) {}
 
   ngOnInit(): void {
     /* esta subscription trae los datos del formulario tipo de orden y los medios de pagos dependiendo del tipo de pago seleccionado.  */
@@ -42,7 +44,9 @@ export class Step2MedioPagoComponent implements OnInit, OnDestroy {
       this.payService.tipoOrden$
         .pipe(
           takeUntil(this.destroy$),
-          tap(tipo => (this.tipoOrden = tipo)),
+          tap(tipo => {
+            (this.tipoOrden = tipo), this.medioPagoSelected.patchValue(null);
+          }),
           concatMap(() => this.medioPagoService.getAllPorIdMFA(StateVoucherType.ORDEN_PAGO)),
           map(medios => {
             if (this.tipoOrden.tipoPago === PaymentsType.LOTE) {
@@ -83,9 +87,6 @@ export class Step2MedioPagoComponent implements OnInit, OnDestroy {
   formValid(event: FormGroup | null): void {
     this.movimientoCajaBanco.patchValue(event);
     this.data = event;
-    /* if (event && this.datosTipoPago) {
-      // this.payService.crearMovimientoCajaBanco(event, this.medioPagoSelected.value, this.montoTotalPago);
-    } */
   }
 
   get medioPagoSelected(): AbstractControl {

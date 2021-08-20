@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { PaymentsType } from 'app/config/payment-type';
-import { IComprobante } from 'app/entities/debt/voucher/voucher.model';
-import * as dayjs from 'dayjs';
+import { IComprobante } from 'app/core/voucher/voucher.model';
 import { Observable } from 'rxjs';
-import { PaymentService } from '../../service/payment.service';
+import { PayVoucherStateService } from '../../service/payVoucherState.service';
 import { DataFormStep1 } from '../step1-tipo-orden/step1-tipo-orden.component';
 
 @Component({
@@ -16,7 +15,12 @@ export class Step3ConfirmarPagoComponent implements OnInit {
   tipoOrden$!: Observable<DataFormStep1>;
   PaymentsType = PaymentsType;
 
-  constructor(private payService: PaymentService) {}
+  dataSource!: any;
+  displayedColumnsCuentaCorriente = ['Cbte', 'Nro', 'F.Emision', 'F.Vencimiento', 'Saldo'];
+  displayedColumnsDirecto = ['Id', 'Item', 'Importe'];
+  displayedColumnsLote = ['Ente', 'F.Vencimiento', 'Periodo', 'Saldo'];
+
+  constructor(private payService: PayVoucherStateService) {}
 
   ngOnInit(): void {
     this.comprobante$ = this.payService.comprobante$;

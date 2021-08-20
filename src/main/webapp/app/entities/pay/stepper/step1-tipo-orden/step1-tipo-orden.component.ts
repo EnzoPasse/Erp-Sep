@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { PaymentsType } from 'app/config/payment-type';
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { PaymentService } from '../../service/payment.service';
+import { PayVoucherStateService } from '../../service/payVoucherState.service';
 
 export interface DataFormStep1 {
   datos?: any;
@@ -27,7 +27,7 @@ export class Step1TipoOrdenComponent implements OnInit {
   subscription!: Subscription;
   @Output() tipoPagoInfo: EventEmitter<DataFormStep1 | null> = new EventEmitter();
 
-  constructor(private fb: FormBuilder, private payService: PaymentService) {}
+  constructor(private fb: FormBuilder, private payService: PayVoucherStateService) {}
 
   ngOnInit(): void {
     this.subscription = this.tipoPagoForm.statusChanges.pipe(debounceTime(250)).subscribe(res => {
@@ -59,5 +59,10 @@ export class Step1TipoOrdenComponent implements OnInit {
     } else {
       this.changeTipoPago();
     }
+  }
+
+  limpiarOptions(): void {
+    this.tipoPagoForm.get('tipoPagoSelected')?.reset();
+    // this.dataSource.entitySubject.next([]);
   }
 }

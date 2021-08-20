@@ -2,8 +2,8 @@ import { BaseDataSource } from 'app/core/request/baseDataSource';
 import { QueryParamsModel } from 'app/core/request/queryParams.model';
 import { of } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { ComprobanteService } from './service/voucher.service';
 import { IComprobante } from './voucher.model';
+import { ComprobanteService } from './voucher.service';
 
 export class ComprobanteDataSource extends BaseDataSource<IComprobante> {
   constructor(private comprobanteService: ComprobanteService) {
