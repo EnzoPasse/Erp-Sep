@@ -104,7 +104,7 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header>Total</mat-header-cell>
         <mat-cell *matCellDef="let comprobante">
           <span class="header-label">Total:</span>
-          {{ comprobante.totalComprobante | currency: 'ARS':'symbol':'1.0-0' }}
+          {{ comprobante.totalComprobante | currency: 'ARS':'symbol' }}
         </mat-cell>
       </ng-container>
 
@@ -112,7 +112,7 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header>Saldo</mat-header-cell>
         <mat-cell *matCellDef="let comprobante" style="color: blue" class="font-medium">
           <span class="header-label">Saldo:</span>
-          {{ comprobante.saldo | currency: 'ARS':'symbol':'1.0-0' }}
+          {{ comprobante.saldo | currency: 'ARS':'symbol' }}
         </mat-cell>
       </ng-container>
 

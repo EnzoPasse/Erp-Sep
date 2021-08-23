@@ -2,16 +2,18 @@ import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '
 import { Validators, FormBuilder, AbstractControl, FormGroup, FormArray } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { OperationTemplate, TypeTemplate } from 'app/config/template.constats';
+import { EventManager, EventWithContent } from 'app/core/event-management/event-manager.service';
 import { Alert } from 'app/core/util/alert.service';
-import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 import { CustomValidators } from 'app/core/util/validators';
 import { IEnte } from 'app/entities/master-crud';
 import { EnteService } from 'app/entities/master-crud/ente-management/ente.service';
 import * as dayjs from 'dayjs';
 import { Subscription, Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, finalize, map, switchMap, tap } from 'rxjs/operators';
-import { ComprobanteService } from '../service/voucher.service';
-import { Comprobante, IComprobante, IItem, ITipoComprobante } from '../voucher.model';
+import { DebtService } from '../service/debt.service';
+import { VoucherAdaper } from '../../../../core/voucher/voucher-adapter.service';
+import { IComprobante, IItem, ITipoComprobante } from '../../../../core/voucher/voucher.model';
+import { ComprobanteService } from 'app/core/voucher/voucher.service';
 
 @Component({
   selector: 'jhi-voucher-update',
@@ -36,6 +38,7 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     fechaContable: ['', [Validators.required, CustomValidators.isValidDate]],
     ente: ['', [Validators.required, CustomValidators.RequireMatch]],
     tipoComprobante: ['', [Validators.required]],
+    // eslint-disable-next-line no-useless-escape
     nroComprobante: ['', [Validators.required, Validators.pattern(`[0-9]{5}-[0-9]{8}`)]],
     fechaComprobante: ['', [Validators.required, CustomValidators.isValidDate]],
     periodo: ['', [Validators.required]],
@@ -47,6 +50,8 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
 
   constructor(
     private comprobanteService: ComprobanteService,
+    private voucherAdapterService: VoucherAdaper,
+    private debtService: DebtService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private enteService: EnteService,
@@ -79,7 +84,7 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
         map(value => (typeof value === 'string' ? this.noWhiteSpace(value) : (value as string))),
         debounceTime(150), // que se emita solo una vez cada 500ms
         distinctUntilChanged(),
-        filter(query => query.length > 1),
+        filter(query => !!query && query.length > 2),
         tap(() => (this.loadingAutocomplete = true)),
         switchMap(value => this.enteService.findAutocompleteEnte(value).pipe(finalize(() => (this.loadingAutocomplete = false))))
       )
@@ -140,7 +145,7 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   limpiar(): void {
-    this.updateForm(new Comprobante());
+    this.updateForm(this.voucherAdapterService.adapter({})); // new Comprobante()
     this.itemArray = [];
     this.editForm.reset();
     this.editForm.markAsUntouched();
@@ -162,9 +167,9 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     const comprobante = this.createComprobante();
 
     if (comprobante.id !== undefined) {
-      this.subscribeToSaveResponse(this.comprobanteService.update(comprobante, this.urlData.editOperation));
+      this.subscribeToSaveResponse(this.debtService.update(comprobante, this.urlData.editOperation));
     } else {
-      this.subscribeToSaveResponse(this.comprobanteService.create(comprobante, this.urlData.createOperation));
+      this.subscribeToSaveResponse(this.debtService.create(comprobante, this.urlData.createOperation));
     }
     if (salir) {
       this.previousState();
@@ -319,9 +324,6 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   private updateForm(comprobante: IComprobante): void {
-    // eslint-disable-next-line no-console
-    console.log(comprobante);
-
     this.editForm.patchValue({
       id: comprobante.id,
       fechaContable: comprobante.fechaContableString ?? this.now,
@@ -341,8 +343,12 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   private createComprobante(): IComprobante {
-    return {
+    /* return {
       ...new Comprobante(),
+     
+    }; */
+
+    const comprobante = {
       id: this.id.value,
       periodo: this.periodo.value,
       fechaComprobanteString: this.fechaComprobante.value,
@@ -377,6 +383,7 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
       movimientoCajaBanco: this.comprobanteRes.movimientoCajaBanco,
       item: this.items.value,
     };
+    return this.voucherAdapterService.adapter(comprobante); // new Comprobante()
   }
 
   private onSaveSuccess(): void {

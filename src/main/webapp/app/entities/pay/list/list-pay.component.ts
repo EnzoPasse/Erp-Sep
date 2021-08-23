@@ -3,15 +3,20 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ReportTypes } from 'app/config/reportType';
+import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { QueryParamsModel } from 'app/core/request/queryParams.model';
 import { DialogService } from 'app/core/util/dialog.service';
-import { ComprobanteService } from 'app/entities/debt/voucher/service/voucher.service';
-import { ComprobanteDataSource } from 'app/entities/debt/voucher/voucher.datasource';
-import { IComprobante, IEstadoComprobante } from 'app/entities/debt/voucher/voucher.model';
+import { ComprobanteDataSource } from 'app/core/voucher/voucher.datasource';
+import { IComprobante, IEstadoComprobante } from 'app/core/voucher/voucher.model';
 import { IMedioPago } from 'app/entities/master-crud/payment-method-management/medio-pago.model';
 import { MedioPagoService } from 'app/entities/master-crud/payment-method-management/medio-pago.service';
-import { fromEvent, merge, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
+import { fromEvent, merge, of, Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { ComprobanteService } from 'app/core/voucher/voucher.service';
+import { PaymentService } from '../service/payment.service';
+import { IMovimientoCajaBanco } from 'app/entities/master-crud';
+import { IFilterPrint } from 'app/entities/master-crud/print/print.model';
 
 @Component({
   selector: 'jhi-list-pay',
@@ -39,26 +44,38 @@ export class ListPayComponent implements OnInit, OnDestroy {
 
   selection = new SelectionModel<IComprobante>(true, []);
 
+  destroy$ = new Subject<void>();
   private subscriptions: Subscription[] = [];
 
   constructor(
     private comprobanteService: ComprobanteService,
+    private paymentService: PaymentService,
     private medioService: MedioPagoService,
     private dialog: DialogService,
     private route: ActivatedRoute,
+    private applicationConfigService: ApplicationConfigService,
+
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.subscriptions.push(
-      this.route.data.subscribe((data: any) => {
+      this.route.data.pipe(takeUntil(this.destroy$)).subscribe((data: any) => {
         this.dataUrl = data as {};
         this.title = data.pageTitle;
-        this.comprobanteService.getAllEstados(data.stateType).subscribe((res: IEstadoComprobante[]) => (this.allEstadosComprobantes = res));
+        this.comprobanteService
+          .getAllEstados(data.stateType)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((res: IEstadoComprobante[]) => (this.allEstadosComprobantes = res));
       })
     );
 
-    this.subscriptions.push(this.medioService.getAll().subscribe((data: IMedioPago[]) => (this.allMediosPago = data)));
+    this.subscriptions.push(
+      this.medioService
+        .getAll()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((data: IMedioPago[]) => (this.allMediosPago = data))
+    );
 
     // Si el usuario cambia el ordenamiento, volver a la primera pagina
     const sortSubscription = this.sort?.sortChange.subscribe(() => (this.paginator!.pageIndex = 0));
@@ -71,7 +88,10 @@ export class ListPayComponent implements OnInit, OnDestroy {
     - Cuando el evento de ordenamiento ocurre => this.sort.sortChange
     */
     const paginatorSubscriptions = merge(this.sort!.sortChange, this.paginator!.page)
-      .pipe(tap(() => this.loadComprobanteList()))
+      .pipe(
+        takeUntil(this.destroy$),
+        tap(() => this.loadComprobanteList())
+      )
       .subscribe();
     this.subscriptions.push(paginatorSubscriptions);
 
@@ -93,6 +113,8 @@ export class ListPayComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(el => el.unsubscribe());
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadComprobanteList(): void {
@@ -122,6 +144,11 @@ export class ListPayComponent implements OnInit, OnDestroy {
   }
 
   deleteComprobante(_item: IComprobante): void {
+    if (_item.movimientoCajaBanco!.length > 1) {
+      this.deleteDocumento(_item);
+      return;
+    }
+
     const _title = 'Borrar Comprobante';
     const _description = 'Esta seguro de borrar el Comprobante permanentemente?';
     const _waitDesciption = 'Borrando Comprobante...';
@@ -135,15 +162,52 @@ export class ListPayComponent implements OnInit, OnDestroy {
 
         if (_item.id) {
           this.subscriptions.push(
-            this.comprobanteService.delete(_item.id).subscribe({
-              next: () => {
-                this.loadComprobanteList();
-              },
-            })
+            this.paymentService
+              .delete(_item.id)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe({
+                next: () => {
+                  this.loadComprobanteList();
+                },
+              })
           );
         }
       })
     );
+  }
+
+  deleteDocumento(item: IComprobante): void {
+    const _title = 'Eliminar Documentos de la Orden de Pago';
+    const _description = 'Seleccione los Documentos que desea eliminar permanentemente?';
+    const _waitDesciption = 'Eliminando Documentos...';
+
+    const _documents = item.movimientoCajaBanco;
+
+    const dialogRef = this.dialog.deleteElement(_title, _description, _waitDesciption, _documents);
+    dialogRef
+      .afterClosed()
+      .pipe(
+        map(res => (res ? res : [])),
+        switchMap((movimientos: IMovimientoCajaBanco[]) => {
+          if (movimientos.length > 0) {
+            const idsDocumentos: number[] = [];
+            movimientos.forEach(it => {
+              const idDocum: any = it.documento?.id as number;
+              idsDocumentos.push(idDocum);
+            });
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+            return this.paymentService.delete(item.id!, idsDocumentos);
+          } else {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+            return of(null);
+          }
+        })
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          this.loadComprobanteList();
+        }
+      });
   }
 
   cambiarFechaDesde(fechaSelected: any): void {
@@ -177,8 +241,17 @@ export class ListPayComponent implements OnInit, OnDestroy {
     }
   }
 
-  /*  imprimirOrden(idOrdenPago: number):void {
-    const url = `${API_CONFIG}Administracion/imprimirDeposito/?idDeposito=${idOrdenPago}&codigoReporte=${ReportTypes.RPT_ORDEN_PAGO}`;
-    this.layoutUtilsService.printElements(url);
-  }  */
+  imprimirOrden(idOrdenPago: number): void {
+    // const url = `${API_CONFIG}Administracion/imprimirDeposito/?idDeposito=${idOrdenPago}&codigoReporte=${ReportTypes.RPT_ORDEN_PAGO}`;
+    /* const  filtros: IFilterPrint = {
+    id: idOrdenPago,
+    lote: false,
+    codigoReporte: ReportTypes.RPT_ORDEN_PAGO
+  } */
+
+    const url = this.applicationConfigService.getEndpointFor(
+      `print/print/?id=${idOrdenPago}&codigoReporte=${ReportTypes.RPT_ORDEN_PAGO}&lote=false`
+    );
+    this.dialog.printElements(url);
+  }
 }

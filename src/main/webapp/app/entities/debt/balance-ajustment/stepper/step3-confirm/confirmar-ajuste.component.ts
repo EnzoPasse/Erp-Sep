@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IComprobante } from 'app/entities/debt/voucher/voucher.model';
+import { IComprobante } from 'app/core/voucher/voucher.model';
 
 @Component({
   selector: 'jhi-confirmar-ajuste',

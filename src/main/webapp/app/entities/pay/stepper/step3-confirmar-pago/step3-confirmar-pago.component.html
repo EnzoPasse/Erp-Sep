@@ -1,1 +1,208 @@
-<p>step3-confirmar-pago works!</p>
+<mat-card *ngIf="comprobante$ | async as confirmVoucher" class="m-t-5">
+  <mat-card-content class="bg-light mat-elevation-z6">
+    <ng-container *ngIf="tipoOrden$ | async as tipoOrden">
+      <div fxLayout="row wrap">
+        <div fxFlex.gt-xs="50" fxFlex="100">
+          <h4 class="font-bold">Tipo Orden : {{ tipoOrden.tipoPago }}</h4>
+
+          <div fxLayout="column">
+            <span [ngSwitch]="tipoOrden.tipoPago">
+              <div *ngSwitchCase="PaymentsType.DIRECTO">
+                <span> {{ confirmVoucher.tipoComprobante?.nombre }}: #{{ confirmVoucher.nroComprobante }} </span>
+              </div>
+              <div *ngSwitchCase="PaymentsType.CUENTA_CORRIENTE">
+                <span>
+                  {{
+                    confirmVoucher.ente?.persona
+                      ? confirmVoucher.ente?.persona.apellido
+                      : confirmVoucher.ente?.personaJuridica.nombreFantasia
+                  }}
+                </span>
+              </div>
+              <div *ngSwitchCase="PaymentsType.LOTE">
+                <span>
+                  {{ confirmVoucher.comprobanteRef[0]?.tipoComprobante.nombre }}: #{{ confirmVoucher.comprobanteRef[0]?.nroLote }}
+                </span>
+              </div>
+            </span>
+          </div>
+        </div>
+        <div fxFlex.gt-xs="50" fxFlex="100" class="text-right">
+          <h4 class="font-bold">Medio Pago : {{ confirmVoucher.movimientoCajaBanco[0]?.medioPago.nombre }}</h4>
+          <div fxLayout="column">
+            <span
+              >{{ confirmVoucher.movimientoCajaBanco[0]?.cajaCuentaBanco.tipoCajaCuentaBanco.nombre }}:
+              {{ confirmVoucher.movimientoCajaBanco[0]?.cajaCuentaBanco.nombre }}</span
+            >
+            <span *ngIf="confirmVoucher.movimientoCajaBanco[0]?.medioPago.id !== 1" style="color: blue">
+              {{ confirmVoucher.movimientoCajaBanco[0]?.cajaCuentaBanco.banco?.nombre }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <span [ngSwitch]="tipoOrden.tipoPago">
+        <div *ngSwitchCase="PaymentsType.DIRECTO">
+          <div class="responsive-table m-t-15">
+            <mat-table [dataSource]="confirmVoucher.item" class="table-items-list" #table>
+              <ng-container matColumnDef="Id">
+                <mat-header-cell *matHeaderCellDef>Id</mat-header-cell>
+                <mat-cell *matCellDef="let item">
+                  <span class="header-label">Id:</span>
+                  {{ item.id.id }}
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="Item">
+                <mat-header-cell *matHeaderCellDef>Item</mat-header-cell>
+                <mat-cell *matCellDef="let item">
+                  <span class="header-label">Item:</span>
+                  {{ item.id.nombre }}
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="Importe">
+                <mat-header-cell *matHeaderCellDef>Importe</mat-header-cell>
+                <mat-cell *matCellDef="let item" style="color: blue" class="font-medium">
+                  <span class="header-label">Importe:</span>
+                  {{ item.importe | currency: 'ARS':'symbol' }}
+                </mat-cell>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="displayedColumnsDirecto"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumnsDirecto"></mat-row>
+            </mat-table>
+          </div>
+          <div class="d-flex align-items-center">
+            <div class="text-right ml-auto">
+              <!--   <h6 class="text-uppercase text-md ma-0 text-bold">Total Nota Crédito :</h6>
+                          <h6 class="text-uppercase text-md ma-0 text-bold">Saldo Actual Nota Crédito :</h6>
+                          <h6 class="text-uppercase text-md ma-0 text-bold">Total a Imputar :</h6> -->
+              <h6 class="text-uppercase text-sm ma-0 text-danger text-bold">Total a Imputar :</h6>
+            </div>
+            <div class="m-l-10">
+              <!--   <h4 class="font-medium">{{ confirmVoucher?.totalComprobante | currency: 'ARS':'symbol':'1.0-0' }}</h4>
+                          <h4 class="font-medium">{{ getSaldoActual() | currency: 'ARS':'symbol':'1.0-0' }}</h4>
+                          <h4 class="font-medium">{{ getImputado() | currency: 'ARS':'symbol':'1.0-0' }}</h4> -->
+              <h4 class="text-danger font-medium">{{ confirmVoucher?.totalComprobante | currency: 'ARS':'symbol' }}</h4>
+            </div>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="PaymentsType.CUENTA_CORRIENTE">
+          <div class="responsive-table m-t-15">
+            <mat-table [dataSource]="confirmVoucher.comprobanteRef" class="table-items-list" #table>
+              <ng-container matColumnDef="Cbte">
+                <mat-header-cell *matHeaderCellDef>Cbte</mat-header-cell>
+                <mat-cell *matCellDef="let comprobante">
+                  <span class="header-label">Cbte:</span>
+                  <small>{{ comprobante.tipoComprobante.nombre }}</small>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="Nro">
+                <mat-header-cell *matHeaderCellDef>Nro</mat-header-cell>
+                <mat-cell *matCellDef="let comprobante">
+                  <span class="header-label">Nro:</span>
+                  {{ comprobante.nroComprobante }}
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="F.Emision">
+                <mat-header-cell *matHeaderCellDef>F.Emision</mat-header-cell>
+                <mat-cell *matCellDef="let comprobante">
+                  <span class="header-label">F.Emision:</span>
+                  <small>{{ comprobante.fechaComprobanteString }}</small>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="F.Vencimiento">
+                <mat-header-cell *matHeaderCellDef>F.Vencimiento</mat-header-cell>
+                <mat-cell *matCellDef="let comprobante">
+                  <span class="header-label">F.Vto:</span>
+                  <small>{{ comprobante.fechaVtoString }}</small>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="Saldo">
+                <mat-header-cell *matHeaderCellDef>Saldo</mat-header-cell>
+                <mat-cell *matCellDef="let comprobante" style="color: blue" class="font-medium">
+                  <span class="header-label">Saldo:</span>
+                  {{ comprobante.saldo | currency: 'ARS':'symbol' }}
+                </mat-cell>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="displayedColumnsCuentaCorriente"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumnsCuentaCorriente"></mat-row>
+            </mat-table>
+          </div>
+          <div class="d-flex align-items-center">
+            <div class="text-right ml-auto">
+              <!--   <h6 class="text-uppercase text-md ma-0 text-bold">Total Nota Crédito :</h6>
+                          <h6 class="text-uppercase text-md ma-0 text-bold">Saldo Actual Nota Crédito :</h6> -->
+              <h6 class="text-uppercase text-md ma-0 text-bold">Monto Seleccionado :</h6>
+              <h6
+                class="text-uppercase text-md ma-a text-bold"
+                *ngIf="confirmVoucher.totalComprobante - confirmVoucher.montoSeleccionado !== 0"
+              >
+                Difencia :
+              </h6>
+              <h6 class="text-uppercase text-sm ma-0 text-danger text-bold">Total a Imputar :</h6>
+            </div>
+            <div class="m-l-10">
+              <!--   <h4 class="font-medium">{{ confirmVoucher?.totalComprobante | currency: 'ARS':'symbol':'1.0-0' }}</h4>
+                          <h4 class="font-medium">{{ getSaldoActual() | currency: 'ARS':'symbol':'1.0-0' }}</h4>
+                          <h4 class="font-medium">{{ getImputado() | currency: 'ARS':'symbol':'1.0-0' }}</h4> -->
+              <h4 class="font-medium">{{ confirmVoucher?.montoSeleccionado | currency: 'ARS':'symbol' }}</h4>
+              <h4 class="font-medium" *ngIf="confirmVoucher.totalComprobante - confirmVoucher.montoSeleccionado !== 0">
+                {{ confirmVoucher.totalComprobante - confirmVoucher.montoSeleccionado | currency: 'ARS':'symbol' }}
+              </h4>
+              <h4 class="text-danger font-medium">{{ confirmVoucher?.totalComprobante | currency: 'ARS':'symbol' }}</h4>
+            </div>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="PaymentsType.LOTE">
+          <div class="responsive-table m-t-15">
+            <mat-table [dataSource]="confirmVoucher.comprobanteRef" class="table-items-list" #table>
+              <ng-container matColumnDef="Ente">
+                <mat-header-cell *matHeaderCellDef>Ente</mat-header-cell>
+                <mat-cell *matCellDef="let comprobante">
+                  <span class="header-label">Ente:</span>
+                  <small>
+                    {{
+                      comprobante.ente.persona ? comprobante.ente.persona.apellido : comprobante.ente.personaJuridica?.nombreFantasia
+                    }}</small
+                  >
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="F.Vencimiento">
+                <mat-header-cell *matHeaderCellDef>F.Vencimiento</mat-header-cell>
+                <mat-cell *matCellDef="let comprobante">
+                  <span class="header-label">F.Vto:</span>
+                  <small>{{ comprobante.fechaVtoString }}</small>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="Periodo">
+                <mat-header-cell *matHeaderCellDef>Periodo</mat-header-cell>
+                <mat-cell *matCellDef="let comprobante">
+                  <span class="header-label">Periodo:</span>
+                  <small>{{ comprobante.periodo }}</small>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="Saldo">
+                <mat-header-cell *matHeaderCellDef>Saldo</mat-header-cell>
+                <mat-cell *matCellDef="let comprobante" style="color: blue" class="font-medium">
+                  <span class="header-label">Saldo:</span>
+                  {{ comprobante.saldo | currency: 'ARS':'symbol' }}
+                </mat-cell>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="displayedColumnsLote"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumnsLote"></mat-row>
+            </mat-table>
+          </div>
+          <div class="d-flex align-items-center">
+            <div class="text-right ml-auto">
+              <h6 class="text-uppercase text-sm ma-0 text-danger text-bold">Total a Imputar :</h6>
+            </div>
+            <div class="m-l-10">
+              <h4 class="text-danger font-medium">{{ confirmVoucher?.totalComprobante | currency: 'ARS':'symbol' }}</h4>
+            </div>
+          </div>
+        </div>
+      </span>
+    </ng-container>
+  </mat-card-content>
+</mat-card>

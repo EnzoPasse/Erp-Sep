@@ -6,7 +6,7 @@
         <button
           fxHide
           fxShow.gt-sm
-          *jhiHasAnyAuthority="'Accion Crear Rol'"
+          *jhiHasAnyAuthority="['Accion Crear Rol', 'Accion Editar Rol']"
           mat-raised-button
           color="primary"
           matTooltip="Guardar los cambios"
@@ -21,7 +21,7 @@
         <button fxHide fxShow.gt-sm mat-raised-button color="warn" matTooltip="Volver" (click)="previousState()">Cancelar</button>
       </div>
       <div>
-        <button *jhiHasAnyAuthority="'Accion Crear Rol'" mat-icon-button [matMenuTriggerFor]="menu" color="primary">
+        <button *jhiHasAnyAuthority="['Accion Crear Rol', 'Accion Editar Rol']" mat-icon-button [matMenuTriggerFor]="menu" color="primary">
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">

@@ -1,1 +1,37 @@
-<p>transferencia works!</p>
+<form [formGroup]="transferenciaForm">
+  <div fxLayout="row wrap" fxLayoutAlign="space-between start">
+    <div fxFlex="100" fxFlex.gt-sm="25">
+      <mat-form-field appearance="outline">
+        <!-- <mat-label> {{ medioPago.id === 1 ? 'Caja' : 'Cuenta Corriente' }} </mat-label> -->
+        <mat-label> Cuenta Corriente: </mat-label>
+        <mat-select formControlName="cajaCuentaBanco" (selectionChange)="cambiarCaja($event.value)">
+          <mat-option *ngFor="let item of allCajasBanco" [value]="item">
+            {{ item.nombre }}
+          </mat-option>
+        </mat-select>
+        <mat-hint style="color: blue"> {{ banco }} </mat-hint>
+        <mat-error *ngIf="transferenciaForm.get('cajaCuentaBanco')?.invalid">{{ mensajeErrorCajaCuentaBanco() }} </mat-error>
+      </mat-form-field>
+    </div>
+    <div fxFlex="100" fxFlex.gt-sm="30">
+      <mat-form-field appearance="outline">
+        <!-- <mat-label> {{ medioPago.id === 1 ? 'Caja' : 'Cuenta Corriente' }} </mat-label> -->
+        <mat-label> Tipo Transferencia: </mat-label>
+        <mat-select formControlName="tipoDocumento">
+          <mat-option *ngFor="let item of allSubtipo" [value]="item">
+            {{ item.nombre }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="transferenciaForm.get('tipoDocumento')?.invalid">{{ mensajeErrorTipoDocumento() }} </mat-error>
+      </mat-form-field>
+    </div>
+    <div fxFlex="100" fxFlex.gt-sm="20">
+      <mat-form-field appearance="outline">
+        <mat-label>Fecha Emision:</mat-label>
+        <input matInput mask="00/00/0000" [dropSpecialCharacters]="false" formControlName="fechaContableString" />
+        <mat-icon matSuffix>date_range</mat-icon>
+        <mat-error *ngIf="transferenciaForm.get('fechaContableString')?.invalid">{{ mensajeErrorFechaContableString() }} </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+</form>

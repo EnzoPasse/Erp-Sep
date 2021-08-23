@@ -14,7 +14,7 @@ import { UserAdaper } from './user-management.adapter.service';
   providedIn: 'root',
 })
 export class UserManagementService {
-  public resourceUrl = this.applicationConfigService.getEndpointFor('/usuario');
+  public resourceUrl = this.applicationConfigService.getEndpointFor('usuario');
 
   constructor(private http: HttpClient, private applicationConfigService: ApplicationConfigService, private userAdapter: UserAdaper) {}
 

@@ -94,7 +94,7 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header>Total</mat-header-cell>
         <mat-cell *matCellDef="let comprobante">
           <span class="header-label">Total:</span>
-          {{ comprobante.totalComprobante | currency: 'ARS':'symbol':'1.0-0' }}
+          {{ comprobante.totalComprobante | currency: 'ARS':'symbol' }}
         </mat-cell>
       </ng-container>
 
@@ -102,7 +102,7 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header>Saldo</mat-header-cell>
         <mat-cell *matCellDef="let comprobante" style="color: red" class="font-medium">
           <span class="header-label">Saldo:</span>
-          {{ comprobante.saldo | currency: 'ARS':'symbol':'1.0-0' }}
+          {{ comprobante.saldo | currency: 'ARS':'symbol' }}
         </mat-cell>
       </ng-container>
 
@@ -127,7 +127,7 @@
       No se encontraron registros
       <strong>Verifique que haya Seleccionado un Ente. </strong>
     </div>
-    <div *ngIf="dataSource.isPreloadTextViewed$ | async">Cargando...</div>
+    <div *ngIf="!dataSource.isPreloadTextViewed$ | async">Cargando...</div>
   </div>
 
   <div fxLayoutAlign="end center">

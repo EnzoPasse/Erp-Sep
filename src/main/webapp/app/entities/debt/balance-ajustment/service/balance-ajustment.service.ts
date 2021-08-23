@@ -5,8 +5,8 @@ import { IQueryParamsModel } from 'app/core/request/queryParams.model';
 import { IQueryResultsModel } from 'app/core/request/queryResult.model';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { VoucherAdaper } from '../../voucher/service/voucher-adapter.service';
-import { IComprobante } from '../../voucher/voucher.model';
+import { VoucherAdaper } from '../../../../core/voucher/voucher-adapter.service';
+import { IComprobante } from '../../../../core/voucher/voucher.model';
 
 @Injectable({
   providedIn: 'root',

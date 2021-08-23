@@ -11,7 +11,7 @@ import { GrupoTrabajo, IGrupoTrabajo } from 'app/entities/master-crud/group-work
 import { GrupoTrabajoService } from 'app/entities/master-crud/group-work-management/grupoTrabajo.service';
 import { IRol, Rol, RolService } from '../../index';
 import { Alert } from 'app/core/util/alert.service';
-import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
+import { EventManager, EventWithContent } from 'app/core/event-management/event-manager.service';
 
 // Validators.pattern('^[a-zA-Z0-9!$&*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$|^[_.@A-Za-z0-9-]+$'),
 

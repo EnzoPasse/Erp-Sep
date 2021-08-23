@@ -16,7 +16,13 @@
     <div fxFlex="100" fxFlex.gt-sm="30" class="m-t-15">
       <mat-form-field appearance="outline">
         <mat-label>Nro Comprobante:</mat-label>
-        <input matInput mask="00000-00000000" [formControl]="nroComprobante" (keyup.enter)="rellenarCeros($event.target)" />
+        <input
+          matInput
+          mask="00000-00000000"
+          [dropSpecialCharacters]="false"
+          [formControl]="nroComprobante"
+          (keyup.enter)="rellenarCeros($event.target)"
+        />
         <!-- <mat-hint align="start">00000-00000000</mat-hint> -->
         <mat-error *ngIf="nroComprobante.invalid">{{ mensajeErrorNroComprobante() }} </mat-error>
       </mat-form-field>
@@ -45,7 +51,7 @@
           <div fxFlex="100" fxFlex.gt-sm="40">
             <mat-form-field appearance="fill">
               <mat-select placeholder="Concepto" [formControl]="item.get('id')">
-                <mat-option *ngFor="let concepto of allConceptos" [value]="concepto.id"> {{ concepto.nombre }} </mat-option>
+                <mat-option *ngFor="let concepto of allConceptos" [value]="concepto"> {{ concepto.nombre }} </mat-option>
               </mat-select>
               <mat-error *ngIf="item.controls.id.invalid"> Requerido</mat-error>
             </mat-form-field>

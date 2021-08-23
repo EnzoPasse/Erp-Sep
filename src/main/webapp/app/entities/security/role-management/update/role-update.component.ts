@@ -4,7 +4,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { ActivatedRoute } from '@angular/router';
 import { Alert } from 'app/core/util/alert.service';
-import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
+import { EventManager, EventWithContent } from 'app/core/event-management/event-manager.service';
 import { Observable, Subscription } from 'rxjs';
 import { IRol } from '../..';
 import { IPermission, ITodoItemFlatNode, Permission, Rol, TodoItemFlatNode } from '../role.model';

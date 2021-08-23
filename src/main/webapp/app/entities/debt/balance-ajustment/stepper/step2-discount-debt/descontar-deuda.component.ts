@@ -6,12 +6,12 @@ import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute } from '@angular/router';
 import { QueryParamsModel } from 'app/core/request/queryParams.model';
 import { Alert } from 'app/core/util/alert.service';
-import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
-import { ComprobanteService } from 'app/entities/debt/voucher/service/voucher.service';
-import { ComprobanteDataSource } from 'app/entities/debt/voucher/voucher.datasource';
-import { IComprobante } from 'app/entities/debt/voucher/voucher.model';
+import { EventManager, EventWithContent } from 'app/core/event-management/event-manager.service';
+import { ComprobanteDataSource } from 'app/core/voucher/voucher.datasource';
+import { IComprobante } from 'app/core/voucher/voucher.model';
 import { merge, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { ComprobanteService } from 'app/core/voucher/voucher.service';
 
 @Component({
   selector: 'jhi-descontar-deuda',

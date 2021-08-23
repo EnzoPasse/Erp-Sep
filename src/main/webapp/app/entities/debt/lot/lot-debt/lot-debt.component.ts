@@ -4,7 +4,7 @@ import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Alert } from 'app/core/util/alert.service';
 import { DialogService } from 'app/core/util/dialog.service';
-import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
+import { EventManager, EventWithContent } from 'app/core/event-management/event-manager.service';
 import * as dayjs from 'dayjs';
 import { Subscription } from 'rxjs';
 import { FileUploadModel, ILoteDto } from '../lot-debt.model';

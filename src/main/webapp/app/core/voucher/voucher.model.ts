@@ -65,13 +65,13 @@ export interface IComprobante {
   condicionPago?: ICondicionPago;
   tipoComprobante?: ITipoComprobante;
   ente?: IEnte;
-  movimientoCajaBanco: IMovimientoCajaBanco[];
+  movimientoCajaBanco?: IMovimientoCajaBanco[];
   item?: IItem[];
 }
 
 export class Comprobante implements IComprobante {
   constructor(
-    public id: number | undefined = undefined,
+    public id?: number,
     public periodo?: string,
     public fechaComprobanteString?: string,
     public fechaContableString?: string,
@@ -83,17 +83,17 @@ export class Comprobante implements IComprobante {
     public nroComprobante?: string,
     public nroLote?: string,
 
-    public percepcionGanancia: number = 0,
-    public percepcionIVA: number = 0,
-    public percepcionIngBruto: number = 0,
-    public retencionGanancia: number = 0,
-    public retencionIVA: number = 0,
-    public retencionIngBruto: number = 0,
-    public saldo: number = 0,
-    public aImputar: number = 0,
-    public imputado: number = 0,
-    public totalComprobante: number = 0,
-    public dtoRgoOtros: number = 0,
+    public percepcionGanancia?: number,
+    public percepcionIVA?: number,
+    public percepcionIngBruto?: number,
+    public retencionGanancia?: number,
+    public retencionIVA?: number,
+    public retencionIngBruto?: number,
+    public saldo?: number,
+    public aImputar?: number,
+    public imputado?: number,
+    public totalComprobante?: number,
+    public dtoRgoOtros?: number,
 
     public grupoRef?: string,
     public observaciones?: string,
@@ -104,7 +104,7 @@ export class Comprobante implements IComprobante {
     public condicionPago?: ICondicionPago,
     public tipoComprobante?: ITipoComprobante,
     public ente?: IEnte,
-    public movimientoCajaBanco: IMovimientoCajaBanco[] = [],
-    public item: IItem[] = []
+    public movimientoCajaBanco?: IMovimientoCajaBanco[],
+    public item?: IItem[]
   ) {}
 }

@@ -14,7 +14,7 @@ import { RolAdaper } from './role.adapter.service';
   providedIn: 'root',
 })
 export class RolService {
-  resourceUrl = this.applicationConfigService.getEndpointFor('/rol');
+  resourceUrl = this.applicationConfigService.getEndpointFor('rol');
 
   constructor(
     private http: HttpClient,

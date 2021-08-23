@@ -4,12 +4,12 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute } from '@angular/router';
+import { EventManager, EventWithContent } from 'app/core/event-management/event-manager.service';
 import { Alert } from 'app/core/util/alert.service';
-import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ComprobanteService } from '../../voucher/service/voucher.service';
-import { IComprobante } from '../../voucher/voucher.model';
+import { DebtService } from '../../voucher/service/debt.service';
+import { IComprobante } from '../../../../core/voucher/voucher.model';
 import { CreditoEnteComponent } from './step1-credits-entity/credito-ente.component';
 import { DescontarDeudaComponent } from './step2-discount-debt/descontar-deuda.component';
 import { ConfirmarAjusteComponent } from './step3-confirm/confirmar-ajuste.component';
@@ -43,7 +43,7 @@ export class StepperAjustmentComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private breakpointObserver: BreakpointObserver,
-    private comprobanteService: ComprobanteService,
+    private debtService: DebtService,
     protected eventManager: EventManager
   ) {
     this.stepperOrientation = breakpointObserver
@@ -74,7 +74,7 @@ export class StepperAjustmentComponent implements OnInit, OnDestroy {
 
     this.isSaving = true;
     // const comprobante = this.createComprobante();
-    this.subscribeToSaveResponse(this.comprobanteService.create(this.saveVoucher, this.urlData.createOperation));
+    this.subscribeToSaveResponse(this.debtService.create(this.saveVoucher, this.urlData.createOperation));
   }
 
   creditSelection(event: IComprobante): void {

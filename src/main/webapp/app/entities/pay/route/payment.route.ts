@@ -18,7 +18,7 @@ export const PAY_ROUTE: Routes = [
         'Accion Crear Orden de Pago Directo',
       ],
       printPermission: 'Accion Reimprimir Orden de Pago',
-      deletePermission: 'Accion Anular Orden de Pagoe',
+      deletePermission: 'Accion Anular Orden de Pago',
     },
   },
   {

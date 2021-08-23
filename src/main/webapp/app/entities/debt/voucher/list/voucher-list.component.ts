@@ -8,9 +8,10 @@ import { QueryParamsModel } from 'app/core/request/queryParams.model';
 import { DialogService } from 'app/core/util/dialog.service';
 import { fromEvent, merge, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
-import { ComprobanteService } from '../service/voucher.service';
-import { ComprobanteDataSource } from '../voucher.datasource';
-import { IComprobante, IEstadoComprobante } from '../voucher.model';
+import { DebtService } from '../service/debt.service';
+import { ComprobanteDataSource } from '../../../../core/voucher/voucher.datasource';
+import { IComprobante, IEstadoComprobante } from '../../../../core/voucher/voucher.model';
+import { ComprobanteService } from 'app/core/voucher/voucher.service';
 
 @Component({
   selector: 'jhi-voucher-list',
@@ -41,6 +42,7 @@ export class VoucherListComponent implements OnInit, OnDestroy {
 
   constructor(
     private comprobanteService: ComprobanteService,
+    private debtService: DebtService,
     private dialog: DialogService,
     private route: ActivatedRoute,
     private router: Router
@@ -129,7 +131,7 @@ export class VoucherListComponent implements OnInit, OnDestroy {
 
       if (_item.id) {
         this.subscriptions.push(
-          this.comprobanteService.delete(_item.id).subscribe({
+          this.debtService.delete(_item.id).subscribe({
             next: () => {
               this.loadComprobanteList();
             },

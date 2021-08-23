@@ -1,20 +1,21 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { OperationType } from 'app/config/operationTypes.constants';
+import { EventManager, EventWithContent } from 'app/core/event-management/event-manager.service';
 import { QueryParamsModel } from 'app/core/request/queryParams.model';
 import { Alert } from 'app/core/util/alert.service';
-import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 import { CustomValidators } from 'app/core/util/validators';
-import { ComprobanteService } from 'app/entities/debt/voucher/service/voucher.service';
-import { ComprobanteDataSource } from 'app/entities/debt/voucher/voucher.datasource';
-import { IComprobante } from 'app/entities/debt/voucher/voucher.model';
+import { ComprobanteDataSource } from 'app/core/voucher/voucher.datasource';
+import { IComprobante } from 'app/core/voucher/voucher.model';
+import { ComprobanteService } from 'app/core/voucher/voucher.service';
 import { IEnte } from 'app/entities/master-crud';
 import { EnteService } from 'app/entities/master-crud/ente-management/ente.service';
 import { merge, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, finalize, map, switchMap, tap } from 'rxjs/operators';
+import { DataFormStep1 } from '../step1-tipo-orden.component';
 
 @Component({
   selector: 'jhi-cuenta-corriente',
@@ -45,8 +46,7 @@ export class CuentaCorrienteComponent implements OnInit, AfterViewInit, OnDestro
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator | undefined;
   @ViewChild('sort1', { static: true }) sort: MatSort | undefined;
 
-  @Output() totalInfo: EventEmitter<number | null> = new EventEmitter<number | null>();
-  @Output() formInfo: EventEmitter<FormGroup | null> = new EventEmitter<FormGroup | null>();
+  @Output() formInfo: EventEmitter<DataFormStep1 | null> = new EventEmitter<DataFormStep1 | null>();
 
   constructor(
     private fb: FormBuilder,
@@ -99,10 +99,13 @@ export class CuentaCorrienteComponent implements OnInit, AfterViewInit, OnDestro
 
     const formValid = this.enteDeudaForm.statusChanges.pipe(debounceTime(250)).subscribe((res: any) => {
       if (res === 'VALID') {
-        this.totalInfo.emit(this.totalComprobante.value);
-        this.formInfo.emit(this.enteDeudaForm.getRawValue());
+        const dataForm: DataFormStep1 = {
+          datos: this.enteDeudaForm.getRawValue(),
+          totalComprobante: this.totalComprobante.value,
+        };
+
+        this.formInfo.emit(dataForm);
       } else {
-        this.totalInfo.emit(null);
         this.formInfo.emit(null);
       }
     });
