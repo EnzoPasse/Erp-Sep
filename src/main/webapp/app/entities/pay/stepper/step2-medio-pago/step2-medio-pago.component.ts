@@ -81,7 +81,7 @@ export class Step2MedioPagoComponent implements OnInit, OnDestroy {
 
   changeMedioPago(): void {
     this.medioPagoForm.get('movimientoCajaBanco')?.patchValue(null);
-    this.payService.newMovimientoCajaBanco();
+    this.payService.resetMovimientoCajaBanco();
   }
 
   formValid(event: FormGroup | null): void {

@@ -16,6 +16,7 @@ import { debounceTime, distinctUntilChanged, map, switchMap, takeUntil, tap } fr
 import { ComprobanteService } from 'app/core/voucher/voucher.service';
 import { PaymentService } from '../service/payment.service';
 import { IMovimientoCajaBanco } from 'app/entities/master-crud';
+import { IFilterPrint } from 'app/entities/master-crud/print/print.model';
 
 @Component({
   selector: 'jhi-list-pay',
@@ -242,8 +243,14 @@ export class ListPayComponent implements OnInit, OnDestroy {
 
   imprimirOrden(idOrdenPago: number): void {
     // const url = `${API_CONFIG}Administracion/imprimirDeposito/?idDeposito=${idOrdenPago}&codigoReporte=${ReportTypes.RPT_ORDEN_PAGO}`;
+    /* const  filtros: IFilterPrint = {
+    id: idOrdenPago,
+    lote: false,
+    codigoReporte: ReportTypes.RPT_ORDEN_PAGO
+  } */
+
     const url = this.applicationConfigService.getEndpointFor(
-      `print/PrintDemoNeutroPDF/?idOrdenPago=${idOrdenPago}&codigoReporte=${ReportTypes.RPT_ORDEN_PAGO}`
+      `print/print/?id=${idOrdenPago}&codigoReporte=${ReportTypes.RPT_ORDEN_PAGO}&lote=false`
     );
     this.dialog.printElements(url);
   }

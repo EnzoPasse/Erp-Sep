@@ -2,6 +2,87 @@
   <mat-card-title>{{ data.title }}</mat-card-title>
   <mat-card-content>
     {{ viewLoading ? data.waitDesciption : data.description }}
+
+    <div *ngIf="dataSource.data.length > 0" class="responsive-table m-t-15 mat-elevation-z2">
+      <mat-table
+        [dataSource]="dataSource"
+        class="table-items-list"
+        #table
+        matSort
+        #sort1="matSort"
+        matSortActive="id"
+        matSortDirection="asc"
+        matSortDisableClear
+      >
+        <ng-container matColumnDef="select">
+          <mat-header-cell *matHeaderCellDef class="mat-column-checkbox">
+            <mat-checkbox
+              (change)="$event ? masterToggle() : null"
+              [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()"
+            >
+            </mat-checkbox>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row" class="mat-column-checkbox">
+            <mat-checkbox
+              (click)="$event.stopPropagation()"
+              (change)="$event ? selection.toggle(row) : null"
+              [checked]="selection.isSelected(row)"
+            >
+            </mat-checkbox>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="Cheque">
+          <mat-header-cell *matHeaderCellDef>Cheque</mat-header-cell>
+          <mat-cell *matCellDef="let item">
+            <span class="header-label">Cheque:</span>
+            <small>{{ item.documento.tipoDocumentoBancario.nombre }} - {{ item.documento.subTipo.nombre }} </small>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="Nro">
+          <mat-header-cell *matHeaderCellDef>Nro</mat-header-cell>
+          <mat-cell *matCellDef="let item">
+            <span class="header-label">Nro:</span>
+            <small>{{ item.documento.nroDocumento }}</small>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="Nombre">
+          <mat-header-cell *matHeaderCellDef>Dirigido a</mat-header-cell>
+          <mat-cell *matCellDef="let item">
+            <span class="header-label">Dirigido:</span>
+            <small>{{ item.documento.nombre }}</small>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="F.Emision">
+          <mat-header-cell *matHeaderCellDef>F.Emision</mat-header-cell>
+          <mat-cell *matCellDef="let item">
+            <span class="header-label">F.Emision:</span>
+            <small>{{ item.documento.fechaEmisionString }}</small>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="F.Presentacion">
+          <mat-header-cell *matHeaderCellDef>F.Presentacion</mat-header-cell>
+          <mat-cell *matCellDef="let item">
+            <span class="header-label">F.Presentacion</span>
+            <small>{{ item.documento.fechaPreVencString }}</small>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="Importe">
+          <mat-header-cell *matHeaderCellDef>Importe</mat-header-cell>
+          <mat-cell *matCellDef="let item" style="color: red">
+            <span class="header-label">Importe:</span>
+            {{ item.documento.importe | currency: 'ARS':'symbol' }}
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      </mat-table>
+
+      <div class="font-medium text-center p-30">
+        <div *ngIf="dataSource.data.length < 0">No se encontraron registros</div>
+      </div>
+    </div>
   </mat-card-content>
   <mat-card-actions align="start">
     <button mat-button (click)="onNoClick()">Cancelar</button>

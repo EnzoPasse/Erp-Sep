@@ -38,6 +38,7 @@ export class VoucherUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     fechaContable: ['', [Validators.required, CustomValidators.isValidDate]],
     ente: ['', [Validators.required, CustomValidators.RequireMatch]],
     tipoComprobante: ['', [Validators.required]],
+    // eslint-disable-next-line no-useless-escape
     nroComprobante: ['', [Validators.required, Validators.pattern(`[0-9]{5}-[0-9]{8}`)]],
     fechaComprobante: ['', [Validators.required, CustomValidators.isValidDate]],
     periodo: ['', [Validators.required]],

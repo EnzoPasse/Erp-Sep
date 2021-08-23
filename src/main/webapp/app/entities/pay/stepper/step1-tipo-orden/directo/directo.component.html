@@ -16,7 +16,13 @@
     <div fxFlex="100" fxFlex.gt-sm="30" class="m-t-15">
       <mat-form-field appearance="outline">
         <mat-label>Nro Comprobante:</mat-label>
-        <input matInput mask="00000-00000000" [formControl]="nroComprobante" (keyup.enter)="rellenarCeros($event.target)" />
+        <input
+          matInput
+          mask="00000-00000000"
+          [dropSpecialCharacters]="false"
+          [formControl]="nroComprobante"
+          (keyup.enter)="rellenarCeros($event.target)"
+        />
         <!-- <mat-hint align="start">00000-00000000</mat-hint> -->
         <mat-error *ngIf="nroComprobante.invalid">{{ mensajeErrorNroComprobante() }} </mat-error>
       </mat-form-field>

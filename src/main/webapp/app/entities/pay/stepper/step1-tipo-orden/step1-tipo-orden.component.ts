@@ -48,7 +48,7 @@ export class Step1TipoOrdenComponent implements OnInit {
 
   changeTipoPago(): void {
     this.tipoPagoForm.get('total')?.patchValue(null);
-    this.payService.newComprobante();
+    this.payService.resetComprobante();
   }
 
   formValid(event: DataFormStep1 | null): void {
