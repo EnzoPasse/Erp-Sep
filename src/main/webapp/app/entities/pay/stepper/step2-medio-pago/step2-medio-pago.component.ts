@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { PaymentsType } from 'app/config/payment-type';
 import { StateVoucherType } from 'app/config/voucherType.constant';
 import { IMovimientoCajaBanco } from 'app/entities/master-crud';
@@ -25,6 +25,8 @@ export class Step2MedioPagoComponent implements OnInit, OnDestroy {
   medioPagoForm = this.fb.group({
     medioPagoSelected: ['', Validators.required],
     movimientoCajaBanco: ['', Validators.required],
+    comprobante: [],
+    documento: [],
   });
   allMediosPago!: IMedioPago[];
 
@@ -61,13 +63,13 @@ export class Step2MedioPagoComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.medioPagoForm.statusChanges.pipe(debounceTime(250)).subscribe(res => {
         if (res === 'VALID') {
-          const dataForm: DataFormStep2 = {
+          /* const dataForm: DataFormStep2 = {
             datos: this.data,
             medioPago: this.medioPagoSelected.value,
             importe: this.tipoOrden.totalComprobante!,
-          };
-          // this.tipoPagoInfo.emit(dataForm);
-          this.payService.crearMovimientoCajaBanco(dataForm);
+          };*/
+
+          this.payService.crearMovimientoCajaBanco(this.medioPagoForm.getRawValue());
         }
       })
     );
@@ -84,9 +86,21 @@ export class Step2MedioPagoComponent implements OnInit, OnDestroy {
     this.payService.resetMovimientoCajaBanco();
   }
 
-  formValid(event: FormGroup | null): void {
-    this.movimientoCajaBanco.patchValue(event);
-    this.data = event;
+  formValid(event: any): void {
+    if (event) {
+      let movi = event.movimientoCajaBanco;
+      const moviextras = {
+        medioPago: this.medioPagoSelected.value,
+        importe: this.tipoOrden.totalComprobante!,
+      };
+      movi = { ...movi, ...moviextras };
+
+      this.movimientoCajaBanco.patchValue(movi);
+      this.medioPagoForm.get('comprobante')?.patchValue(event.comprobante);
+      this.medioPagoForm.get('documento')?.patchValue(event.documento);
+    } else {
+      this.movimientoCajaBanco.reset();
+    }
   }
 
   get medioPagoSelected(): AbstractControl {

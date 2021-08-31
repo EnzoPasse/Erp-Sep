@@ -16,7 +16,6 @@ import { debounceTime, distinctUntilChanged, map, switchMap, takeUntil, tap } fr
 import { ComprobanteService } from 'app/core/voucher/voucher.service';
 import { PaymentService } from '../service/payment.service';
 import { IMovimientoCajaBanco } from 'app/entities/master-crud';
-import { IFilterPrint } from 'app/entities/master-crud/print/print.model';
 
 @Component({
   selector: 'jhi-list-pay',
@@ -29,7 +28,7 @@ export class ListPayComponent implements OnInit, OnDestroy {
   dataSource!: ComprobanteDataSource;
   dataUrl: any;
 
-  displayedColumns = ['Ente', 'Cbte', 'Nro', 'F.Emision', 'Periodo', 'Total', 'Estado', 'Acciones'];
+  displayedColumns = ['Ente', 'Cbte', 'Nro', 'F.Emision', 'Total', 'Estado', 'Acciones'];
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator | undefined;
   @ViewChild('sort1', { static: true }) sort: MatSort | undefined;

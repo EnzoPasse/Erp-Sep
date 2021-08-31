@@ -1,41 +1,58 @@
 <form [formGroup]="efectivoForm">
   <div fxLayout="row wrap" fxLayoutAlign="space-between start">
-    <div fxFlex="100" fxFlex.gt-sm="25">
-      <mat-form-field appearance="outline">
-        <!-- <mat-label> {{ medioPago.id === 1 ? 'Caja' : 'Cuenta Corriente' }} </mat-label> -->
-        <mat-label> Caja: </mat-label>
-        <mat-select formControlName="cajaCuentaBanco" (selectionChange)="cambiarCaja($event.value)">
-          <mat-option *ngFor="let item of allCajasBanco" [value]="item">
-            {{ item.nombre }}
-          </mat-option>
-        </mat-select>
-        <!-- <mat-hint *ngIf="medioPago.id !== 1" style="color: blue"> {{ banco }} </mat-hint> -->
-        <mat-error *ngIf="efectivoForm.get('cajaCuentaBanco')?.invalid">{{ mensajeErrorCajaCuentaBanco() }} </mat-error>
-      </mat-form-field>
-    </div>
-    <div fxFlex="100" fxFlex.gt-sm="30">
-      <mat-form-field appearance="outline">
-        <mat-label>Retira Sr/Sra:</mat-label>
-        <input matInput formControlName="receptor" #receptor [value]="receptor.value.toUpperCase()" />
-      </mat-form-field>
+    <div fxFlex.gt-sm="60">
+      <div formGroupName="movimientoCajaBanco">
+        <div fxLayout="row wrap" fxLayoutAlign="space-between start">
+          <div fxFlex="100" fxFlex.gt-sm="40">
+            <mat-form-field appearance="outline">
+              <!-- <mat-label> {{ medioPago.id === 1 ? 'Caja' : 'Cuenta Corriente' }} </mat-label> -->
+              <mat-label> Caja: </mat-label>
+              <mat-select formControlName="cajaCuentaBanco" (selectionChange)="cambiarCaja($event.value)">
+                <mat-option *ngFor="let item of allCajasBanco" [value]="item">
+                  {{ item.nombre }}
+                </mat-option>
+              </mat-select>
+              <!-- <mat-hint *ngIf="medioPago.id !== 1" style="color: blue"> {{ banco }} </mat-hint> -->
+              <mat-error *ngIf="efectivoForm.get('movimientoCajaBanco.cajaCuentaBanco')?.invalid"
+                >{{ mensajeErrorCajaCuentaBanco() }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div fxFlex="100" fxFlex.gt-sm="55">
+            <mat-form-field appearance="outline">
+              <mat-label>Retira Sr/Sra:</mat-label>
+              <input matInput formControlName="receptor" #receptor [value]="receptor.value.toUpperCase()" />
+              <mat-error *ngIf="efectivoForm.get('movimientoCajaBanco.receptor')?.invalid">{{ mensajeErrorReceptor() }} </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div fxFlex="100" fxFlex.gt-sm="15">
-      <mat-form-field appearance="outline">
-        <mat-label>Periodo Servicio</mat-label>
-        <input matInput mask="00/0000" [dropSpecialCharacters]="false" formControlName="periodo" />
-        <mat-icon matSuffix>date_range</mat-icon>
-        <mat-error *ngIf="efectivoForm.get('periodo')?.invalid">{{ mensajeErrorFechaPeriodo() }} </mat-error>
-      </mat-form-field>
-    </div>
+    <div fxFlex.gt-sm="40">
+      <div formGroupName="comprobante">
+        <div fxLayout="row wrap" fxLayoutAlign="space-evenly start">
+          <div fxFlex="100" fxFlex.gt-sm="30">
+            <mat-form-field appearance="outline">
+              <mat-label>Periodo Servicio</mat-label>
+              <input matInput mask="00/0000" [dropSpecialCharacters]="false" formControlName="periodo" />
+              <mat-icon matSuffix>date_range</mat-icon>
+              <mat-error *ngIf="efectivoForm.get('comprobante.periodo')?.invalid">{{ mensajeErrorFechaPeriodo() }} </mat-error>
+            </mat-form-field>
+          </div>
 
-    <div fxFlex="100" fxFlex.gt-sm="20">
-      <mat-form-field appearance="outline">
-        <mat-label>Fecha Contable</mat-label>
-        <input matInput mask="00/00/0000" [dropSpecialCharacters]="false" formControlName="fechaContableString" />
-        <mat-icon matSuffix>date_range</mat-icon>
-        <mat-error *ngIf="efectivoForm.get('fechaContableString')?.invalid">{{ mensajeErrorFechaContableString() }} </mat-error>
-      </mat-form-field>
+          <div fxFlex="100" fxFlex.gt-sm="40">
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha Contable</mat-label>
+              <input matInput mask="00/00/0000" [dropSpecialCharacters]="false" formControlName="fechaContableString" />
+              <mat-icon matSuffix>date_range</mat-icon>
+              <mat-error *ngIf="efectivoForm.get('comprobante.fechaContableString')?.invalid"
+                >{{ mensajeErrorFechaContableString() }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </form>

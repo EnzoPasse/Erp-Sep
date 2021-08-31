@@ -2,10 +2,17 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { VoucherAdaper } from 'app/core/voucher/voucher-adapter.service';
 import { IComprobante } from 'app/core/voucher/voucher.model';
-import { Documento, IDocumento, IMovimientoCajaBanco, MovimientoCajaBanco } from 'app/entities/master-crud';
+import {
+  Documento,
+  IDocumento,
+  IMovimientoCajaBanco,
+  ITipoDocumentoBancario,
+  MovimientoCajaBanco,
+  TipoDocumentoBancario,
+} from 'app/entities/master-crud';
+import * as dayjs from 'dayjs';
 import { BehaviorSubject } from 'rxjs';
 import { DataFormStep1 } from '../stepper/step1-tipo-orden/step1-tipo-orden.component';
-import { DataFormStep2 } from '../stepper/step2-medio-pago/step2-medio-pago.component';
 
 @Injectable({
   providedIn: 'root',
@@ -51,9 +58,6 @@ export class PayVoucherStateService {
     const { datos } = val.datos; // solo necesito los datos de la estructura que viene como parametro
     this.tipoOrden = { ...this.tipoOrden, ...val };
     this.comprobante = { ...this.comprobante, ...datos }; // piso la info del comprobante en una nueva copia, state-magement.
-
-    // eslint-disable-next-line no-console
-    // console.log(this.voucherAdapterService.adaptToSubmit(this.comprobante));
   }
 
   resetComprobante(): void {
@@ -65,18 +69,35 @@ export class PayVoucherStateService {
     }
   }
 
-  crearMovimientoCajaBanco(val: DataFormStep2): void {
-    this.comprobante.fechaContableString = val.datos.fechaContableString;
-    this.comprobante.periodo = val.datos.periodo;
-    switch (val.medioPago?.id) {
-      case 2:
-        break;
+  crearMovimientoCajaBanco(val: any): void {
+    // eslint-disable-next-line no-console
+    console.log(val);
 
-      case 3:
-        break;
+    this.comprobante.fechaContableString = dayjs().format('DD/MM/YYYY'); // por si no viene la fechaContable, es igual a hoy
+    switch (val.medioPagoSelected?.id) {
+      case 2: {
+        let movimiento: IMovimientoCajaBanco;
+        for (let i = 0; val.documento.length > i; i++) {
+          const importeNew = val.documento[i].importe;
+          movimiento = this.addMovimientoCajaBanco(val.movimientoCajaBanco, importeNew);
+          movimiento.documento = this.addDocumento(val.documento[i], val.movimientoCajaBanco.importe);
+          this.movimientoCajaBanco.push(movimiento);
+        }
 
+        break;
+      }
+
+      case 3: {
+        const movimiento = this.addMovimientoCajaBanco(val.movimientoCajaBanco, val.movimientoCajaBanco.importe);
+        movimiento.documento = this.addDocumento(val.documento, val.movimientoCajaBanco.importe);
+        this.movimientoCajaBanco.push(movimiento); // = [...[movimiento]];
+
+        break;
+      }
       default: {
-        this.movimientoCajaBanco = [...this.addMovimientoCajaBanco(val)];
+        this.comprobante = { ...this.comprobante, ...val.comprobante };
+        this.movimientoCajaBanco.push(this.addMovimientoCajaBanco(val.movimientoCajaBanco, val.movimientoCajaBanco.importe)); // = [...[this.addMovimientoCajaBanco(val,val.movimientoCajaBanco.importe)]]
+
         break;
       }
     }
@@ -87,18 +108,37 @@ export class PayVoucherStateService {
     console.log(this.comprobante);
   }
 
-  addMovimientoCajaBanco(val: DataFormStep2): IMovimientoCajaBanco[] {
-    const { datos } = val; // destructuring object
-
+  addMovimientoCajaBanco(datos: any, importe: number): IMovimientoCajaBanco {
     const mCB = new MovimientoCajaBanco();
     mCB.cajaCuentaBanco = datos.cajaCuentaBanco;
+    mCB.medioPago = datos.medioPago;
     mCB.receptor = datos.receptor;
-    mCB.importe = val.importe;
-    mCB.medioPago = val.medioPago;
-    return [mCB];
+    mCB.importe = importe;
+
+    return mCB;
   }
 
   resetMovimientoCajaBanco(): void {
     this.movimientoCajaBanco = [];
+  }
+
+  addDocumento(datos: any, importe?: number): IDocumento {
+    const doc = new Documento();
+    doc.tipoDocumentoBancario = this.addTipoDocumento(datos.subTipo);
+    doc.nroDocumento = datos.nroDocumento;
+    doc.importe = datos.importe ?? importe;
+    doc.fechaEmisionString = datos.fechaEmisionString;
+    doc.fechaPreVencString = datos.fechaPreVencString;
+    return doc;
+  }
+
+  private addTipoDocumento(datos: any): ITipoDocumentoBancario {
+    let tipo = new TipoDocumentoBancario();
+    const ti: ITipoDocumentoBancario = {
+      id: datos.idTipoDocumento,
+      subTipo: [datos],
+    };
+    tipo = { ...tipo, ...ti };
+    return tipo;
   }
 }

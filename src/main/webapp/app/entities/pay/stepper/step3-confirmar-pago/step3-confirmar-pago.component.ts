@@ -19,6 +19,7 @@ export class Step3ConfirmarPagoComponent implements OnInit {
   displayedColumnsCuentaCorriente = ['Cbte', 'Nro', 'F.Emision', 'F.Vencimiento', 'Saldo'];
   displayedColumnsDirecto = ['Id', 'Item', 'Importe'];
   displayedColumnsLote = ['Ente', 'F.Vencimiento', 'Periodo', 'Saldo'];
+  displayedColumnsDocumentos = ['Tipo', 'Nro', 'F.Emision', 'F.Vencimiento', 'Importe'];
 
   constructor(private payService: PayVoucherStateService) {}
 

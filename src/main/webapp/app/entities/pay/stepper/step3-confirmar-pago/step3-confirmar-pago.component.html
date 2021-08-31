@@ -43,6 +43,9 @@
 
       <span [ngSwitch]="tipoOrden.tipoPago">
         <div *ngSwitchCase="PaymentsType.DIRECTO">
+          <hr />
+          <div class="text-center">Conceptos:</div>
+
           <div class="responsive-table m-t-15">
             <mat-table [dataSource]="confirmVoucher.item" class="table-items-list" #table>
               <ng-container matColumnDef="Id">
@@ -70,12 +73,19 @@
               <mat-row *matRowDef="let row; columns: displayedColumnsDirecto"></mat-row>
             </mat-table>
           </div>
+
+          <!-- ESTO SE PUEDE EJECUTAR O NO DEPENDIENDO SI TIENE DOCUMENTOS   -->
+          <ng-container *ngIf="confirmVoucher.movimientoCajaBanco[0]?.documento">
+            <ng-container [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ item: confirmVoucher }"> </ng-container>
+          </ng-container>
+          <!-- FIN -->
+
           <div class="d-flex align-items-center">
             <div class="text-right ml-auto">
               <!--   <h6 class="text-uppercase text-md ma-0 text-bold">Total Nota Crédito :</h6>
                           <h6 class="text-uppercase text-md ma-0 text-bold">Saldo Actual Nota Crédito :</h6>
                           <h6 class="text-uppercase text-md ma-0 text-bold">Total a Imputar :</h6> -->
-              <h6 class="text-uppercase text-sm ma-0 text-danger text-bold">Total a Imputar :</h6>
+              <h6 class="text-uppercase text-sm ma-0 text-danger text-bold">Total a Pagar :</h6>
             </div>
             <div class="m-l-10">
               <!--   <h4 class="font-medium">{{ confirmVoucher?.totalComprobante | currency: 'ARS':'symbol':'1.0-0' }}</h4>
@@ -87,6 +97,8 @@
         </div>
 
         <div *ngSwitchCase="PaymentsType.CUENTA_CORRIENTE">
+          <hr />
+          <div class="text-center">Conceptos:</div>
           <div class="responsive-table m-t-15">
             <mat-table [dataSource]="confirmVoucher.comprobanteRef" class="table-items-list" #table>
               <ng-container matColumnDef="Cbte">
@@ -128,18 +140,25 @@
               <mat-row *matRowDef="let row; columns: displayedColumnsCuentaCorriente"></mat-row>
             </mat-table>
           </div>
+
+          <!-- ESTO SE PUEDE EJECUTAR O NO DEPENDIENDO SI TIENE DOCUMENTOS   -->
+          <ng-container *ngIf="confirmVoucher.movimientoCajaBanco[0]?.documento">
+            <ng-container [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ item: confirmVoucher }"> </ng-container>
+          </ng-container>
+          <!-- FIN -->
+
           <div class="d-flex align-items-center">
             <div class="text-right ml-auto">
               <!--   <h6 class="text-uppercase text-md ma-0 text-bold">Total Nota Crédito :</h6>
                           <h6 class="text-uppercase text-md ma-0 text-bold">Saldo Actual Nota Crédito :</h6> -->
-              <h6 class="text-uppercase text-md ma-0 text-bold">Monto Seleccionado :</h6>
+              <h6 class="text-uppercase text-md ma-0 text-bold">Monto Total de Items Seleccionados :</h6>
               <h6
                 class="text-uppercase text-md ma-a text-bold"
                 *ngIf="confirmVoucher.totalComprobante - confirmVoucher.montoSeleccionado !== 0"
               >
                 Difencia :
               </h6>
-              <h6 class="text-uppercase text-sm ma-0 text-danger text-bold">Total a Imputar :</h6>
+              <h6 class="text-uppercase text-sm ma-0 text-danger text-bold">Total a Pagar :</h6>
             </div>
             <div class="m-l-10">
               <!--   <h4 class="font-medium">{{ confirmVoucher?.totalComprobante | currency: 'ARS':'symbol':'1.0-0' }}</h4>
@@ -155,6 +174,8 @@
         </div>
 
         <div *ngSwitchCase="PaymentsType.LOTE">
+          <hr />
+          <div class="text-center">Conceptos:</div>
           <div class="responsive-table m-t-15">
             <mat-table [dataSource]="confirmVoucher.comprobanteRef" class="table-items-list" #table>
               <ng-container matColumnDef="Ente">
@@ -193,6 +214,13 @@
               <mat-row *matRowDef="let row; columns: displayedColumnsLote"></mat-row>
             </mat-table>
           </div>
+
+          <!-- ESTO SE PUEDE EJECUTAR O NO DEPENDIENDO SI TIENE DOCUMENTOS   -->
+          <ng-container *ngIf="confirmVoucher.movimientoCajaBanco[0]?.documento">
+            <ng-container [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ item: confirmVoucher }"> </ng-container>
+          </ng-container>
+          <!-- FIN -->
+
           <div class="d-flex align-items-center">
             <div class="text-right ml-auto">
               <h6 class="text-uppercase text-sm ma-0 text-danger text-bold">Total a Imputar :</h6>
@@ -205,4 +233,52 @@
       </span>
     </ng-container>
   </mat-card-content>
+
+  <ng-template #itemTemplate let-item="item">
+    <hr />
+    <div class="m-t-10">
+      <div class="text-center">Documentos Generados:</div>
+      <div class="responsive-table m-t-15">
+        <mat-table [dataSource]="item.movimientoCajaBanco" class="table-items-list" #table>
+          <ng-container matColumnDef="Tipo">
+            <mat-header-cell *matHeaderCellDef>Tipo </mat-header-cell>
+            <mat-cell *matCellDef="let mcb">
+              <span class="header-label">Tipo:</span>
+              <small> {{ mcb.documento.tipoDocumentoBancario.subTipo[0].nombre }}</small>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="Nro">
+            <mat-header-cell *matHeaderCellDef>Nro</mat-header-cell>
+            <mat-cell *matCellDef="let mcb">
+              <span class="header-label">Nro:</span>
+              <small> {{ mcb.documento.nroDocumento ? mcb.documento.nroDocumento : '-' }}</small>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="F.Emision">
+            <mat-header-cell *matHeaderCellDef>F.Emision</mat-header-cell>
+            <mat-cell *matCellDef="let mcb">
+              <span class="header-label">F.Emision:</span>
+              <small>{{ mcb.documento.fechaEmisionString }}</small>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="F.Vencimiento">
+            <mat-header-cell *matHeaderCellDef>F.Vencimiento</mat-header-cell>
+            <mat-cell *matCellDef="let mcb">
+              <span class="header-label">F.Vto:</span>
+              <small>{{ mcb.documento.fechaPreVencString }}</small>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="Importe">
+            <mat-header-cell *matHeaderCellDef>Importe</mat-header-cell>
+            <mat-cell *matCellDef="let mcb" style="color: blue" class="font-medium">
+              <span class="header-label">Importe:</span>
+              {{ mcb.documento.importe | currency: 'ARS':'symbol' }}
+            </mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="displayedColumnsDocumentos"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumnsDocumentos"></mat-row>
+        </mat-table>
+      </div>
+    </div>
+  </ng-template>
 </mat-card>
