@@ -7,10 +7,15 @@ import { EventManager, EventWithContent } from 'app/core/event-management/event-
 import { Alert } from 'app/core/util/alert.service';
 import { IComprobante } from 'app/core/voucher/voucher.model';
 import { Observable, Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { switchMap, takeUntil } from 'rxjs/operators';
 import { Step1TipoOrdenComponent } from './step1-tipo-orden/step1-tipo-orden.component';
 import { PayVoucherStateService } from '../service/payVoucherState.service';
 import { PaymentService } from '../service/payment.service';
+import { PrintCheques, WcfService } from 'app/core/wfc/wfc.service';
+import { ApplicationConfigService } from 'app/core/config/application-config.service';
+import { ReportTypes } from 'app/config/reportType';
+import { DialogService } from 'app/core/util/dialog.service';
+import { DocumentoService } from 'app/entities/master-crud/document-management/documento.service';
 
 @Component({
   selector: 'jhi-stepper-pay',
@@ -29,11 +34,17 @@ export class StepperPayComponent implements OnInit, OnDestroy {
   @ViewChild(Step1TipoOrdenComponent) step1Ordertype!: Step1TipoOrdenComponent;
 
   @ViewChild('stepper', { static: false }) stepper!: MatStepper;
+  terminal = '';
+  impresora = '';
 
   constructor(
     private route: ActivatedRoute,
     private payService: PayVoucherStateService,
     private paymentService: PaymentService,
+    private wfc: WcfService,
+    private applicationConfigService: ApplicationConfigService,
+    private dialog: DialogService,
+    private documentoService: DocumentoService,
     protected eventManager: EventManager
   ) {}
 
@@ -43,6 +54,21 @@ export class StepperPayComponent implements OnInit, OnDestroy {
         this.titleForm = data.pageTitle;
         this.urlData = data;
       })
+    );
+
+    this.wfc.getTerminalService().subscribe(
+      res => {
+        this.terminal = res['Nombre'];
+      },
+      () => {
+        this.eventManager.broadcast(
+          new EventWithContent<Alert>('erpSepApp.error', {
+            message:
+              'El servicio de Windows de Impresion Automatica de Chueques WFC está APAGADO!, NO se puedran imprimir los Cheques, Comuniquese con Soporte Tecnico',
+            type: 'danger',
+          })
+        );
+      }
     );
 
     this.subscriptions.push(this.payService.comprobante$.pipe(takeUntil(this.destroy$)).subscribe(res => (this.saveVoucher = res)));
@@ -91,17 +117,21 @@ export class StepperPayComponent implements OnInit, OnDestroy {
     this.subscribeToSaveResponse(this.paymentService.create(this.saveVoucher, this.operation));
   }
 
+  managerImpresora(event: any): void {
+    this.impresora = event;
+  }
   protected subscribeToSaveResponse(result: Observable<IComprobante>): void {
     const saveSubscription = result.subscribe({
-      next: () => this.onSaveSuccess(),
+      next: res => this.onSaveSuccess(res),
       error: () => this.onSaveError(),
     });
     this.subscriptions.push(saveSubscription);
     this.step1Ordertype.limpiarOptions();
   }
 
-  private onSaveSuccess(): void {
+  private onSaveSuccess(res: any): void {
     this.isSaving = false;
+    this.imprimirOrden(res['id']);
     this.stepper.reset();
   }
 
@@ -110,5 +140,19 @@ export class StepperPayComponent implements OnInit, OnDestroy {
     this.eventManager.broadcast(
       new EventWithContent<Alert>('erpSepApp.error', { message: 'Algo salio mal!', type: 'danger' })
     );
+  }
+
+  private imprimirOrden(idOrdenPago: number): void {
+    const url = this.applicationConfigService.getEndpointFor(
+      `print/print/?id=${idOrdenPago}&codigoReporte=${ReportTypes.RPT_ORDEN_PAGO}&lote=false`
+    );
+    this.dialog.printElements(url);
+
+    if (this.impresora !== 'NOIMPRIMIR' && this.terminal !== '') {
+      this.documentoService
+        .getChequesParaImprimir(idOrdenPago, this.terminal)
+        .pipe(switchMap((raw: PrintCheques[]) => this.wfc.imprimirCheques(raw, this.impresora)))
+        .subscribe();
+    }
   }
 }

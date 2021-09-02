@@ -90,13 +90,13 @@ export class PayVoucherStateService {
       case 3: {
         const movimiento = this.addMovimientoCajaBanco(val.movimientoCajaBanco, val.movimientoCajaBanco.importe);
         movimiento.documento = this.addDocumento(val.documento, val.movimientoCajaBanco.importe);
-        this.movimientoCajaBanco.push(movimiento); // = [...[movimiento]];
+        this.movimientoCajaBanco = [...[movimiento]]; // no hacer un push, sino voy a crear un movimiento con cada entrada.
 
         break;
       }
       default: {
         this.comprobante = { ...this.comprobante, ...val.comprobante };
-        this.movimientoCajaBanco.push(this.addMovimientoCajaBanco(val.movimientoCajaBanco, val.movimientoCajaBanco.importe)); // = [...[this.addMovimientoCajaBanco(val,val.movimientoCajaBanco.importe)]]
+        this.movimientoCajaBanco = [...[this.addMovimientoCajaBanco(val.movimientoCajaBanco, val.movimientoCajaBanco.importe)]];
 
         break;
       }

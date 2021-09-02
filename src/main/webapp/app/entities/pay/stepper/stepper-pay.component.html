@@ -20,7 +20,7 @@
       </mat-step>
 
       <mat-step label="Medio de Pago" [stepControl]="form2.medioPagoForm">
-        <jhi-step2-medio-pago #form2> </jhi-step2-medio-pago>
+        <jhi-step2-medio-pago (impresoraInfo)="managerImpresora($event)" #form2> </jhi-step2-medio-pago>
 
         <div class="text-right p-t-20">
           <button mat-stroked-button color="warn" matStepperPrevious>Atras</button>

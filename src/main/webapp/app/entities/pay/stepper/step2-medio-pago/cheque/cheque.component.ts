@@ -5,6 +5,7 @@ import { StateVoucherType } from 'app/config/voucherType.constant';
 import { EventManager, EventWithContent } from 'app/core/event-management/event-manager.service';
 import { Alert } from 'app/core/util/alert.service';
 import { CustomValidators } from 'app/core/util/validators';
+import { WcfService } from 'app/core/wfc/wfc.service';
 import { CajaCuentaBanco, ISubTipo } from 'app/entities/master-crud';
 import { MovimientoCajaBancoService } from 'app/entities/master-crud/bank-cash-movement-management/movimientoCajaBanco.service';
 import { DocumentoService } from 'app/entities/master-crud/document-management/documento.service';
@@ -38,15 +39,13 @@ export class ChequeComponent implements OnInit, OnChanges, OnDestroy {
   subscriptions: Subscription[] = [];
   allCajasBanco: CajaCuentaBanco[] = [];
   allSubtipo: ISubTipo[] = [];
+  allImpresoras: string[] = [];
   destroy$ = new Subject<void>();
   banco = '';
   _totalPagar!: number;
 
   @Input()
   set totalPagar(val: number) {
-    // eslint-disable-next-line no-console
-    console.log(val);
-
     this._totalPagar = val;
   }
 
@@ -60,6 +59,7 @@ export class ChequeComponent implements OnInit, OnChanges, OnDestroy {
     private cajaBancoService: MovimientoCajaBancoService,
     private fb: FormBuilder,
     private documentoService: DocumentoService,
+    private wfcService: WcfService,
     protected eventManager: EventManager
   ) {}
 
@@ -87,6 +87,27 @@ export class ChequeComponent implements OnInit, OnChanges, OnDestroy {
         this.formInfo.emit(null);
       }
     });
+
+    this.wfcService.getTerminalService();
+
+    this.wfcService.getPrinterService().subscribe(
+      res => {
+        // eslint-disable-next-line no-console
+        console.log(res);
+        this.allImpresoras = res['Impresoras'];
+      },
+      error => {
+        // eslint-disable-next-line no-console
+        console.log(error);
+        this.eventManager.broadcast(
+          new EventWithContent<Alert>('erpSepApp.error', {
+            message:
+              'El servicio de Windows de Impresion Automatica de Cheques WFC esta APAGADO!, NO se puedran imprimir los Cheques, Comuniquese con Soporte Tecnico',
+            type: 'danger',
+          })
+        );
+      }
+    );
   }
 
   ngOnChanges(): void {

@@ -67,9 +67,9 @@
         <mat-label> Seleccione Impresora: </mat-label>
         <mat-select formControlName="impresora">
           <mat-option value="NOIMPRIMIR">NO IMPRIMIR</mat-option>
-          <!--   <mat-option *ngFor="let item of allSubtipo" [value]="item">
-            {{ item.nombre }}
-          </mat-option> -->
+          <mat-option *ngFor="let item of allImpresoras" [value]="item">
+            {{ item }}
+          </mat-option>
         </mat-select>
         <mat-error *ngIf="chequeForm.get('impresora')?.invalid">{{ mensajeErrorImpresora() }} </mat-error>
       </mat-form-field>
