@@ -1,45 +1,126 @@
 <form [formGroup]="chequeForm">
   <div fxLayout="row wrap" fxLayoutAlign="space-between start">
-    <div fxFlex="100" fxFlex.gt-sm="25">
+    <div formGroupName="movimientoCajaBanco">
+      <div fxFlex="100">
+        <mat-form-field appearance="outline">
+          <!-- <mat-label> {{ medioPago.id === 1 ? 'Caja' : 'Cuenta Corriente' }} </mat-label> -->
+          <mat-label> Cuenta Corriente: </mat-label>
+          <mat-select formControlName="cajaCuentaBanco" (selectionChange)="cambiarCaja($event.value)">
+            <mat-option *ngFor="let item of allCajasBanco" [value]="item">
+              {{ item.nombre }}
+            </mat-option>
+          </mat-select>
+          <mat-hint style="color: blue"> {{ banco }} </mat-hint>
+          <mat-error *ngIf="chequeForm.get('movimientoCajaBanco.cajaCuentaBanco')?.invalid">{{ mensajeErrorCajaCuentaBanco() }} </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="20">
       <mat-form-field appearance="outline">
         <!-- <mat-label> {{ medioPago.id === 1 ? 'Caja' : 'Cuenta Corriente' }} </mat-label> -->
-        <mat-label> Cuenta Corriente: </mat-label>
-        <mat-select formControlName="cajaCuentaBanco" (selectionChange)="cambiarCaja($event.value)">
-          <mat-option *ngFor="let item of allCajasBanco" [value]="item">
+        <mat-label> Tipo Cheque: </mat-label>
+        <mat-select formControlName="subTipo">
+          <mat-option *ngFor="let item of allSubtipo" [value]="item">
             {{ item.nombre }}
           </mat-option>
         </mat-select>
-        <mat-hint style="color: blue"> {{ banco }} </mat-hint>
-        <mat-error *ngIf="chequeForm.get('cajaCuentaBanco')?.invalid">{{ mensajeErrorCajaCuentaBanco() }} </mat-error>
+        <mat-error *ngIf="chequeForm.get('subTipo')?.invalid">{{ mensajeErrorTipoDocumento() }} </mat-error>
       </mat-form-field>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="30">
+      <mat-form-field appearance="outline">
+        <mat-label>Dirigido a:</mat-label>
+        <input matInput formControlName="dirigido" #receptor [value]="receptor.value.toUpperCase()" />
+        <mat-error *ngIf="chequeForm.get('dirigido')?.invalid">{{ mensajeErrorDirigido() }} </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="15">
+      <mat-form-field appearance="outline">
+        <mat-label>Fecha Emision:</mat-label>
+        <input matInput mask="00/00/0000" [dropSpecialCharacters]="false" formControlName="fechaEmision" />
+        <mat-icon matSuffix>date_range</mat-icon>
+        <mat-error *ngIf="chequeForm.get('fechaEmision')?.invalid">{{ mensajeErrorFechaEmision() }} </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="20">
+      <mat-form-field appearance="outline">
+        <mat-label>Nro Cheque:</mat-label>
+        <input matInput mask="00000000" formControlName="nroCheque" style="font-size: 20px" (blur)="generateLast($event.target.value)" />
+        <mat-error *ngIf="chequeForm.get('nroCheque')?.invalid">{{ mensajeErrorNroCheque() }} </mat-error>
+      </mat-form-field>
+    </div>
+    <div fxFlex="100" fxFlex.gt-sm="20">
+      <mat-form-field appearance="outline">
+        <mat-label>Cantidad de Cheques:</mat-label>
+        <input matInput type="number" formControlName="cantidadDocs" />
+        <mat-error *ngIf="chequeForm.get('cantidadDocs')?.invalid">{{ mensajeErrorCantidadDoc() }} </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="30">
+      <mat-form-field appearance="outline" *ngIf="chequeForm.get('cantidadDocs')?.value">
+        <!-- <mat-label> {{ medioPago.id === 1 ? 'Caja' : 'Cuenta Corriente' }} </mat-label> -->
+        <mat-label> Seleccione Impresora: </mat-label>
+        <mat-select formControlName="impresora">
+          <mat-option value="NOIMPRIMIR">NO IMPRIMIR</mat-option>
+          <mat-option *ngFor="let item of allImpresoras" [value]="item">
+            {{ item }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="chequeForm.get('impresora')?.invalid">{{ mensajeErrorImpresora() }} </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="15">
+      <button *ngIf="chequeForm.get('cantidadDocs')?.value" mat-raised-button color="warn" (click)="generarCheques()">
+        Generar Cheques
+      </button>
+    </div>
+  </div>
+
+  &nbsp;
+  <div *ngIf="chequeForm.get('cantidadDocs')?.value" class="text-center font-medium">Cheques Generados</div>
+  <hr />
+  &nbsp;
+
+  <div formArrayName="documento">
+    <div *ngFor="let item of documento?.controls; let i = index">
+      <div [formGroupName]="i">
+        <div fxLayout="row wrap" fxLayoutAlign="space-between start">
+          <div fxFlex="100" fxFlex.gt-sm="20">
+            <mat-form-field appearance="fill">
+              <mat-label>Nro Cheque {{ i + 1 }}</mat-label>
+              <input matInput [formControl]="item.get('nroDocumento')" style="font-size: 15px" />
+            </mat-form-field>
+          </div>
+
+          <div fxFlex="100" fxFlex.gt-sm="20">
+            <mat-form-field appearance="fill">
+              <mat-label>Fecha Emision</mat-label>
+              <input matInput mask="00/00/0000" [formControl]="item.get('fechaEmisionString')" />
+              <mat-icon matSuffix>date_range</mat-icon>
+            </mat-form-field>
+          </div>
+          <div fxFlex="100" fxFlex.gt-sm="20">
+            <mat-form-field appearance="fill">
+              <mat-label>Fecha Presentacion</mat-label>
+              <input matInput mask="00/00/0000" [formControl]="item.get('fechaPreVencString')" />
+              <mat-icon matSuffix>date_range</mat-icon>
+            </mat-form-field>
+          </div>
+          <div fxFlex="100" fxFlex.gt-sm="20">
+            <mat-form-field appearance="fill">
+              <mat-label>Importe {{ i + 1 }}</mat-label>
+              <input type="number" matInput [formControl]="item.get('importe')" style="font-size: 15px" />
+              <span matPrefix>$&nbsp;</span>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </form>
-
-<!-- 
-{
-  "periodo":"08/2021",
-  "fechaComprobanteString":"19/08/2021",
-  "fechaContableString":"19/08/2021",
-  "nroComprobante":"00001-00000125",
-  "percepcionGanancia":0,
-  "percepcionIVA":0,
-  "percepcionIngBruto":0,
-  "retencionGanancia":0,
-  "retencionIVA":0,
-  "retencionIngBruto":0,
-  "saldo":0,
-  "aImputar":0,
-  "imputado":0,
-  "totalComprobante":11500,
-  "dtoRgoOtros":0,
-  "establecimiento":null,
-  "estadoComprobante":null,
-  "comprobanteRef":[],
-  "condicionIVA":null,
-  "condicionPago":null,
-  "tipoComprobante":{"id":2,"nombre":"FACTURA-A","letra":"A","idTipoCbteFe":0,"ci":0,"activo":1,"rowNumber":1,"recordCount":1,"mensaje":null},
-  "ente":null,
-  "movimientoCajaBanco":[{"cajaCuentaBanco":{"id":4,"tipoCajaCuentaBanco":{"id":3,"nombre":"CAJA"},"moneda":{"id":1,"codigoMoneda":null,"nombre":"PESO","nombrePlural":null,"idTipoMonedaFE":null,"activo":0},"banco":{"id":0,"nombre":"SIN ASIGNAR"},"establecimiento":{"id":0,"idSede":0,"nombre":"SIN ASIGNAR","personaJuridica":null,"activo":0,"rowNumber":0,"recordCount":0,"usuario":null},"cuentaContable":111010010,"fechaApertura":"0001-01-01T00:00:00Z","codigo":null,"nombre":"HACIENDA OPERATIVA","cbu":null,"alias":null,"bloqueo":0,"tipoCierre":0,"activo":1,"rowNumber":4,"recordCount":62},"importe":11500,"medioPago":{"id":1,"nombre":"EFECTIVO","activo":1},"receptor":"MONTOTo"}],
-  "item":[{"id":53,"importe":3500},{"id":58,"importe":8000}]
-} -->

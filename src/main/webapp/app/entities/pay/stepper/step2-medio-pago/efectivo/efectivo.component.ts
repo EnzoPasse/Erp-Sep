@@ -1,8 +1,8 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BoxTypes } from 'app/config/boxType';
 import { CustomValidators } from 'app/core/util/validators';
-import { ICajaCuentaBanco, MovimientoCajaBanco } from 'app/entities/master-crud';
+import { ICajaCuentaBanco } from 'app/entities/master-crud';
 import { MovimientoCajaBancoService } from 'app/entities/master-crud/bank-cash-movement-management/movimientoCajaBanco.service';
 import * as dayjs from 'dayjs';
 import { Subscription } from 'rxjs';
@@ -14,18 +14,22 @@ import { debounceTime } from 'rxjs/operators';
   styleUrls: ['./efectivo.component.scss'],
 })
 export class EfectivoComponent implements OnInit, OnDestroy {
-  efectivoForm = this.fb.group({
-    fechaContableString: [dayjs().format('DD/MM/YYYY'), [Validators.required, CustomValidators.isValidDate]],
-    periodo: ['', Validators.required],
-    cajaCuentaBanco: ['', Validators.required],
-    receptor: ['', Validators.required],
+  efectivoForm = new FormGroup({
+    comprobante: new FormGroup({
+      fechaContableString: new FormControl(dayjs().format('DD/MM/YYYY'), [Validators.required, CustomValidators.isValidDate]),
+      periodo: new FormControl('', Validators.required),
+    }),
+    movimientoCajaBanco: new FormGroup({
+      cajaCuentaBanco: new FormControl('', Validators.required),
+      receptor: new FormControl('', Validators.required),
+    }),
   });
 
   allCajasBanco: ICajaCuentaBanco[] = [];
   subscriptions: Subscription[] = [];
   banco = '';
 
-  @Output() formInfo: EventEmitter<MovimientoCajaBanco | null> = new EventEmitter();
+  @Output() formInfo: EventEmitter<FormGroup | null> = new EventEmitter();
 
   constructor(private fb: FormBuilder, private cajaBancoService: MovimientoCajaBancoService) {}
 
@@ -52,17 +56,21 @@ export class EfectivoComponent implements OnInit, OnDestroy {
   }
 
   mensajeErrorCajaCuentaBanco(): string {
-    return this.efectivoForm.get('cajaCuentaBanco')!.hasError('required') ? 'La Caja debe ser seleccionada' : '';
+    return this.efectivoForm.get('movimientoCajaBanco.cajaCuentaBanco')!.hasError('required') ? 'La Caja debe ser seleccionada' : '';
+  }
+
+  mensajeErrorReceptor(): string {
+    return this.efectivoForm.get('movimientoCajaBanco.receptor')!.hasError('required') ? 'El Receptor del dinero es requerido' : '';
   }
 
   mensajeErrorFechaPeriodo(): string {
-    return this.efectivoForm.get('periodo')!.hasError('required') ? 'El Periodo es requerido (mm/yyyy)' : '';
+    return this.efectivoForm.get('comprobante.periodo')!.hasError('required') ? 'El Periodo es requerido (mm/yyyy)' : '';
   }
 
   mensajeErrorFechaContableString(): string {
-    return this.efectivoForm.get('fechaContableString')!.hasError('required')
+    return this.efectivoForm.get('comprobante.fechaContableString')!.hasError('required')
       ? 'La Fecha es requerida'
-      : this.efectivoForm.get('fechaContableString')!.hasError('isValidDate')
+      : this.efectivoForm.get('comprobante.fechaContableString')!.hasError('isValidDate')
       ? 'Ingrese una fecha Valida dd/mm/yyyy'
       : '';
   }

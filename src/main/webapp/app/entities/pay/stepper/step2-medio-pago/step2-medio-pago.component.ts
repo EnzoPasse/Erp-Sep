@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { PaymentsType } from 'app/config/payment-type';
 import { StateVoucherType } from 'app/config/voucherType.constant';
 import { IMovimientoCajaBanco } from 'app/entities/master-crud';
@@ -25,14 +25,19 @@ export class Step2MedioPagoComponent implements OnInit, OnDestroy {
   medioPagoForm = this.fb.group({
     medioPagoSelected: ['', Validators.required],
     movimientoCajaBanco: ['', Validators.required],
+    comprobante: [],
+    documento: [],
   });
   allMediosPago!: IMedioPago[];
 
-  // tipoOrden!: Observable<DataFormStep1>;
+  impresora!: string;
   tipoOrden!: DataFormStep1;
   mcb$!: Observable<IMovimientoCajaBanco[]>;
 
   data: any;
+
+  @Output() impresoraInfo: EventEmitter<string> = new EventEmitter();
+
   private subscriptions: Subscription[] = [];
   private destroy$ = new Subject<void>();
 
@@ -61,13 +66,8 @@ export class Step2MedioPagoComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.medioPagoForm.statusChanges.pipe(debounceTime(250)).subscribe(res => {
         if (res === 'VALID') {
-          const dataForm: DataFormStep2 = {
-            datos: this.data,
-            medioPago: this.medioPagoSelected.value,
-            importe: this.tipoOrden.totalComprobante!,
-          };
-          // this.tipoPagoInfo.emit(dataForm);
-          this.payService.crearMovimientoCajaBanco(dataForm);
+          this.payService.crearMovimientoCajaBanco(this.medioPagoForm.getRawValue());
+          this.impresoraInfo.emit(this.impresora);
         }
       })
     );
@@ -80,13 +80,29 @@ export class Step2MedioPagoComponent implements OnInit, OnDestroy {
   }
 
   changeMedioPago(): void {
-    this.medioPagoForm.get('movimientoCajaBanco')?.patchValue(null);
+    this.movimientoCajaBanco.reset();
     this.payService.resetMovimientoCajaBanco();
   }
 
-  formValid(event: FormGroup | null): void {
-    this.movimientoCajaBanco.patchValue(event);
-    this.data = event;
+  formValid(event: any): void {
+    // eslint-disable-next-line no-console
+    console.log(event);
+
+    if (event) {
+      let movi = event.movimientoCajaBanco;
+      const moviextras = {
+        medioPago: this.medioPagoSelected.value,
+        importe: this.tipoOrden.totalComprobante!,
+      };
+      movi = { ...movi, ...moviextras };
+
+      this.movimientoCajaBanco.patchValue(movi);
+      this.medioPagoForm.get('comprobante')?.patchValue(event.comprobante);
+      this.medioPagoForm.get('documento')?.patchValue(event.documento);
+      this.impresora = event.impresora;
+    } else {
+      this.changeMedioPago();
+    }
   }
 
   get medioPagoSelected(): AbstractControl {
